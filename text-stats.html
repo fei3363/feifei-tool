@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字數統計工具</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body>
+
+<div class="ts-container">
+    <!-- 導航欄 -->
+    <div class="ts-menu">
+        <a class="ts-item" href="text-stats.html">文字統計</a>
+        <a class="ts-item" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="ts-item" href="pdf-to-png.html">PDF 轉 PNG</a>
+    </div>
+
+    <h1 class="ts-header">字數統計工具</h1>
+    <div class="ts-form">
+        <div class="field">
+            <textarea class="ts-textarea" id="text-input" placeholder="在這裡輸入文字..." oninput="updateStats()"></textarea>
+        </div>
+    </div>
+    <div id="stats-output">
+        <!-- 統計數據顯示區域 -->
+    </div>
+</div>
+
+<script>
+    function updateStats() {
+        let text = document.getElementById('text-input').value;
+        let stats = calculateStats(text);
+        displayStats(stats);
+    }
+
+    function calculateStats(text) {
+        let stats = {
+            total: text.length,
+            digits: (text.match(/\d/g) || []).length,
+            paragraphs: text.split(/\n\n+/).length,
+            chineseChars: (text.match(/[\u4E00-\u9FFF]/g) || []).length,
+            chinesePunctuation: (text.match(/[\u3000-\u303F]/g) || []).length,
+            englishChars: (text.match(/[a-zA-Z]/g) || []).length,
+            englishPunctuation: (text.match(/[.,!?;:()"'`\-]/g) || []).length,
+            englishWords: (text.match(/\b[a-zA-Z]+\b/g) || []).length,
+            byteWords: (text.match(/\b[\x00-\xff]+\b/g) || []).length
+        };
+        return stats;
+    }
+
+    function displayStats(stats) {
+        let output = `
+            <p>總數： ${stats.total}</p>
+            <p>數字： ${stats.digits}</p>
+            <p>段落數： ${stats.paragraphs}</p>
+            <p>中文字數： ${stats.chineseChars} | 中文標點符號數： ${stats.chinesePunctuation}</p>
+            <p>英文字數： ${stats.englishChars} | 英文標點符號數： ${stats.englishPunctuation}</p>
+            <p>英文單詞數： ${stats.englishWords} | 字節單詞數： ${stats.byteWords}</p>
+        `;
+        document.getElementById('stats-output').innerHTML = output;
+    }
+</script>
+
+</body>
+</html>
