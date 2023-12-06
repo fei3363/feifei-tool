@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF 轉 PNG 轉換器 - Tocas UI 版本</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <style>
+        #images img {
+            margin-top: 15px;
+            max-width: 100%;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="ts-container">
+
+    <!-- 導航欄 -->
+    <div class="ts-menu">
+        <a class="ts-item" href="text-stats.html">文字統計</a>
+        <a class="ts-item" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="ts-item" href="pdf-to-png.html">PDF 轉 PNG</a>
+    </div>
+
+        <h1 class="ts-header">PDF 轉 PNG 轉換器</h1>
+        <div class="ts-form">
+            <div class="field">
+                <label for="pdfInput">選擇PDF文件：</label>
+                <input type="file" id="pdfInput" class="ts-input" multiple accept="application/pdf">
+            </div>
+            <button id="convertButton" class="ts-button ts-primary">確認轉換</button>
+        </div>
+        <div id="images"></div>
+    </div>
+
+    <script>
+        document.getElementById('convertButton').addEventListener('click', () => {
+            const files = document.getElementById('pdfInput').files;
+            for (let i = 0; i < files.length; i++) {
+                convertPDFToImages(files[i]);
+            }
+        });
+
+        async function convertPDFToImages(file) {
+            const fileReader = new FileReader();
+
+            fileReader.onload = async (e) => {
+                const typedArray = new Uint8Array(e.target.result);
+                const pdfDoc = await pdfjsLib.getDocument(typedArray).promise;
+
+                for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                    const page = await pdfDoc.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const canvas = document.createElement('canvas');
+                    canvas.classList.add('ts-image');
+                    const ctx = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+                    const img = document.createElement('img');
+                    img.src = canvas.toDataURL();
+                    document.getElementById('images').appendChild(img);
+                }
+            };
+
+            fileReader.readAsArrayBuffer(file);
+        }
+    </script>
+</body>
+</html>
