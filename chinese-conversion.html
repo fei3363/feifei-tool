@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>繁簡轉換工具</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+</head>
+<body>
+
+<div class="ts-container">
+      <div class="ts-menu">
+        <a class="ts-item" href="text-stats.html">文字統計</a>
+        <a class="ts-item" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="ts-item" href="pdf-to-png.html">PDF 轉 PNG</a>
+    </div>
+    <h1 class="ts-header">繁簡轉換工具</h1>
+    <div class="ts-form">
+        <div class="field">
+            <label for="input-text">輸入文字:</label>
+            <textarea class="ts-textarea" id="input-text" placeholder="在這裡輸入文字..."></textarea>
+        </div>
+        <div class="field">
+            <button class="ts-button" onclick="convertToSimplified()">轉換為簡體</button>
+            <button class="ts-button" onclick="convertToTraditional()">轉換為繁體</button>
+        </div>
+        <div class="field">
+            <label for="output-text">輸出結果:</label>
+            <textarea class="ts-textarea" id="output-text" readonly></textarea>
+        </div>
+    </div>
+</div>
+
+<!-- Import opencc-js -->
+<script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script> 
+
+<script>
+    var converterS2T, converterT2S;
+
+    function initConverters() {
+        // 創建轉換器，從簡體到繁體以及從繁體到簡體
+        converterS2T = OpenCC.Converter({ from: 'cn', to: 'tw' });
+        converterT2S = OpenCC.Converter({ from: 'tw', to: 'cn' });
+    }
+
+    function convertToSimplified() {
+        var inputText = document.getElementById('input-text').value;
+        var convertedText = converterT2S(inputText);
+        document.getElementById('output-text').value = convertedText;
+    }
+
+    function convertToTraditional() {
+        var inputText = document.getElementById('input-text').value;
+        var convertedText = converterS2T(inputText);
+        document.getElementById('output-text').value = convertedText;
+    }
+
+    // 初始化轉換器
+    initConverters();
+</script>
+
+</body>
+</html>
