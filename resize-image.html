@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 轉 PNG 轉換器 - Tocas UI 版本</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+  </head>
+  <body>
+    <div class="ts-container">
+      <!-- 導航欄 -->
+      <div class="ts-tab is-fluid">
+        <a class="item" href="text-stats.html">文字統計</a>
+        <a class="item" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
+        <a class="item is-active" href="resize-image.html">PDF 轉 PNG</a>
+      </div>
+      <h1 class="ts-header">縮小圖片</h1>
+      <div class="ts-form">
+        <div class="field">
+          <label for="imageInput">選擇圖片</label>
+          <input type="file" id="imageInput" class="ts-input" multiple>
+        </div>
+        <div class="field">
+          <label for="width">寬度</label>
+          <input type="number" id="width" class="ts-input" multiple>
+        </div>
+        <div class="field">
+          <label for="height">高度</label>
+          <input type="number" id="height" class="ts-input" multiple>
+        </div>
+        <button id="processButton" class="ts-button ts-primary">處理圖片</button>
+      </div>
+      <canvas id="canvas" style="border:1px solid black;"></canvas>
+    </div>
+    <script>
+      document.getElementById('processButton').addEventListener('click', function() {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var imageInput = document.getElementById('imageInput');
+        if (imageInput.files && imageInput.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            var img = new Image();
+            img.onload = function() {
+              // 獲取使用者輸入的寬度和高度
+              var inputWidth = document.getElementById('width').value;
+              var inputHeight = document.getElementById('height').value;
+              var scaleFactor = 1;
+              if (inputWidth) {
+                scaleFactor = inputWidth / img.width;
+              } else if (inputHeight) {
+                scaleFactor = inputHeight / img.height;
+              }
+              var newWidth = img.width * scaleFactor;
+              var newHeight = img.height * scaleFactor;
+              // 調整canvas大小並繪制圖片
+              canvas.width = newWidth;
+              canvas.height = newHeight;
+              ctx.drawImage(img, 0, 0, newWidth, newHeight);
+            }
+            img.src = event.target.result;
+          }
+          reader.readAsDataURL(imageInput.files[0]);
+        }
+      });
+    </script>
+  </body>
+</html>
