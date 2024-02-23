@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 轉 PNG 轉換器 - Tocas UI 版本</title>
+    <title>編碼/雜湊/加解密</title>
     <!-- Tocas UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
@@ -16,10 +16,45 @@
         <a class="item" href="text-stats.html">文字統計</a>
         <a class="item" href="chinese-conversion.html">繁簡轉換</a>
         <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
-        <a class="item is-active" href="resize-image.html">縮小圖片</a>
-        <a class="item" href="encry.html">編碼/雜湊/加解密</a>
+        <a class="item" href="resize-image.html">縮小圖片</a>
+        <a class="item  is-active" href="encry.html">編碼/雜湊/加解密</a>
       </div>
-     
+     <div class="container">
+  <h1 class="ts-header">Encryption Tools</h1>
+  <div class="ts-form">
+    <h2 class="ts-header">Base64 Encode/Decode</h2>
+    <div class="field">
+      <input type="text" id="base64Input" class="ts-input" placeholder="Enter text for Base64">
+      <button onclick="encodeBase64()" class="ts-button ts-primary">Encode</button>
+      <button onclick="decodeBase64()" class="ts-button ts-primary">Decode</button>
+      <p>Result: <span id="base64Result"></span></p>
+    </div>
+
+    <h2 class="ts-header">MD5 Hash</h2>
+    <div class="field">
+      <input type="text" id="md5Input" class="ts-input" placeholder="Enter text for MD5">
+      <button onclick="generateMD5()" class="ts-button ts-primary">Hash</button>
+      <p>Result: <span id="md5Result"></span></p>
+    </div>
+
+    <h2 class="ts-header">SHA-256 Hash</h2>
+    <div class="field">
+      <input type="text" id="sha256Input" class="ts-input" placeholder="Enter text for SHA-256">
+      <button onclick="generateSHA256()" class="ts-button ts-primary">Hash</button>
+      <p>Result: <span id="sha256Result"></span></p>
+    </div>
+
+    <h2 class="ts-header">AES Encrypt/Decrypt</h2>
+    <div class="field">
+      <input type="text" id="aesInput" class="ts-input" placeholder="Enter text for AES Encryption">
+      <input type="text" id="aesKey" class="ts-input" placeholder="Enter a secret key">
+      <button onclick="encryptAES()" class="ts-button ts-primary">Encrypt</button>
+      <button onclick="decryptAES()" class="ts-button ts-primary">Decrypt</button>
+      <p>Result: <span id="aesResult"></span></p>
+    </div>
+  </div>
+</div>
+
     <script>
       // Base64 Encode
 function encodeBase64() {
