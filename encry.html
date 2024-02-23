@@ -7,6 +7,7 @@
     <!-- Tocas UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
   </head>
   <body>
     <div class="ts-container">
@@ -15,57 +16,56 @@
         <a class="item" href="text-stats.html">文字統計</a>
         <a class="item" href="chinese-conversion.html">繁簡轉換</a>
         <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
-        <a class="item is-active" href="resize-image.html">PDF 轉 PNG</a>
+        <a class="item is-active" href="resize-image.html">縮小圖片</a>
+        <a class="item" href="encry.html">編碼/雜湊/加解密</a>
       </div>
-      <h1 class="ts-header">縮小圖片</h1>
-      <div class="ts-form">
-        <div class="field">
-          <label for="imageInput">選擇圖片</label>
-          <input type="file" id="imageInput" class="ts-input" multiple>
-        </div>
-        <div class="field">
-          <label for="width">寬度</label>
-          <input type="number" id="width" class="ts-input" multiple>
-        </div>
-        <div class="field">
-          <label for="height">高度</label>
-          <input type="number" id="height" class="ts-input" multiple>
-        </div>
-        <button id="processButton" class="ts-button ts-primary">處理圖片</button>
-      </div>
-      <canvas id="canvas" style="border:1px solid black;"></canvas>
-    </div>
+     
     <script>
-      document.getElementById('processButton').addEventListener('click', function() {
-        var canvas = document.getElementById('canvas');
-        var ctx = canvas.getContext('2d');
-        var imageInput = document.getElementById('imageInput');
-        if (imageInput.files && imageInput.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function(event) {
-            var img = new Image();
-            img.onload = function() {
-              // 獲取使用者輸入的寬度和高度
-              var inputWidth = document.getElementById('width').value;
-              var inputHeight = document.getElementById('height').value;
-              var scaleFactor = 1;
-              if (inputWidth) {
-                scaleFactor = inputWidth / img.width;
-              } else if (inputHeight) {
-                scaleFactor = inputHeight / img.height;
-              }
-              var newWidth = img.width * scaleFactor;
-              var newHeight = img.height * scaleFactor;
-              // 調整canvas大小並繪制圖片
-              canvas.width = newWidth;
-              canvas.height = newHeight;
-              ctx.drawImage(img, 0, 0, newWidth, newHeight);
-            }
-            img.src = event.target.result;
-          }
-          reader.readAsDataURL(imageInput.files[0]);
-        }
-      });
+      // Base64 Encode
+function encodeBase64() {
+    var input = document.getElementById('base64Input').value;
+    var result = btoa(input);
+    document.getElementById('base64Result').innerText = result;
+}
+
+// Base64 Decode
+function decodeBase64() {
+    var input = document.getElementById('base64Input').value;
+    var result = atob(input);
+    document.getElementById('base64Result').innerText = result;
+}
+
+// Generate MD5
+function generateMD5() {
+    var input = document.getElementById('md5Input').value;
+    var result = CryptoJS.MD5(input).toString();
+    document.getElementById('md5Result').innerText = result;
+}
+
+// Generate SHA-256
+function generateSHA256() {
+    var input = document.getElementById('sha256Input').value;
+    var result = CryptoJS.SHA256(input).toString();
+    document.getElementById('sha256Result').innerText = result;
+}
+
+// AES Encrypt
+function encryptAES() {
+    var input = document.getElementById('aesInput').value;
+    var secretKey = document.getElementById('aesKey').value;
+    var result = CryptoJS.AES.encrypt(input, secretKey).toString();
+    document.getElementById('aesResult').innerText = result;
+}
+
+// AES Decrypt
+function decryptAES() {
+    var input = document.getElementById('aesInput').value;
+    var secretKey = document.getElementById('aesKey').value;
+    var decryptedBytes = CryptoJS.AES.decrypt(input, secretKey);
+    var result = decryptedBytes.toString(CryptoJS.enc.Utf8);
+    document.getElementById('aesResult').innerText = result;
+}
+
     </script>
   </body>
 </html>
