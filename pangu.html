@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盤古之白自動排版</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+</head>
+<body>
+
+<div class="ts-container">
+    <h1 class="ts-header">盤古之白自動排版</h1>
+    <div class="ts-form">
+        <div class="field">
+            <label for="inputText">輸入文字:</label>
+            <textarea class="ts-textarea" id="inputText" placeholder="在這裡輸入文字...">當你凝視著bug，bug也凝視著你</textarea>
+        </div>
+        <div class="field">
+            <button class="ts-button" onclick="adjustSpacing()">自動排版</button>
+        </div>
+        <div class="field">
+            <label for="outputText">排版後的文字:</label>
+            <textarea class="ts-textarea" id="outputText" readonly></textarea>
+        </div>
+    </div>
+</div>
+
+<script>
+    function adjustSpacing() {
+        const inputText = document.getElementById('inputText').value;
+        const spacedText = pangu.spacing(inputText);
+        document.getElementById('outputText').value = spacedText;
+    }
+</script>
+
+</body>
+</html>
