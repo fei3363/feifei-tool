@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字識別和取代</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .highlighted { background-color: yellow; }
+    </style>
+</head>
+<body>
+<div class="ts-container">
+    <h1 class="ts-header">文字識別和取代</h1>
+    <div class="ts-form">
+        <div class="field">
+            <label for="inputText">輸入文字:</label>
+            <textarea class="ts-textarea" id="inputText" placeholder="在這裡輸入文字..."></textarea>
+        </div>
+        <div class="field">
+            <button class="ts-button" onclick="highlightText()">識別</button>
+            <button class="ts-button" onclick="replaceText()">取代</button>
+        </div>
+        <div class="field">
+            <label for="outputText">處理後的文字:</label>
+            <div id="outputText" class="ts-text"></div>
+        </div>
+    </div>
+</div>
+<script>
+    const replacementMap = {
+        '信息': '資訊',
+        '服務器': '伺服器'
+    };
+
+    function highlightText() {
+        const inputText = document.getElementById('inputText').value;
+        let highlightedText = inputText;
+
+        for (const key in replacementMap) {
+            const regex = new RegExp(key, 'g');
+            highlightedText = highlightedText.replace(regex, `<span class="highlighted">${key}</span>`);
+        }
+
+        document.getElementById('outputText').innerHTML = highlightedText;
+    }
+
+    function replaceText() {
+        const inputText = document.getElementById('inputText').value;
+        let replacedText = inputText;
+
+        for (const key in replacementMap) {
+            const regex = new RegExp(key, 'g');
+            replacedText = replacedText.replace(regex, replacementMap[key]);
+        }
+
+        document.getElementById('outputText').textContent = replacedText;
+    }
+</script>
+</body>
+</html>
+
