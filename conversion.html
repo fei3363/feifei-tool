@@ -15,6 +15,21 @@
         body {
             font-family: 'Noto Sans TC', sans-serif;
         }
+        .editable-area {
+            min-height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 8px;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .editable-area:focus {
+            outline: none;
+            border-color: #0069d9;
+        }
+        .is-readonly {
+            background-color: #f8f9fa;
+        }
     </style>
 </head>
 <body>
@@ -29,8 +44,8 @@
         <h1 class="ts-header">繁簡轉換工具</h1>
         <div class="ts-form">
             <div class="field">
-                <label for="input-text">輸入文字:</label>
-                <textarea class="ts-textarea" id="input-text" placeholder="在這裡輸入文字..."></textarea>
+                <label>輸入文字:</label>
+                <div id="input-text" class="editable-area" contenteditable="true" placeholder="在這裡輸入或貼上文字..."></div>
             </div>
             <div class="field">
                 <button class="ts-button" onclick="convertText('simplified')">轉換為簡體</button>
@@ -41,8 +56,8 @@
                 </div>
             </div>
             <div class="field">
-                <label for="output-text">輸出結果:</label>
-                <textarea class="ts-textarea" id="output-text" readonly></textarea>
+                <label>輸出結果:</label>
+                <div id="output-text" class="editable-area is-readonly" contenteditable="false"></div>
             </div>
         </div>
     </div>
@@ -58,17 +73,17 @@
         }
 
         function convertText(type) {
-            const inputText = document.getElementById('input-text').value;
+            const inputDiv = document.getElementById('input-text');
+            const outputDiv = document.getElementById('output-text');
             const preserveFormat = document.getElementById('preserve-format').checked;
-            let convertedText;
+            let convertedContent;
 
             if (preserveFormat) {
-                // 建臨時 DOM 元素來解析 HTML
+                // 複製輸入內容
                 const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = inputText;
+                tempDiv.innerHTML = inputDiv.innerHTML;
 
                 // 遍歷所有文本節點並轉換
-                const textNodes = [];
                 const walker = document.createTreeWalker(
                     tempDiv,
                     NodeFilter.SHOW_TEXT,
@@ -78,30 +93,43 @@
 
                 let node;
                 while (node = walker.nextNode()) {
-                    textNodes.push(node);
+                    if (node.textContent.trim()) {
+                        node.textContent = type === 'simplified' 
+                            ? converterT2S(node.textContent)
+                            : converterS2T(node.textContent);
+                    }
                 }
 
-                textNodes.forEach(textNode => {
-                    if (textNode.textContent.trim()) {
-                        textNode.textContent = type === 'simplified' 
-                            ? converterT2S(textNode.textContent)
-                            : converterS2T(textNode.textContent);
-                    }
-                });
-
-                convertedText = tempDiv.innerHTML;
+                convertedContent = tempDiv.innerHTML;
             } else {
-                // 不保留格式，直接轉換
-                convertedText = type === 'simplified' 
-                    ? converterT2S(inputText)
-                    : converterS2T(inputText);
+                // 不保留格式，直接轉換純文本
+                const plainText = inputDiv.innerText;
+                convertedContent = type === 'simplified' 
+                    ? converterT2S(plainText)
+                    : converterS2T(plainText);
             }
 
-            document.getElementById('output-text').value = convertedText;
+            outputDiv.innerHTML = convertedContent;
         }
 
-        // 初始化轉換器
+        // 為輸入區域添加提示文字功能
+        const inputArea = document.getElementById('input-text');
+        
+        inputArea.addEventListener('focus', function() {
+            if (this.innerHTML.trim() === '') {
+                this.innerHTML = '';
+            }
+        });
+
+        inputArea.addEventListener('blur', function() {
+            if (this.innerHTML.trim() === '') {
+                this.innerHTML = '<span style="color: #999;">' + this.getAttribute('placeholder') + '</span>';
+            }
+        });
+
+        // 初始化轉換器和placeholder
         initConverters();
+        inputArea.dispatchEvent(new Event('blur'));
     </script>
 </body>
 </html>
