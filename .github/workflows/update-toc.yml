@@ -1,0 +1,41 @@
+name: 自動更新工具目錄
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '*.html'
+      - '!index.html'  # 不觸發於 index.html 的更改，避免循環觸發
+
+jobs:
+  update-toc:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # 需要寫入權限來推送更改
+    
+    steps:
+      - name: Checkout 程式碼
+        uses: actions/checkout@v3
+      
+      - name: 設置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: 執行目錄更新腳本
+        run: python .github/scripts/update_toc.py
+      
+      - name: 檢查是否有更改
+        id: check_changes
+        run: |
+          git diff --quiet index.html || echo "changes=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit 並推送更新
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
+          git add index.html
+          git commit -m "UPDATE: 自動更新工具目錄"
+          git push
