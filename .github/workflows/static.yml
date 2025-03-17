@@ -23,13 +23,21 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
       - name: Setup Pages
         uses: actions/configure-pages@v4
+      
+      - name: 檢查檔案
+        run: |
+          echo "目錄內容:"
+          ls -la
+      
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3  # 更新到 v3 版本
+        uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-
+          name: github-pages
+  
   # 部署工作
   deploy:
     environment:
@@ -41,3 +49,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v3
+        with:
+          artifact_name: github-pages
