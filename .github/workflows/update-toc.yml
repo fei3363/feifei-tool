@@ -1,27 +1,108 @@
 name: 自動更新工具目錄
-
 on:
   push:
     branches:
       - main
     paths:
-      - '*.html'
-      - '!index.html'  # 不觸發於 index.html 的更改，避免循環觸發
+      - '**.html'      # 符合任何目錄下的 HTML 檔案
+      - '!index.html'  # 排除 index.html
+  workflow_dispatch:   # 允許手動觸發
 
 jobs:
   update-toc:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # 需要寫入權限來推送更改
+      contents: write
     
     steps:
-      - name: Checkout 程式碼
+      - name: 簽出程式碼
         uses: actions/checkout@v3
       
-      - name: 設置 Python
+      - name: 設定 Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+      
+      - name: 確認腳本目錄
+        run: |
+          mkdir -p .github/scripts
+          ls -la .github/scripts
+      
+      - name: 建立更新腳本 (若不存在)
+        run: |
+          if [ ! -f .github/scripts/update_toc.py ]; then
+            cat > .github/scripts/update_toc.py << 'EOF'
+import os
+import re
+
+def get_html_tools():
+    """取得所有 HTML 工具檔案"""
+    files = [f for f in os.listdir('.') if f.endswith('.html') and f != 'index.html']
+    return sorted(files)
+
+def get_tool_title(file_path):
+    """從 HTML 檔案中擷取標題"""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+            title_match = re.search(r'<title>(.*?)</title>', content)
+            if title_match:
+                return title_match.group(1)
+            
+            base_name = os.path.splitext(os.path.basename(file_path))[0]
+            return base_name.replace('-', ' ').replace('_', ' ').title()
+    except Exception as e:
+        print(f"讀取 {file_path} 時發生錯誤: {e}")
+        return os.path.splitext(os.path.basename(file_path))[0]
+
+def generate_toc(tools):
+    """產生工具目錄的 HTML 程式碼"""
+    toc = ""
+    for tool in tools:
+        title = get_tool_title(tool)
+        toc += f'    <div class="tool-link">\n        <a class="ts-button" href="{tool}">{title}</a>\n    </div>\n'
+    return toc
+
+def update_index(toc_content):
+    """更新 index.html 中的目錄部分"""
+    try:
+        with open("index.html", "r", encoding="utf-8") as f:
+            content = f.read()
+
+        toc_pattern = r'<!--TOC_START-->(.*?)<!--TOC_END-->'
+        if re.search(toc_pattern, content, re.DOTALL):
+            new_content = re.sub(toc_pattern, f'<!--TOC_START-->\n{toc_content}<!--TOC_END-->', content, flags=re.DOTALL)
+            
+            with open("index.html", "w", encoding="utf-8") as f:
+                f.write(new_content)
+            print("目錄已成功更新！")
+        else:
+            print("在 index.html 中找不到目錄標記，將嘗試新增基本標記")
+            
+            # 嘗試在 body 標籤之後插入標記
+            body_pattern = r'(<body.*?>)'
+            if re.search(body_pattern, content):
+                body_with_toc = f'\\1\n\n<!--TOC_START-->\n{toc_content}<!--TOC_END-->\n'
+                new_content = re.sub(body_pattern, body_with_toc, content)
+                
+                with open("index.html", "w", encoding="utf-8") as f:
+                    f.write(new_content)
+                print("已新增目錄標記並更新目錄！")
+            else:
+                print("無法找到適合插入目錄的位置")
+    except Exception as e:
+        print(f"更新 index.html 時發生錯誤: {e}")
+
+if __name__ == "__main__":
+    tools = get_html_tools()
+    print(f"找到以下工具檔案: {tools}")
+    toc = generate_toc(tools)
+    update_index(toc)
+EOF
+            echo "已建立更新腳本"
+          else
+            echo "更新腳本已存在"
+          fi
       
       - name: 執行目錄更新腳本
         run: python .github/scripts/update_toc.py
@@ -31,11 +112,11 @@ jobs:
         run: |
           git diff --quiet index.html || echo "changes=true" >> $GITHUB_OUTPUT
       
-      - name: Commit 並推送更新
+      - name: 提交並推送更新
         if: steps.check_changes.outputs.changes == 'true'
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
           git add index.html
-          git commit -m "UPDATE: 自動更新工具目錄"
+          git commit -m "更新: 自動更新工具目錄"
           git push
