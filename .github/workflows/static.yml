@@ -1,12 +1,14 @@
 # Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
-
 on:
-  # Runs on pushes targeting the default branch
-  push:
+  # 修改觸發條件，在 update-toc 工作流程完成後運行
+  workflow_run:
+    workflows: ["自動更新工具目錄"]  # 這裡必須使用 update-toc.yml 中定義的確切名稱
+    types:
+      - completed
     branches: ["main"]
-
-  # Allows you to run this workflow manually from the Actions tab
+  
+  # 保留手動觸發功能
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
