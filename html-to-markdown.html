@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML 轉 Markdown</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Turndown 庫 - 用於 HTML 轉 Markdown -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.1.1/turndown.min.js"></script>
+    <style>
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+        }
+        .ts-textarea {
+            min-height: 200px;
+            overflow-y: auto;
+        }
+        .is-readonly {
+            background-color: #f8f9fa;
+        }
+        @media (max-width: 768px) {
+            .ts-container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+            .ts-button {
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ts-container">
+        <!-- 導航欄 -->
+        <div class="ts-tab is-fluid">
+            <a class="item" href="text-stats.html">文字統計</a>
+            <a class="item" href="chinese-conversion.html">繁簡轉換</a>
+            <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
+            <a class="item is-active" href="html-to-markdown.html">HTML 轉 Markdown</a>
+        </div>
+
+        <h1 class="ts-header">HTML 轉 Markdown 工具</h1>
+        
+        <div class="ts-form">
+            <div class="field">
+                <label>HTML 原始碼:</label>
+                <textarea id="input-html" class="ts-textarea" placeholder="在這裡貼上 HTML 原始碼..."></textarea>
+            </div>
+            <div class="field">
+                <button class="ts-button" onclick="convertToMarkdown()">轉換為 Markdown</button>
+                <button class="ts-button" onclick="clearAll()">清除內容</button>
+                <button class="ts-button" onclick="copyMarkdown()">複製 Markdown</button>
+                
+                <div class="ts-checkbox">
+                    <input id="preserve-links" type="checkbox" checked>
+                    <label for="preserve-links">保留連結</label>
+                </div>
+                <div class="ts-checkbox">
+                    <input id="preserve-images" type="checkbox" checked>
+                    <label for="preserve-images">保留圖片</label>
+                </div>
+            </div>
+            <div class="field">
+                <label>Markdown 結果:</label>
+                <textarea id="output-markdown" class="ts-textarea" readonly></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 TurndownService
+        let turndownService = new TurndownService({
+            headingStyle: 'atx',
+            hr: '---',
+            bulletListMarker: '-',
+            codeBlockStyle: 'fenced'
+        });
+
+        function convertToMarkdown() {
+            const htmlContent = document.getElementById('input-html').value;
+            const preserveLinks = document.getElementById('preserve-links').checked;
+            const preserveImages = document.getElementById('preserve-images').checked;
+            
+            // 設定選項
+            // 重新初始化 TurndownService，根據當前設置
+            turndownService = new TurndownService({
+                headingStyle: 'atx',
+                hr: '---',
+                bulletListMarker: '-',
+                codeBlockStyle: 'fenced'
+            });
+            
+            // 如果不保留連結，添加規則覆蓋連結處理
+            if (!preserveLinks) {
+                turndownService.addRule('removeLinks', {
+                    filter: 'a',
+                    replacement: function(content) {
+                        return content;
+                    }
+                });
+            }
+            
+            // 如果不保留圖片，添加規則覆蓋圖片處理
+            if (!preserveImages) {
+                turndownService.addRule('removeImages', {
+                    filter: 'img',
+                    replacement: function() {
+                        return '';
+                    }
+                });
+            }
+            
+            // 轉換 HTML 為 Markdown
+            const markdown = turndownService.turndown(htmlContent);
+            document.getElementById('output-markdown').value = markdown;
+        }
+        
+        function clearAll() {
+            document.getElementById('input-html').value = '';
+            document.getElementById('output-markdown').value = '';
+        }
+        
+        function copyMarkdown() {
+            const markdownOutput = document.getElementById('output-markdown');
+            markdownOutput.select();
+            document.execCommand('copy');
+            
+            // 顯示複製成功提示
+            const originalText = "複製 Markdown";
+            const button = document.querySelector("button:nth-child(3)");
+            button.textContent = "已複製！";
+            setTimeout(() => {
+                button.textContent = originalText;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
