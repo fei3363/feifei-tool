@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>信箱提取</title>
+    <title>信箱與暱稱提取工具</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; }
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            padding-bottom: 50px;
+        }
         .result-text { 
             word-break: break-all;
             margin: 1rem 0;
@@ -16,6 +19,16 @@
             padding: 10px;
             border-radius: 4px;
             background-color: #f9f9f9;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .table-result {
+            margin: 1rem 0;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            max-height: 400px;
+            overflow-y: auto;
         }
         #count { 
             margin: 1rem 0; 
@@ -68,31 +81,81 @@
             margin: 1rem 0;
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
         }
     </style>
 </head>
 <body>
     <div class="ts-container">
-        <h1 class="ts-header">信箱提取</h1>
+        <h1 class="ts-header">信箱與暱稱提取工具</h1>
         <div class="ts-form">
             <div class="field">
                 <label for="inputText">輸入文字:</label>
-                <textarea class="ts-textarea" id="inputText" rows="6" placeholder="輸入含有信箱的文字"></textarea>
+                <textarea class="ts-textarea" id="inputText" rows="8" placeholder="輸入含有信箱與暱稱的會員資料"></textarea>
             </div>
             <div class="field">
-                <button class="ts-button" onclick="extractAndDisplay()">信箱提取</button>
+                <button class="ts-button" onclick="extractAndDisplay()">提取資料</button>
             </div>
             <div class="field">
                 <div id="count" class="ts-text"></div>
                 <div class="ts-tab">
-                    <a class="item active" onclick="switchTab('comma')">逗號分隔</a>
+                    <a class="item active" onclick="switchTab('table')">表格視圖</a>
+                    <a class="item" onclick="switchTab('comma')">逗號分隔</a>
                     <a class="item" onclick="switchTab('list')">全列表</a>
                     <a class="item" onclick="switchTab('sheet')">Sheet格式</a>
+                    <a class="item" onclick="switchTab('email')">僅Email</a>
+                </div>
+                <div class="ts-text ts-secondary" style="margin: 0.5rem 0;">格式說明：暱稱/Email/會員編號</div>
+                
+                <div id="tableContent" class="tab-content active">
+                    <div class="format-options">
+                        <button class="copy-button" onclick="copyTableToClipboard()">複製表格內容</button>
+                    </div>
+                    <div class="result-container">
+                        <div id="tableResult" class="table-result">
+                            <table id="dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>暱稱/會員名</th>
+                                        <th>Email</th>
+                                        <th>會員編號</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="copy-message">已複製!</div>
+                    </div>
                 </div>
                 
-                <div id="commaContent" class="tab-content active">
+                <div id="commaContent" class="tab-content">
                     <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('commaResult')">複製逗號分隔</button>
+                        <button class="copy-button" onclick="copyToClipboard('commaResult')">複製全部</button>
+                        <button class="copy-button" onclick="copyColumn('comma', 'nickname')">複製暱稱</button>
+                        <button class="copy-button" onclick="copyColumn('comma', 'email')">複製Email</button>
                     </div>
                     <div class="result-container">
                         <div id="commaResult" class="result-text"></div>
@@ -102,7 +165,9 @@
                 
                 <div id="listContent" class="tab-content">
                     <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('listResult')">複製列表</button>
+                        <button class="copy-button" onclick="copyToClipboard('listResult')">複製全部</button>
+                        <button class="copy-button" onclick="copyColumn('list', 'nickname')">複製暱稱</button>
+                        <button class="copy-button" onclick="copyColumn('list', 'email')">複製Email</button>
                     </div>
                     <div class="result-container">
                         <div id="listResult" class="result-text"></div>
@@ -112,10 +177,21 @@
                 
                 <div id="sheetContent" class="tab-content">
                     <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('sheetResult')">複製 Sheet 格式</button>
+                        <button class="copy-button" onclick="copyToClipboard('sheetResult')">複製Sheet格式</button>
                     </div>
                     <div class="result-container">
                         <div id="sheetResult" class="result-text"></div>
+                        <div class="copy-message">已複製!</div>
+                    </div>
+                </div>
+                
+                <div id="emailContent" class="tab-content">
+                    <div class="format-options">
+                        <button class="copy-button" onclick="copyToClipboard('emailOnlyResult')">複製Email列表</button>
+                        <button class="copy-button" onclick="copyToClipboard('emailCommaResult')">複製Email(逗號分隔)</button>
+                    </div>
+                    <div class="result-container">
+                        <div id="emailOnlyResult" class="result-text"></div>
                         <div class="copy-message">已複製!</div>
                     </div>
                 </div>
@@ -123,23 +199,101 @@
         </div>
     </div>
     <script>
-        function extractEmails(text) {
-            const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-            const matches = text.match(emailPattern) || [];
-            return [...new Set(matches)].sort();
+        // 儲存解析後的資料
+        let parsedMembers = [];
+        
+        function extractMemberInfo(text) {
+            const lines = text.split('\n');
+            const members = [];
+            let currentMember = {};
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                // 跳過標題行或空行
+                if (line === '' || line.includes('**會員已開通課程註冊時間**')) {
+                    continue;
+                }
+                
+                // 檢查是否是用戶名與ID行（包含 # 號）
+                const nicknameMatch = line.match(/^(.+)\s+#(\d+)/);
+                if (nicknameMatch) {
+                    // 如果已經有當前用戶，先保存它
+                    if (currentMember.nickname) {
+                        members.push(currentMember);
+                    }
+                    
+                    // 開始一個新用戶
+                    currentMember = {
+                        nickname: nicknameMatch[1].trim(),
+                        id: nicknameMatch[2],
+                        email: '',
+                        regTime: ''
+                    };
+                    continue;
+                }
+                
+                // 檢查是否是email行
+                const emailMatch = line.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+                if (emailMatch && currentMember.nickname) {
+                    currentMember.email = emailMatch[1];
+                    continue;
+                }
+                
+                // 檢查是否包含註冊時間
+                if (line.includes('已註冊') && i+1 < lines.length) {
+                    const nextLine = lines[i+1].trim();
+                    const dateMatch = nextLine.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
+                    if (dateMatch) {
+                        currentMember.regTime = dateMatch[1];
+                    }
+                }
+            }
+            
+            // 不要忘記添加最後一個用戶
+            if (currentMember.nickname) {
+                members.push(currentMember);
+            }
+            
+            return members;
         }
         
         function extractAndDisplay() {
             const content = document.getElementById('inputText').value;
-            const emails = extractEmails(content);
+            parsedMembers = extractMemberInfo(content);
             
-            document.getElementById('count').textContent = `信箱數量：${emails.length}`;
-            document.getElementById('commaResult').textContent = emails.join(',');
-            document.getElementById('listResult').textContent = emails.join('\n');
+            document.getElementById('count').textContent = `會員數量：${parsedMembers.length}`;
             
-            // 針對Google Sheet的格式，每個郵件獨立一格
-            // 當複製並貼上到Sheet時，每個郵件會自動填入不同的儲存格
-            document.getElementById('sheetResult').textContent = emails.join('\n');
+            // 清空表格
+            const tableBody = document.querySelector('#dataTable tbody');
+            tableBody.innerHTML = '';
+            
+            // 填充表格數據
+            parsedMembers.forEach(member => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerText = member.nickname || '';
+                row.insertCell(1).innerText = member.email || '';
+                row.insertCell(2).innerText = member.id || '';
+            });
+            
+            // 逗號分隔格式
+            const commaFormat = parsedMembers.map(m => `${m.nickname}, ${m.email}, ${m.id}`).join(',');
+            document.getElementById('commaResult').textContent = commaFormat;
+            
+            // 列表格式
+            const listFormat = parsedMembers.map(m => `${m.nickname}, ${m.email}, ${m.id}`).join('\n');
+            document.getElementById('listResult').textContent = listFormat;
+            
+            // Sheet格式 (每行一組數據：暱稱、Email、ID)
+            const sheetFormat = parsedMembers.map(m => `${m.nickname}\t${m.email}\t${m.id}`).join('\n');
+            
+            // 僅Email格式
+            const emailOnlyFormat = parsedMembers.map(m => m.email).join('\n');
+            document.getElementById('emailOnlyResult').textContent = emailOnlyFormat;
+            
+            // 僅Email逗號分隔
+            const emailCommaFormat = parsedMembers.map(m => m.email).join(',');
+            document.getElementById('emailCommaResult').textContent = emailCommaFormat;
         }
         
         function switchTab(tabName) {
@@ -160,7 +314,55 @@
             
             navigator.clipboard.writeText(text).then(() => {
                 // 顯示已複製訊息
-                const container = document.getElementById(elementId).parentElement;
+                const container = document.getElementById(elementId).closest('.result-container');
+                const message = container.querySelector('.copy-message');
+                message.style.display = 'block';
+                
+                // 2秒後隱藏訊息
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請手動選取文字後複製');
+            });
+        }
+        
+        function copyColumn(format, column) {
+            let text = '';
+            
+            if (column === 'nickname') {
+                text = parsedMembers.map(m => m.nickname).join(format === 'comma' ? ',' : '\n');
+            } else if (column === 'email') {
+                text = parsedMembers.map(m => m.email).join(format === 'comma' ? ',' : '\n');
+            }
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // 顯示已複製訊息
+                const container = document.getElementById(`${format}Result`).closest('.result-container');
+                const message = container.querySelector('.copy-message');
+                message.style.display = 'block';
+                
+                // 2秒後隱藏訊息
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請手動選取文字後複製');
+            });
+        }
+        
+        function copyTableToClipboard() {
+            // 構建表格數據
+            let tableText = "暱稱/會員名\tEmail\t會員編號\n";
+            parsedMembers.forEach(member => {
+                tableText += `${member.nickname || ''}\t${member.email || ''}\t${member.id || ''}\n`;
+            });
+            
+            navigator.clipboard.writeText(tableText).then(() => {
+                // 顯示已複製訊息
+                const container = document.getElementById('tableResult').closest('.result-container');
                 const message = container.querySelector('.copy-message');
                 message.style.display = 'block';
                 
