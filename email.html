@@ -12,6 +12,10 @@
             word-break: break-all;
             margin: 1rem 0;
             white-space: pre-wrap;
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
         }
         #count { 
             margin: 1rem 0; 
@@ -31,6 +35,40 @@
         .ts-tab .item.active {
             border-bottom: 2px solid #00b5ad;
         }
+        .copy-button {
+            margin: 0.5rem 0;
+            background-color: #00b5ad;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .copy-button:hover {
+            background-color: #009c95;
+        }
+        .copy-button:active {
+            background-color: #008c86;
+        }
+        .result-container {
+            position: relative;
+        }
+        .copy-message {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 181, 173, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .format-options {
+            margin: 1rem 0;
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +77,7 @@
         <div class="ts-form">
             <div class="field">
                 <label for="inputText">輸入文字:</label>
-                <textarea class="ts-textarea" id="inputText" rows="6" placeholder="輸入信箱"></textarea>
+                <textarea class="ts-textarea" id="inputText" rows="6" placeholder="輸入含有信箱的文字"></textarea>
             </div>
             <div class="field">
                 <button class="ts-button" onclick="extractAndDisplay()">信箱提取</button>
@@ -49,24 +87,48 @@
                 <div class="ts-tab">
                     <a class="item active" onclick="switchTab('comma')">逗號分隔</a>
                     <a class="item" onclick="switchTab('list')">全列表</a>
+                    <a class="item" onclick="switchTab('sheet')">Sheet格式</a>
                 </div>
+                
                 <div id="commaContent" class="tab-content active">
-                    <div id="commaResult" class="result-text"></div>
+                    <div class="format-options">
+                        <button class="copy-button" onclick="copyToClipboard('commaResult')">複製逗號分隔</button>
+                    </div>
+                    <div class="result-container">
+                        <div id="commaResult" class="result-text"></div>
+                        <div class="copy-message">已複製!</div>
+                    </div>
                 </div>
+                
                 <div id="listContent" class="tab-content">
-                    <div id="listResult" class="result-text"></div>
+                    <div class="format-options">
+                        <button class="copy-button" onclick="copyToClipboard('listResult')">複製列表</button>
+                    </div>
+                    <div class="result-container">
+                        <div id="listResult" class="result-text"></div>
+                        <div class="copy-message">已複製!</div>
+                    </div>
+                </div>
+                
+                <div id="sheetContent" class="tab-content">
+                    <div class="format-options">
+                        <button class="copy-button" onclick="copyToClipboard('sheetResult')">複製 Sheet 格式</button>
+                    </div>
+                    <div class="result-container">
+                        <div id="sheetResult" class="result-text"></div>
+                        <div class="copy-message">已複製!</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <script>
         function extractEmails(text) {
             const emailPattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
             const matches = text.match(emailPattern) || [];
             return [...new Set(matches)].sort();
         }
-
+        
         function extractAndDisplay() {
             const content = document.getElementById('inputText').value;
             const emails = extractEmails(content);
@@ -74,8 +136,12 @@
             document.getElementById('count').textContent = `信箱數量：${emails.length}`;
             document.getElementById('commaResult').textContent = emails.join(',');
             document.getElementById('listResult').textContent = emails.join('\n');
+            
+            // 針對Google Sheet的格式，每個郵件獨立一格
+            // 當複製並貼上到Sheet時，每個郵件會自動填入不同的儲存格
+            document.getElementById('sheetResult').textContent = emails.join('\n');
         }
-
+        
         function switchTab(tabName) {
             // 移除所有 active 類別
             document.querySelectorAll('.ts-tab .item').forEach(tab => {
@@ -84,10 +150,28 @@
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
-
             // 添加 active 到選中的元素
             document.querySelector(`.ts-tab .item[onclick*="${tabName}"]`).classList.add('active');
             document.getElementById(`${tabName}Content`).classList.add('active');
+        }
+        
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // 顯示已複製訊息
+                const container = document.getElementById(elementId).parentElement;
+                const message = container.querySelector('.copy-message');
+                message.style.display = 'block';
+                
+                // 2秒後隱藏訊息
+                setTimeout(() => {
+                    message.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請手動選取文字後複製');
+            });
         }
     </script>
 </body>
