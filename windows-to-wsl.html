@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 路徑轉換成 WSL 路徑</title>
+    <!-- Tocas UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+        }
+        .path-example {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .ts-notice {
+            margin: 1rem 0;
+        }
+        .result-container {
+            position: relative;
+        }
+        .copy-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            z-index: 10;
+        }
+        .copy-success {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 128, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .options-container {
+            margin: 1rem 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .history-container {
+            margin-top: 2rem;
+            border-top: 1px solid #eee;
+            padding-top: 1rem;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+        .history-path {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .history-actions {
+                margin-top: 8px;
+                align-self: flex-end;
+            }
+            .copy-button {
+                position: static;
+                margin-top: 10px;
+                width: 100%;
+            }
+            .copy-success {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ts-container">
+        <!-- 導航欄 (保持和其他工具一致) -->
+        <div class="ts-tab is-fluid">
+            <a class="item" href="text-stats.html">文字統計</a>
+            <a class="item" href="chinese-conversion.html">繁簡轉換</a>
+            <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
+            <a class="item is-active" href="windows-to-wsl.html">Windows 轉 WSL 路徑</a>
+        </div>
+
+        <h1 class="ts-header">Windows 路徑轉換成 WSL 路徑</h1>
+        
+        <div class="ts-notice is-info">
+            <div class="content">
+                <p>在 WSL 中，Windows 的磁碟會掛載在 <code>/mnt/</code> 下，例如：</p>
+                <p>Windows 路徑: <code>C:\Users\username\Documents\file.txt</code></p>
+                <p>WSL 路徑: <code>/mnt/c/Users/username/Documents/file.txt</code></p>
+            </div>
+        </div>
+        
+        <div class="ts-form">
+            <div class="field">
+                <label for="windows-path">Windows 路徑</label>
+                <input type="text" id="windows-path" class="ts-input" placeholder="例如: C:\Users\username\Documents\file.txt">
+                <div class="path-example">支援 Windows 常見格式，如 <code>C:\Users\username</code> 或 <code>\\server\share</code></div>
+            </div>
+            
+            <div class="options-container">
+                <h5>選項</h5>
+                <div class="ts-checkbox">
+                    <input id="slash-option" type="checkbox" checked>
+                    <label for="slash-option">自動轉換反斜線 ( \ ) 為斜線 ( / )</label>
+                </div>
+                <div class="ts-checkbox">
+                    <input id="lowercase-option" type="checkbox" checked>
+                    <label for="lowercase-option">轉換磁碟代號為小寫 (C → c)</label>
+                </div>
+                <div class="ts-checkbox">
+                    <input id="network-path-option" type="checkbox" checked>
+                    <label for="network-path-option">轉換網路路徑 (\\server\share → /mnt/wsl/share)</label>
+                </div>
+            </div>
+            
+            <button class="ts-button" onclick="convertPath()">轉換</button>
+            <button class="ts-button is-secondary" onclick="clearInputs()">清除</button>
+            
+            <div class="field">
+                <label for="wsl-path">WSL 路徑</label>
+                <div class="result-container">
+                    <input type="text" id="wsl-path" class="ts-input" readonly>
+                    <button class="copy-button ts-button is-small is-circular" onclick="copyToClipboard('wsl-path')">複製</button>
+                    <div class="copy-success">已複製！</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="history-container">
+            <div class="ts-space"></div>
+            <h3 class="ts-header">轉換記錄</h3>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <script>
+        // 保存轉換歷史
+        let conversionHistory = [];
+        const MAX_HISTORY = 10;
+        
+        // 初始化頁面時，從 localStorage 載入歷史記錄
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHistory();
+            document.getElementById('windows-path').addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    convertPath();
+                }
+            });
+        });
+        
+        function convertPath() {
+            const windowsPath = document.getElementById('windows-path').value.trim();
+            if (!windowsPath) return;
+            
+            const slashOption = document.getElementById('slash-option').checked;
+            const lowercaseOption = document.getElementById('lowercase-option').checked;
+            const networkPathOption = document.getElementById('network-path-option').checked;
+            
+            let wslPath = '';
+            
+            // 檢查是否為網路路徑
+            if (windowsPath.startsWith('\\\\') && networkPathOption) {
+                // 網路路徑格式: \\server\share\path
+                let networkPath = windowsPath.replace(/\\\\/g, '');
+                networkPath = networkPath.replace(/\\/g, '/');
+                wslPath = `/mnt/wsl/${networkPath}`;
+            } else {
+                // 標準 Windows 路徑
+                // 移除可能的前後空格，並確保是有效的 Windows 路徑
+                let normalizedPath = windowsPath;
+                
+                // 轉換反斜線為斜線
+                if (slashOption) {
+                    normalizedPath = normalizedPath.replace(/\\/g, '/');
+                }
+                
+                // 檢查是否為絕對路徑 (有磁碟代號)
+                const driveMatch = normalizedPath.match(/^([a-zA-Z]):(.*)$/);
+                if (driveMatch) {
+                    const driveLetter = lowercaseOption ? driveMatch[1].toLowerCase() : driveMatch[1];
+                    const pathPart = driveMatch[2];
+                    
+                    wslPath = `/mnt/${driveLetter}${pathPart}`;
+                } else {
+                    // 相對路徑或其他格式，無法轉換
+                    wslPath = '錯誤: 無法識別的 Windows 路徑格式';
+                }
+            }
+            
+            document.getElementById('wsl-path').value = wslPath;
+            
+            // 添加到歷史記錄
+            if (wslPath !== '錯誤: 無法識別的 Windows 路徑格式') {
+                addToHistory(windowsPath, wslPath);
+            }
+        }
+        
+        function clearInputs() {
+            document.getElementById('windows-path').value = '';
+            document.getElementById('wsl-path').value = '';
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            // 顯示複製成功訊息
+            const successMsg = element.parentElement.querySelector('.copy-success');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 1500);
+        }
+        
+        function addToHistory(windowsPath, wslPath) {
+            // 檢查是否已在歷史記錄中
+            const existingIndex = conversionHistory.findIndex(item => item.windows === windowsPath);
+            if (existingIndex !== -1) {
+                // 移除舊記錄
+                conversionHistory.splice(existingIndex, 1);
+            }
+            
+            // 添加到歷史記錄的開頭
+            conversionHistory.unshift({
+                windows: windowsPath,
+                wsl: wslPath,
+                timestamp: Date.now()
+            });
+            
+            // 保持歷史記錄不超過最大數量
+            if (conversionHistory.length > MAX_HISTORY) {
+                conversionHistory.pop();
+            }
+            
+            // 更新 UI 和儲存記錄
+            renderHistory();
+            saveHistory();
+        }
+        
+        function renderHistory() {
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '';
+            
+            if (conversionHistory.length === 0) {
+                historyList.innerHTML = '<div class="ts-text is-secondary">尚無轉換記錄</div>';
+                return;
+            }
+            
+            conversionHistory.forEach((item, index) => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                // 建立路徑顯示部分
+                const pathInfo = document.createElement('div');
+                pathInfo.className = 'history-path';
+                pathInfo.innerHTML = `
+                    <div class="ts-text is-bold">${item.windows}</div>
+                    <div class="ts-text">${item.wsl}</div>
+                `;
+                
+                // 建立操作按鈕部分
+                const actions = document.createElement('div');
+                actions.className = 'history-actions';
+                actions.innerHTML = `
+                    <button class="ts-button is-small is-icon" onclick="reloadHistory(${index})">
+                        <span class="ts-icon is-refresh-icon"></span>
+                    </button>
+                    <button class="ts-button is-small is-icon is-negative" onclick="removeHistory(${index})">
+                        <span class="ts-icon is-trash-icon"></span>
+                    </button>
+                `;
+                
+                historyItem.appendChild(pathInfo);
+                historyItem.appendChild(actions);
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        function reloadHistory(index) {
+            if (index >= 0 && index < conversionHistory.length) {
+                document.getElementById('windows-path').value = conversionHistory[index].windows;
+                document.getElementById('wsl-path').value = conversionHistory[index].wsl;
+            }
+        }
+        
+        function removeHistory(index) {
+            if (index >= 0 && index < conversionHistory.length) {
+                conversionHistory.splice(index, 1);
+                renderHistory();
+                saveHistory();
+            }
+        }
+        
+        function clearHistory() {
+            conversionHistory = [];
+            renderHistory();
+            saveHistory();
+        }
+        
+        function saveHistory() {
+            localStorage.setItem('wslPathHistory', JSON.stringify(conversionHistory));
+        }
+        
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('wslPathHistory');
+            if (savedHistory) {
+                try {
+                    conversionHistory = JSON.parse(savedHistory);
+                    renderHistory();
+                } catch (e) {
+                    console.error('無法載入歷史記錄:', e);
+                    conversionHistory = [];
+                }
+            }
+        }
+    </script>
+</body>
+</html>
