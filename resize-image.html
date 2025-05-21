@@ -3,35 +3,36 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>縮小圖片</title>
-    <!-- Tocas UI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <meta name="description" content="縮小圖片" />
+    <meta name="keywords" content="縮小圖片,工具" />
+    <meta name="author" content="FeiFei" />
   </head>
   <body>
-    <div class="ts-container">
+    <div class="container mx-auto p-4">
       <!-- 導航欄 -->
-      <div class="ts-tab is-fluid">
-        <a class="item" href="text-stats.html">文字統計</a>
-        <a class="item" href="chinese-conversion.html">繁簡轉換</a>
-        <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
-        <a class="item is-active" href="resize-image.html">PDF 轉 PNG</a>
+      <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
+        <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
+        <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
+        <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="resize-image.html">PDF 轉 PNG</a>
       </div>
-      <h1 class="ts-header">縮小圖片</h1>
-      <div class="ts-form">
+      <h1 class="text-2xl font-bold mb-4">縮小圖片</h1>
+      <div class="space-y-4 my-4">
         <div class="field">
           <label for="imageInput">選擇圖片</label>
-          <input type="file" id="imageInput" class="ts-input" multiple>
+          <input type="file" id="imageInput" class="w-full p-2 border rounded" multiple>
         </div>
         <div class="field">
           <label for="width">寬度</label>
-          <input type="number" id="width" class="ts-input" multiple>
+          <input type="number" id="width" class="w-full p-2 border rounded" multiple>
         </div>
         <div class="field">
           <label for="height">高度</label>
-          <input type="number" id="height" class="ts-input" multiple>
+          <input type="number" id="height" class="w-full p-2 border rounded" multiple>
         </div>
-        <button id="processButton" class="ts-button ts-primary">處理圖片</button>
+        <button id="processButton" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">處理圖片</button>
       </div>
       <canvas id="canvas" style="border:1px solid black;"></canvas>
     </div>

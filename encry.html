@@ -3,53 +3,54 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>編碼/雜湊/加解密</title>
-    <!-- Tocas UI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <meta name="description" content="編碼/雜湊/加解密" />
+    <meta name="keywords" content="編碼/雜湊/加解密,工具" />
+    <meta name="author" content="FeiFei" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
   </head>
   <body>
-    <div class="ts-container">
+    <div class="container mx-auto p-4">
       <!-- 導航欄 -->
-      <div class="ts-tab is-fluid">
-        <a class="item" href="text-stats.html">文字統計</a>
-        <a class="item" href="chinese-conversion.html">繁簡轉換</a>
-        <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
-        <a class="item" href="resize-image.html">縮小圖片</a>
-        <a class="item  is-active" href="encry.html">編碼/雜湊/加解密</a>
+      <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
+        <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
+        <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
+        <a class="px-4 py-2 text-blue-600" href="resize-image.html">縮小圖片</a>
+        <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="encry.html">編碼/雜湊/加解密</a>
       </div>
      <div class="container">
-  <h1 class="ts-header">Encryption Tools</h1>
-  <div class="ts-form">
-    <h2 class="ts-header">Base64 Encode/Decode</h2>
+  <h1 class="text-2xl font-bold mb-4">Encryption Tools</h1>
+  <div class="space-y-4 my-4">
+    <h2 class="text-2xl font-bold mb-4">Base64 Encode/Decode</h2>
     <div class="field">
-      <input type="text" id="base64Input" class="ts-input" placeholder="Enter text for Base64">
-      <button onclick="encodeBase64()" class="ts-button ts-primary">Encode/進行編碼</button>
-      <button onclick="decodeBase64()" class="ts-button ts-primary">Decode/進行解碼</button>
+      <input type="text" id="base64Input" class="w-full p-2 border rounded" placeholder="Enter text for Base64">
+      <button onclick="encodeBase64()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Encode/進行編碼</button>
+      <button onclick="decodeBase64()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Decode/進行解碼</button>
       <p>Result: <span id="base64Result"></span></p>
     </div>
 
-    <h2 class="ts-header">MD5 Hash</h2>
+    <h2 class="text-2xl font-bold mb-4">MD5 Hash</h2>
     <div class="field">
-      <input type="text" id="md5Input" class="ts-input" placeholder="Enter text for MD5">
-      <button onclick="generateMD5()" class="ts-button ts-primary">Hash/雜湊</button>
+      <input type="text" id="md5Input" class="w-full p-2 border rounded" placeholder="Enter text for MD5">
+      <button onclick="generateMD5()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Hash/雜湊</button>
       <p>Result: <span id="md5Result"></span></p>
     </div>
 
-    <h2 class="ts-header">SHA-256 Hash</h2>
+    <h2 class="text-2xl font-bold mb-4">SHA-256 Hash</h2>
     <div class="field">
-      <input type="text" id="sha256Input" class="ts-input" placeholder="Enter text for SHA-256">
-      <button onclick="generateSHA256()" class="ts-button ts-primary">Hash/雜湊</button>
+      <input type="text" id="sha256Input" class="w-full p-2 border rounded" placeholder="Enter text for SHA-256">
+      <button onclick="generateSHA256()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Hash/雜湊</button>
       <p>Result: <span id="sha256Result"></span></p>
     </div>
 
-    <h2 class="ts-header">AES Encrypt/Decrypt</h2>
+    <h2 class="text-2xl font-bold mb-4">AES Encrypt/Decrypt</h2>
     <div class="field">
-      <input type="text" id="aesInput" class="ts-input" placeholder="Enter text for AES Encryption">
-      <input type="text" id="aesKey" class="ts-input" placeholder="Enter a secret key">
-      <button onclick="encryptAES()" class="ts-button ts-primary">Encrypt/加密</button>
-      <button onclick="decryptAES()" class="ts-button ts-primary">Decrypt/解密</button>
+      <input type="text" id="aesInput" class="w-full p-2 border rounded" placeholder="Enter text for AES Encryption">
+      <input type="text" id="aesKey" class="w-full p-2 border rounded" placeholder="Enter a secret key">
+      <button onclick="encryptAES()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Encrypt/加密</button>
+      <button onclick="decryptAES()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Decrypt/解密</button>
       <p>Result: <span id="aesResult"></span></p>
     </div>
   </div>

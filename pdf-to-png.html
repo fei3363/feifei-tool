@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>PDF 轉 PNG </title>
-    <!-- Tocas UI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <meta name="description" content="PDF 轉 PNG " />
+    <meta name="keywords" content="PDF 轉 PNG ,工具" />
+    <meta name="author" content="FeiFei" />
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <style>
@@ -18,23 +19,23 @@
     </style>
 </head>
 <body>
-    <div class="ts-container">
+    <div class="container mx-auto p-4">
 
     <!-- 導航欄 -->
-    <div class="ts-tab is-fluid">
-        <a class="item" href="text-stats.html">文字統計</a>
-        <a class="item" href="chinese-conversion.html">繁簡轉換</a>
-        <a class="item is-active" href="pdf-to-png.html">PDF 轉 PNG</a>
+    <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
+        <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
+        <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
+        <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="pdf-to-png.html">PDF 轉 PNG</a>
     </div>
 
 
-        <h1 class="ts-header">PDF 轉 PNG 轉換器</h1>
-        <div class="ts-form">
+        <h1 class="text-2xl font-bold mb-4">PDF 轉 PNG 轉換器</h1>
+        <div class="space-y-4 my-4">
             <div class="field">
                 <label for="pdfInput">選擇PDF文件：</label>
-                <input type="file" id="pdfInput" class="ts-input" multiple accept="application/pdf">
+                <input type="file" id="pdfInput" class="w-full p-2 border rounded" multiple accept="application/pdf">
             </div>
-            <button id="convertButton" class="ts-button ts-primary">確認轉換</button>
+            <button id="convertButton" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">確認轉換</button>
         </div>
         <div id="images"></div>
     </div>
@@ -58,7 +59,7 @@
                     const page = await pdfDoc.getPage(pageNum);
                     const viewport = page.getViewport({ scale: 1.5 });
                     const canvas = document.createElement('canvas');
-                    canvas.classList.add('ts-image');
+                    canvas.classList.add('rounded');
                     const ctx = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;

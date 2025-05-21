@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Windows 路徑轉換成 WSL 路徑</title>
-    <!-- Tocas UI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <meta name="description" content="Windows 路徑轉換成 WSL 路徑" />
+    <meta name="keywords" content="Windows 路徑轉換成 WSL 路徑,工具" />
+    <meta name="author" content="FeiFei" />
     <!-- Noto Sans TC 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,9 +20,6 @@
             color: #666;
             font-size: 0.9em;
             margin-top: 5px;
-        }
-        .ts-notice {
-            margin: 1rem 0;
         }
         .result-container {
             position: relative;
@@ -91,18 +89,18 @@
     </style>
 </head>
 <body>
-    <div class="ts-container">
+    <div class="container mx-auto p-4">
         <!-- 導航欄 (保持和其他工具一致) -->
-        <div class="ts-tab is-fluid">
-            <a class="item" href="text-stats.html">文字統計</a>
-            <a class="item" href="chinese-conversion.html">繁簡轉換</a>
-            <a class="item" href="pdf-to-png.html">PDF 轉 PNG</a>
-            <a class="item is-active" href="windows-to-wsl.html">Windows 轉 WSL 路徑</a>
+        <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
+            <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
+            <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
+            <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
+            <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="windows-to-wsl.html">Windows 轉 WSL 路徑</a>
         </div>
 
-        <h1 class="ts-header">Windows 路徑轉換成 WSL 路徑</h1>
+        <h1 class="text-2xl font-bold mb-4">Windows 路徑轉換成 WSL 路徑</h1>
         
-        <div class="ts-notice is-info">
+        <div class="bg-blue-100 border-l-4 border-blue-500 p-4 mb-4 text-blue-700">
             <div class="content">
                 <p>在 WSL 中，Windows 的磁碟會掛載在 <code>/mnt/</code> 下，例如：</p>
                 <p>Windows 路徑: <code>C:\Users\username\Documents\file.txt</code></p>
@@ -110,45 +108,45 @@
             </div>
         </div>
         
-        <div class="ts-form">
+        <div class="space-y-4 my-4">
             <div class="field">
                 <label for="windows-path">Windows 路徑</label>
-                <input type="text" id="windows-path" class="ts-input" placeholder="例如: C:\Users\username\Documents\file.txt">
+                <input type="text" id="windows-path" class="w-full p-2 border rounded" placeholder="例如: C:\Users\username\Documents\file.txt">
                 <div class="path-example">支援 Windows 常見格式，如 <code>C:\Users\username</code> 或 <code>\\server\share</code></div>
             </div>
             
             <div class="options-container">
                 <h5>選項</h5>
-                <div class="ts-checkbox">
+                <div class="flex items-center space-x-2">
                     <input id="slash-option" type="checkbox" checked>
                     <label for="slash-option">自動轉換反斜線 ( \ ) 為斜線 ( / )</label>
                 </div>
-                <div class="ts-checkbox">
+                <div class="flex items-center space-x-2">
                     <input id="lowercase-option" type="checkbox" checked>
                     <label for="lowercase-option">轉換磁碟代號為小寫 (C → c)</label>
                 </div>
-                <div class="ts-checkbox">
+                <div class="flex items-center space-x-2">
                     <input id="network-path-option" type="checkbox" checked>
                     <label for="network-path-option">轉換網路路徑 (\\server\share → /mnt/wsl/share)</label>
                 </div>
             </div>
             
-            <button class="ts-button" onclick="convertPath()">轉換</button>
-            <button class="ts-button is-secondary" onclick="clearInputs()">清除</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="convertPath()">轉換</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded is-secondary" onclick="clearInputs()">清除</button>
             
             <div class="field">
                 <label for="wsl-path">WSL 路徑</label>
                 <div class="result-container">
-                    <input type="text" id="wsl-path" class="ts-input" readonly>
-                    <button class="copy-button ts-button is-small is-circular" onclick="copyToClipboard('wsl-path')">複製</button>
+                    <input type="text" id="wsl-path" class="w-full p-2 border rounded" readonly>
+                    <button class="copy-button bg-blue-500 text-white px-4 py-2 rounded  " onclick="copyToClipboard('wsl-path')">複製</button>
                     <div class="copy-success">已複製！</div>
                 </div>
             </div>
         </div>
         
         <div class="history-container">
-            <div class="ts-space"></div>
-            <h3 class="ts-header">轉換記錄</h3>
+            <div class="my-2"></div>
+            <h3 class="text-2xl font-bold mb-4">轉換記錄</h3>
             <div id="history-list"></div>
         </div>
     </div>
@@ -263,7 +261,7 @@
             historyList.innerHTML = '';
             
             if (conversionHistory.length === 0) {
-                historyList.innerHTML = '<div class="ts-text is-secondary">尚無轉換記錄</div>';
+                historyList.innerHTML = '<div class="text-gray-700 is-secondary">尚無轉換記錄</div>';
                 return;
             }
             
@@ -275,19 +273,19 @@
                 const pathInfo = document.createElement('div');
                 pathInfo.className = 'history-path';
                 pathInfo.innerHTML = `
-                    <div class="ts-text is-bold">${item.windows}</div>
-                    <div class="ts-text">${item.wsl}</div>
+                    <div class="text-gray-700 is-bold">${item.windows}</div>
+                    <div class="text-gray-700">${item.wsl}</div>
                 `;
                 
                 // 建立操作按鈕部分
                 const actions = document.createElement('div');
                 actions.className = 'history-actions';
                 actions.innerHTML = `
-                    <button class="ts-button is-small is-icon" onclick="reloadHistory(${index})">
-                        <span class="ts-icon is-refresh-icon"></span>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded  " onclick="reloadHistory(${index})">
+                        21bb
                     </button>
-                    <button class="ts-button is-small is-icon is-negative" onclick="removeHistory(${index})">
-                        <span class="ts-icon is-trash-icon"></span>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded   bg-red-500" onclick="removeHistory(${index})">
+                        
                     </button>
                 `;
                 
