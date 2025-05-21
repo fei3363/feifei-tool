@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>盤古之白自動排版</title>
-    <!-- Tocas UI -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tocas/4.2.5/tocas.min.js"></script>
+    <meta name="description" content="盤古之白自動排版" />
+    <meta name="keywords" content="盤古之白自動排版,工具" />
+    <meta name="author" content="FeiFei" />
     <!-- Noto Sans TC 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,19 +19,19 @@
 </head>
 <body>
 
-<div class="ts-container">
-    <h1 class="ts-header">盤古之白自動排版</h1>
-    <div class="ts-form">
+<div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4">盤古之白自動排版</h1>
+    <div class="space-y-4 my-4">
         <div class="field">
             <label for="inputText">輸入文字:</label>
-            <textarea class="ts-textarea" id="inputText" placeholder="在這裡輸入文字...">當你凝視著bug，bug也凝視著你</textarea>
+            <textarea class="w-full p-2 border rounded" id="inputText" placeholder="在這裡輸入文字...">當你凝視著bug，bug也凝視著你</textarea>
         </div>
         <div class="field">
-            <button class="ts-button" onclick="adjustSpacing()">自動排版</button>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="adjustSpacing()">自動排版</button>
         </div>
         <div class="field">
             <label for="outputText">排版後的文字:</label>
-            <textarea class="ts-textarea" id="outputText" readonly></textarea>
+            <textarea class="w-full p-2 border rounded" id="outputText" readonly></textarea>
         </div>
     </div>
 </div>
