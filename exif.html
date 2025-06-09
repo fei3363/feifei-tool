@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>照片 Exif 資料讀取器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3a86ff;
+            --secondary-color: #8338ec;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #dee2e6;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-input-wrapper:hover {
+            border-color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .file-input-wrapper:hover .upload-icon {
+            transform: translateY(-5px);
+        }
+
+        .preview-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: none;
+        }
+
+        .exif-container {
+            display: none;
+            width: 100%;
+            margin-top: 30px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .exif-data {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .exif-section {
+            margin-bottom: 20px;
+        }
+
+        .exif-section h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .exif-item {
+            display: flex;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .exif-item:hover {
+            background-color: rgba(58, 134, 255, 0.1);
+        }
+
+        .exif-label {
+            flex: 1;
+            font-weight: 600;
+            padding-right: 10px;
+        }
+
+        .exif-value {
+            flex: 2;
+            word-break: break-word;
+        }
+
+        .no-exif {
+            text-align: center;
+            color: #dc3545;
+            font-weight: 500;
+            margin: 20px 0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .map-container {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .theme-toggle span {
+            margin-left: 5px;
+        }
+
+        /* Dark theme */
+        body.dark-theme {
+            --primary-color: #00b4d8;
+            --secondary-color: #48cae4;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #333;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .exif-data {
+                grid-template-columns: 1fr;
+            }
+            
+            .file-input-wrapper {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle" id="themeToggle">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" id="themeIcon">
+            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+        </svg>
+        <span id="themeText">切換為暗色模式</span>
+    </div>
+
+    <div class="container">
+        <h1>照片 Exif 資料讀取器</h1>
+        
+        <div class="upload-container fade-in">
+            <div class="file-input-wrapper" id="dropZone">
+                <input type="file" id="imageInput" accept="image/*" />
+                <div class="upload-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>
+                    <p>點擊或拖放圖片到此處</p>
+                </div>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>讀取中...</p>
+            </div>
+
+            <div class="preview-container">
+                <img src="" alt="圖片預覽" class="image-preview" id="imagePreview">
+            </div>
+        </div>
+
+        <div class="exif-container" id="exifContainer">
+            <div class="exif-data" id="exifData"></div>
+            <div class="map-container" id="mapContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const exifContainer = document.getElementById('exifContainer');
+            const exifData = document.getElementById('exifData');
+            const loading = document.getElementById('loading');
+            const dropZone = document.getElementById('dropZone');
+            const mapContainer = document.getElementById('mapContainer');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeText = document.getElementById('themeText');
+            const themeIcon = document.getElementById('themeIcon');
+
+            // Theme toggle functionality
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark-theme');
+                
+                if (document.body.classList.contains('dark-theme')) {
+                    themeText.textContent = '切換為亮色模式';
+                    // Moon icon
+                    themeIcon.innerHTML = '<path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>';
+                } else {
+                    themeText.textContent = '切換為暗色模式';
+                    // Sun icon
+                    themeIcon.innerHTML = '<path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>';
+                }
+            });
+
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                dropZone.style.borderColor = 'var(--secondary-color)';
+                dropZone.style.transform = 'scale(1.02)';
+            }
+
+            function unhighlight() {
+                dropZone.style.borderColor = 'var(--primary-color)';
+                dropZone.style.transform = 'scale(1)';
+            }
+
+            dropZone.addEventListener('drop', function(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                
+                if (files.length) {
+                    imageInput.files = files;
+                    handleFiles(files);
+                }
+            });
+
+            // Handle file selection
+            imageInput.addEventListener('change', function(e) {
+                if (imageInput.files.length) {
+                    handleFiles(imageInput.files);
+                }
+            });
+
+            function handleFiles(files) {
+                const file = files[0];
+                
+                if (!file.type.match('image.*')) {
+                    alert('請選擇圖片檔案！');
+                    return;
+                }
+
+                // Show loading indicator
+                loading.style.display = 'block';
+                
+                // Preview image
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                    imagePreview.classList.add('fade-in');
+                    
+                    // Read EXIF data
+                    readExifData(file);
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function readExifData(file) {
+                EXIF.getData(file, function() {
+                    loading.style.display = 'none';
+                    exifContainer.style.display = 'block';
+                    exifContainer.classList.add('fade-in');
+                    
+                    const allTags = EXIF.getAllTags(this);
+                    
+                    if (Object.keys(allTags).length === 0) {
+                        exifData.innerHTML = '<div class="no-exif">這張圖片中沒有找到任何 Exif 資料</div>';
+                        return;
+                    }
+                    
+                    displayExifData(allTags);
+                    
+                    // Check for GPS data
+                    if (allTags.GPSLatitude && allTags.GPSLongitude) {
+                        const lat = convertDMSToDD(allTags.GPSLatitude, allTags.GPSLatitudeRef);
+                        const lng = convertDMSToDD(allTags.GPSLongitude, allTags.GPSLongitudeRef);
+                        displayMap(lat, lng);
+                    } else {
+                        mapContainer.style.display = 'none';
+                    }
+                });
+            }
+
+            function displayExifData(tags) {
+                exifData.innerHTML = '';
+                
+                // Group tags by category
+                const categories = {
+                    '基本資訊': ['Make', 'Model', 'Software', 'DateTime', 'DateTimeOriginal', 'DateTimeDigitized', 'ImageDescription', 'Orientation'],
+                    '相機設定': ['ExposureTime', 'FNumber', 'ISOSpeedRatings', 'ExposureProgram', 'ApertureValue', 'MaxApertureValue', 'ExposureBiasValue', 'MeteringMode', 'Flash', 'FocalLength', 'WhiteBalance', 'DigitalZoomRatio'],
+                    '圖片資訊': ['XResolution', 'YResolution', 'ResolutionUnit', 'Compression', 'JPEGInterchangeFormat', 'JPEGInterchangeFormatLength', 'YCbCrPositioning', 'ExifImageWidth', 'ExifImageHeight', 'ColorSpace', 'ComponentsConfiguration'],
+                    'GPS資訊': ['GPSLatitudeRef', 'GPSLatitude', 'GPSLongitudeRef', 'GPSLongitude', 'GPSAltitudeRef', 'GPSAltitude', 'GPSTimeStamp', 'GPSProcessingMethod', 'GPSDateStamp'],
+                    '其他資訊': []
+                };
+                
+                // Sort tags into categories
+                Object.keys(tags).forEach(tag => {
+                    let categorized = false;
+                    
+                    for (const category in categories) {
+                        if (categories[category].includes(tag)) {
+                            categorized = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!categorized) {
+                        categories['其他資訊'].push(tag);
+                    }
+                });
+                
+                // Display each category
+                for (const category in categories) {
+                    const tagsInCategory = categories[category].filter(tag => tags[tag] !== undefined);
+                    
+                    if (tagsInCategory.length > 0) {
+                        const section = document.createElement('div');
+                        section.className = 'exif-section';
+                        
+                        const heading = document.createElement('h3');
+                        heading.textContent = category;
+                        section.appendChild(heading);
+                        
+                        tagsInCategory.forEach(tag => {
+                            const item = document.createElement('div');
+                            item.className = 'exif-item';
+                            
+                            const label = document.createElement('div');
+                            label.className = 'exif-label';
+                            label.textContent = getTagLabel(tag);
+                            
+                            const value = document.createElement('div');
+                            value.className = 'exif-value';
+                            value.textContent = formatExifValue(tag, tags[tag]);
+                            
+                            item.appendChild(label);
+                            item.appendChild(value);
+                            section.appendChild(item);
+                        });
+                        
+                        exifData.appendChild(section);
+                    }
+                }
+            }
+
+            function getTagLabel(tag) {
+                const labels = {
+                    'Make': '相機製造商',
+                    'Model': '相機型號',
+                    'Software': '軟體',
+                    'DateTime': '修改日期',
+                    'DateTimeOriginal': '拍攝日期',
+                    'DateTimeDigitized': '數位化日期',
+                    'ImageDescription': '圖片描述',
+                    'Orientation': '方向',
+                    'ExposureTime': '曝光時間',
+                    'FNumber': '光圈值',
+                    'ISOSpeedRatings': 'ISO感光度',
+                    'ExposureProgram': '曝光程序',
+                    'ApertureValue': '光圈值',
+                    'MaxApertureValue': '最大光圈值',
+                    'ExposureBiasValue': '曝光補償',
+                    'MeteringMode': '測光模式',
+                    'Flash': '閃光燈',
+                    'FocalLength': '焦距',
+                    'WhiteBalance': '白平衡',
+                    'DigitalZoomRatio': '數位變焦比例',
+                    'XResolution': 'X解析度',
+                    'YResolution': 'Y解析度',
+                    'ResolutionUnit': '解析度單位',
+                    'Compression': '壓縮',
+                    'JPEGInterchangeFormat': 'JPEG格式',
+                    'JPEGInterchangeFormatLength': 'JPEG格式長度',
+                    'YCbCrPositioning': 'YCbCr定位',
+                    'ExifImageWidth': '圖片寬度',
+                    'ExifImageHeight': '圖片高度',
+                    'ColorSpace': '色彩空間',
+                    'ComponentsConfiguration': '組件設定',
+                    'GPSLatitudeRef': '緯度參考',
+                    'GPSLatitude': '緯度',
+                    'GPSLongitudeRef': '經度參考',
+                    'GPSLongitude': '經度',
+                    'GPSAltitudeRef': '高度參考',
+                    'GPSAltitude': '高度',
+                    'GPSTimeStamp': 'GPS時間戳記',
+                    'GPSProcessingMethod': 'GPS處理方法',
+                    'GPSDateStamp': 'GPS日期戳記',
+                };
+                
+                return labels[tag] || tag;
+            }
+
+            function formatExifValue(tag, value) {
+                switch (tag) {
+                    case 'ExposureTime':
+                        // Convert exposure time to fraction (e.g., 1/125)
+                        if (value < 1) {
+                            return `1/${Math.round(1 / value)}秒`;
+                        } else {
+                            return `${value}秒`;
+                        }
+                    
+                    case 'FNumber':
+                        return `f/${value}`;
+                    
+                    case 'FocalLength':
+                        return `${value}mm`;
+                    
+                    case 'GPSLatitude':
+                    case 'GPSLongitude':
+                        return `${value[0]}° ${value[1]}' ${value[2]}"`;
+                    
+                    case 'Flash':
+                        const flashValues = {
+                            0x0000: '閃光燈未觸發',
+                            0x0001: '閃光燈觸發',
+                            0x0005: '閃光燈觸發，未偵測到回光',
+                            0x0007: '閃光燈觸發，偵測到回光',
+                            0x0008: '閃光燈未觸發，強制模式',
+                            0x0009: '閃光燈觸發，強制模式',
+                            0x000D: '閃光燈觸發，強制模式，未偵測到回光',
+                            0x000F: '閃光燈觸發，強制模式，偵測到回光',
+                            0x0010: '閃光燈未觸發，自動模式',
+                            0x0018: '閃光燈未觸發，自動模式，紅眼減少',
+                            0x0019: '閃光燈觸發，自動模式，紅眼減少',
+                            0x001D: '閃光燈觸發，自動模式，紅眼減少，未偵測到回光',
+                            0x001F: '閃光燈觸發，自動模式，紅眼減少，偵測到回光',
+                            0x0020: '無閃光燈功能',
+                            0x0041: '閃光燈觸發，紅眼減少',
+                            0x0045: '閃光燈觸發，紅眼減少，未偵測到回光',
+                            0x0047: '閃光燈觸發，紅眼減少，偵測到回光',
+                            0x0049: '閃光燈觸發，強制模式，紅眼減少',
+                            0x004D: '閃光燈觸發，強制模式，紅眼減少，未偵測到回光',
+                            0x004F: '閃光燈觸發，強制模式，紅眼減少，偵測到回光',
+                            0x0059: '閃光燈觸發，自動模式，紅眼減少',
+                            0x005D: '閃光燈觸發，自動模式，紅眼減少，未偵測到回光',
+                            0x005F: '閃光燈觸發，自動模式，紅眼減少，偵測到回光'
+                        };
+                        return flashValues[value] || `未知 (${value})`;
+                    
+                    case 'ExposureProgram':
+                        const expProgram = {
+                            0: '未定義',
+                            1: '手動',
+                            2: '程式自動',
+                            3: '光圈優先',
+                            4: '快門優先',
+                            5: '創意程式',
+                            6: '動作程式',
+                            7: '肖像模式',
+                            8: '風景模式'
+                        };
+                        return expProgram[value] || `未知 (${value})`;
+                    
+                    case 'MeteringMode':
+                        const meteringMode = {
+                            0: '未知',
+                            1: '平均',
+                            2: '中央重點',
+                            3: '點測光',
+                            4: '多點測光',
+                            5: '圖案',
+                            6: '部分',
+                            255: '其他'
+                        };
+                        return meteringMode[value] || `未知 (${value})`;
+                    
+                    case 'WhiteBalance':
+                        return value === 0 ? '自動' : '手動';
+                    
+                    case 'Orientation':
+                        const orientations = {
+                            1: '正常',
+                            2: '水平翻轉',
+                            3: '旋轉 180°',
+                            4: '垂直翻轉',
+                            5: '逆時針旋轉 90° 加上水平翻轉',
+                            6: '逆時針旋轉 90°',
+                            7: '順時針旋轉 90° 加上水平翻轉',
+                            8: '順時針旋轉 90°'
+                        };
+                        return orientations[value] || `未知 (${value})`;
+                    
+                    case 'ResolutionUnit':
+                        return value === 2 ? '英寸' : (value === 3 ? '厘米' : '未知');
+                    
+                    case 'ColorSpace':
+                        return value === 1 ? 'sRGB' : (value === 2 ? 'Adobe RGB' : `未知 (${value})`);
+                    
+                    case 'GPSLatitudeRef':
+                        return value === 'N' ? '北緯' : '南緯';
+                    
+                    case 'GPSLongitudeRef':
+                        return value === 'E' ? '東經' : '西經';
+                    
+                    case 'GPSAltitudeRef':
+                        return value === 0 ? '海平面之上' : '海平面之下';
+                    
+                    case 'ComponentsConfiguration':
+                        if (Array.isArray(value)) {
+                            const components = {
+                                1: 'Y',
+                                2: 'Cb',
+                                3: 'Cr',
+                                4: 'R',
+                                5: 'G',
+                                6: 'B'
+                            };
+                            return value.map(v => components[v] || v).join(', ');
+                        }
+                        return value.toString();
+                    
+                    default:
+                        if (value instanceof Array) {
+                            return value.join(', ');
+                        }
+                        return value.toString();
+                }
+            }
+
+            function convertDMSToDD(dms, ref) {
+                const degrees = dms[0];
+                const minutes = dms[1];
+                const seconds = dms[2];
+                
+                let dd = degrees + (minutes / 60) + (seconds / 3600);
+                
+                if (ref === 'S' || ref === 'W') {
+                    dd = -dd;
+                }
+                
+                return dd;
+            }
+
+            function displayMap(lat, lng) {
+                mapContainer.style.display = 'block';
+                mapContainer.innerHTML = `
+                    <div style="text-align: center; padding: 10px;">
+                        <p>照片拍攝地點：緯度 ${lat.toFixed(6)}，經度 ${lng.toFixed(6)}</p>
+                        <a href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" style="display: inline-block; background-color: var(--primary-color); color: white; padding: 8px 16px; border-radius: 4px; text-decoration: none; margin-top: 10px;">
+                            在 Google 地圖中查看
+                        </a>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
