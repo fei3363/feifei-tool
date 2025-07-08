@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>終端指令提取工具</title>
+    <meta name="description" content="終端指令提取工具 - 從終端輸出中提取執行的指令" />
+    <meta name="keywords" content="終端指令提取工具,命令行,shell,bash,工具" />
+    <meta name="author" content="FeiFei" />
+    <!-- Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: #f5f5f5;
+        }
+        .terminal-input {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre;
+            overflow-x: auto;
+            min-height: 300px;
+            resize: vertical;
+        }
+        .command-list {
+            background-color: #2d2d2d;
+            color: #00ff00;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .command-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background-color: #3a3a3a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.2s;
+        }
+        .command-item:hover {
+            background-color: #4a4a4a;
+        }
+        .command-text {
+            flex-grow: 1;
+        }
+        .copy-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+        .stats {
+            background-color: #e8f4fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #007bff;
+        }
+        .format-options {
+            margin: 15px 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .option-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .export-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .export-btn:hover {
+            background-color: #218838;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+        }
+        .highlight-prompt {
+            color: #ffd700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">終端指令提取工具</h1>
+        
+        <div class="bg-blue-100 border-l-4 border-blue-500 p-4 mb-4">
+            <p class="text-sm">從終端輸出中自動提取執行的指令，支援多種提示符格式。</p>
+            <p class="text-sm mt-1">支援格式：user@host:~$、root@host:#、[user@host ~]$ 等</p>
+        </div>
+
+        <div class="space-y-4">
+            <div class="field">
+                <label for="terminal-input" class="block mb-2 font-semibold">貼上終端輸出：</label>
+                <textarea 
+                    id="terminal-input" 
+                    class="terminal-input w-full"
+                    placeholder="fei@fei:~$ ls
+Desktop  Documents  Downloads
+fei@fei:~$ pwd
+/home/fei
+fei@fei:~$"
+                    rows="12"
+                ></textarea>
+            </div>
+
+            <div class="format-options">
+                <div class="option-group">
+                    <input type="checkbox" id="show-prompts" checked>
+                    <label for="show-prompts">顯示提示符</label>
+                </div>
+                <div class="option-group">
+                    <input type="checkbox" id="remove-duplicates">
+                    <label for="remove-duplicates">移除重複指令</label>
+                </div>
+                <div class="option-group">
+                    <input type="checkbox" id="highlight-prompts">
+                    <label for="highlight-prompts">高亮提示符</label>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button 
+                    onclick="extractCommands()" 
+                    class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition"
+                >
+                    提取指令
+                </button>
+                <button 
+                    onclick="clearAll()" 
+                    class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600 transition"
+                >
+                    清除
+                </button>
+            </div>
+
+            <div id="stats" class="stats" style="display: none;">
+                <p>找到 <span id="command-count" class="font-bold">0</span> 個指令</p>
+                <p class="text-sm mt-1">提示符類型：<span id="prompt-types"></span></p>
+            </div>
+
+            <div id="results" style="display: none;">
+                <h3 class="text-lg font-semibold mb-2">提取的指令：</h3>
+                <div class="export-buttons">
+                    <button onclick="copyAllCommands()" class="export-btn">
+                        複製全部
+                    </button>
+                    <button onclick="exportAsList()" class="export-btn">
+                        匯出為列表
+                    </button>
+                    <button onclick="exportAsScript()" class="export-btn">
+                        匯出為腳本
+                    </button>
+                </div>
+                <div id="command-list" class="command-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // 常見的終端提示符模式
+        const promptPatterns = [
+            // user@host:path$
+            /^([a-zA-Z0-9_-]+)@([a-zA-Z0-9_.-]+):([^$#]+)[$#]\s*/,
+            // [user@host path]$
+            /^\[([a-zA-Z0-9_-]+)@([a-zA-Z0-9_.-]+)\s+([^\]]+)\][$#]\s*/,
+            // user@host $
+            /^([a-zA-Z0-9_-]+)@([a-zA-Z0-9_.-]+)\s*[$#]\s*/,
+            // root@host:#
+            /^root@([a-zA-Z0-9_.-]+):([^#]+)#\s*/,
+            // $
+            /^[$#]\s+/,
+            // >
+            /^>\s+/
+        ];
+
+        let extractedCommands = [];
+
+        function extractCommands() {
+            const input = document.getElementById('terminal-input').value;
+            if (!input.trim()) {
+                showNotification('請輸入終端輸出內容', 'error');
+                return;
+            }
+
+            const lines = input.split('\n');
+            extractedCommands = [];
+            const promptTypes = new Set();
+            
+            lines.forEach(line => {
+                for (const pattern of promptPatterns) {
+                    const match = line.match(pattern);
+                    if (match) {
+                        const promptEnd = match[0].length;
+                        const command = line.substring(promptEnd).trim();
+                        
+                        if (command) {
+                            extractedCommands.push({
+                                prompt: match[0].trim(),
+                                command: command,
+                                fullLine: line
+                            });
+                            promptTypes.add(match[0].replace(/\s+$/, ''));
+                        }
+                        break;
+                    }
+                }
+            });
+
+            displayResults(promptTypes);
+        }
+
+        function displayResults(promptTypes) {
+            if (extractedCommands.length === 0) {
+                showNotification('未找到任何指令', 'warning');
+                document.getElementById('results').style.display = 'none';
+                document.getElementById('stats').style.display = 'none';
+                return;
+            }
+
+            // 更新統計
+            document.getElementById('command-count').textContent = extractedCommands.length;
+            document.getElementById('prompt-types').textContent = Array.from(promptTypes).join(', ');
+            document.getElementById('stats').style.display = 'block';
+
+            // 顯示指令列表
+            const commandList = document.getElementById('command-list');
+            commandList.innerHTML = '';
+
+            const showPrompts = document.getElementById('show-prompts').checked;
+            const removeDuplicates = document.getElementById('remove-duplicates').checked;
+            const highlightPrompts = document.getElementById('highlight-prompts').checked;
+
+            let commandsToShow = extractedCommands;
+            
+            if (removeDuplicates) {
+                const uniqueCommands = [];
+                const seen = new Set();
+                
+                extractedCommands.forEach(cmd => {
+                    if (!seen.has(cmd.command)) {
+                        seen.add(cmd.command);
+                        uniqueCommands.push(cmd);
+                    }
+                });
+                commandsToShow = uniqueCommands;
+            }
+
+            commandsToShow.forEach((cmd, index) => {
+                const commandItem = document.createElement('div');
+                commandItem.className = 'command-item';
+                
+                const commandText = document.createElement('div');
+                commandText.className = 'command-text';
+                
+                if (showPrompts) {
+                    if (highlightPrompts) {
+                        commandText.innerHTML = `<span class="highlight-prompt">${cmd.prompt}</span> ${cmd.command}`;
+                    } else {
+                        commandText.textContent = `${cmd.prompt} ${cmd.command}`;
+                    }
+                } else {
+                    commandText.textContent = cmd.command;
+                }
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = '複製';
+                copyBtn.onclick = () => copyCommand(cmd.command);
+                
+                commandItem.appendChild(commandText);
+                commandItem.appendChild(copyBtn);
+                commandList.appendChild(commandItem);
+            });
+
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function copyCommand(command) {
+            navigator.clipboard.writeText(command).then(() => {
+                showNotification('已複製指令', 'success');
+            }).catch(err => {
+                showNotification('複製失敗', 'error');
+            });
+        }
+
+        function copyAllCommands() {
+            const removeDuplicates = document.getElementById('remove-duplicates').checked;
+            let commands = extractedCommands.map(cmd => cmd.command);
+            
+            if (removeDuplicates) {
+                commands = [...new Set(commands)];
+            }
+            
+            navigator.clipboard.writeText(commands.join('\n')).then(() => {
+                showNotification(`已複製 ${commands.length} 個指令`, 'success');
+            }).catch(err => {
+                showNotification('複製失敗', 'error');
+            });
+        }
+
+        function exportAsList() {
+            const removeDuplicates = document.getElementById('remove-duplicates').checked;
+            let commands = extractedCommands.map(cmd => cmd.command);
+            
+            if (removeDuplicates) {
+                commands = [...new Set(commands)];
+            }
+            
+            const content = commands.join('\n');
+            downloadFile('commands.txt', content);
+        }
+
+        function exportAsScript() {
+            const removeDuplicates = document.getElementById('remove-duplicates').checked;
+            let commands = extractedCommands.map(cmd => cmd.command);
+            
+            if (removeDuplicates) {
+                commands = [...new Set(commands)];
+            }
+            
+            const content = '#!/bin/bash\n\n' + commands.join('\n');
+            downloadFile('commands.sh', content);
+        }
+
+        function downloadFile(filename, content) {
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            showNotification(`已下載 ${filename}`, 'success');
+        }
+
+        function clearAll() {
+            document.getElementById('terminal-input').value = '';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('stats').style.display = 'none';
+            extractedCommands = [];
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.backgroundColor = type === 'error' ? '#dc3545' : 
+                                               type === 'warning' ? '#ffc107' : '#28a745';
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // 監聽選項變更
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                if (extractedCommands.length > 0) {
+                    displayResults(new Set(extractedCommands.map(cmd => cmd.prompt)));
+                }
+            });
+        });
+
+        // 支援 Ctrl+Enter 快速提取
+        document.getElementById('terminal-input').addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                extractCommands();
+            }
+        });
+    </script>
+</body>
+</html>
