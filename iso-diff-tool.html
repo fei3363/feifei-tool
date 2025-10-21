@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISO文件差異對照工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .compare-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 50px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+        }
+
+        .compare-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .compare-btn:active {
+            transform: translateY(0);
+        }
+
+        .results {
+            display: none;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .diff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .diff-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .diff-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        .diff-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .clause-number {
+            font-weight: bold;
+            color: #667eea;
+            min-width: 80px;
+        }
+
+        .diff-text {
+            line-height: 1.8;
+        }
+
+        .diff-highlight {
+            text-decoration: underline;
+            text-decoration-color: #ff6b6b;
+            text-decoration-thickness: 2px;
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .no-diff {
+            text-align: center;
+            padding: 40px;
+            color: #28a745;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .input-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 ISO文件差異對照工具</h1>
+        
+        <div class="input-section">
+            <div class="input-group">
+                <label for="doc1">文件版本 A：</label>
+                <textarea id="doc1" placeholder="請貼上第一個版本的ISO文件內容...&#10;&#10;範例格式：&#10;1. 範圍&#10;本標準規定了...&#10;&#10;2. 規範性引用文件&#10;下列文件..."></textarea>
+            </div>
+            <div class="input-group">
+                <label for="doc2">文件版本 B：</label>
+                <textarea id="doc2" placeholder="請貼上第二個版本的ISO文件內容...&#10;&#10;範例格式：&#10;1. 範圍&#10;本標準規定了...&#10;&#10;2. 規範性引用文件&#10;下列文件..."></textarea>
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button class="compare-btn" onclick="compareDocs()">🔍 開始比對</button>
+        </div>
+
+        <div class="results" id="results">
+            <h2>📊 差異分析結果</h2>
+            <div class="stats" id="stats"></div>
+            <div id="diffContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function parseDocument(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const clauses = [];
+            let currentClause = null;
+
+            lines.forEach(line => {
+                const clauseMatch = line.match(/^(\d+(?:\.\d+)*)\s*[.、]?\s*(.+)/);
+                
+                if (clauseMatch) {
+                    if (currentClause) {
+                        clauses.push(currentClause);
+                    }
+                    currentClause = {
+                        number: clauseMatch[1],
+                        content: clauseMatch[2].trim()
+                    };
+                } else if (currentClause) {
+                    currentClause.content += ' ' + line.trim();
+                }
+            });
+
+            if (currentClause) {
+                clauses.push(currentClause);
+            }
+
+            return clauses;
+        }
+
+        function findDifferences(text1, text2) {
+            const words1 = text1.split(/\s+/);
+            const words2 = text2.split(/\s+/);
+            
+            const dp = Array(words1.length + 1).fill(null).map(() => 
+                Array(words2.length + 1).fill(0)
+            );
+
+            for (let i = 1; i <= words1.length; i++) {
+                for (let j = 1; j <= words2.length; j++) {
+                    if (words1[i-1] === words2[j-1]) {
+                        dp[i][j] = dp[i-1][j-1] + 1;
+                    } else {
+                        dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+                    }
+                }
+            }
+
+            const diff1 = [];
+            const diff2 = [];
+            let i = words1.length;
+            let j = words2.length;
+
+            while (i > 0 || j > 0) {
+                if (i > 0 && j > 0 && words1[i-1] === words2[j-1]) {
+                    diff1.unshift({ word: words1[i-1], isDiff: false });
+                    diff2.unshift({ word: words2[j-1], isDiff: false });
+                    i--;
+                    j--;
+                } else if (j > 0 && (i === 0 || dp[i][j-1] >= dp[i-1][j])) {
+                    diff2.unshift({ word: words2[j-1], isDiff: true });
+                    j--;
+                } else if (i > 0) {
+                    diff1.unshift({ word: words1[i-1], isDiff: true });
+                    i--;
+                }
+            }
+
+            return { diff1, diff2 };
+        }
+
+        function highlightDifferences(diffArray) {
+            return diffArray.map(item => {
+                if (item.isDiff) {
+                    return `<span class="diff-highlight">${item.word}</span>`;
+                }
+                return item.word;
+            }).join(' ');
+        }
+
+        function compareDocs() {
+            const doc1Text = document.getElementById('doc1').value;
+            const doc2Text = document.getElementById('doc2').value;
+
+            if (!doc1Text.trim() || !doc2Text.trim()) {
+                alert('請輸入兩個文件的內容！');
+                return;
+            }
+
+            const clauses1 = parseDocument(doc1Text);
+            const clauses2 = parseDocument(doc2Text);
+
+            const clauseMap1 = {};
+            const clauseMap2 = {};
+
+            clauses1.forEach(clause => {
+                clauseMap1[clause.number] = clause.content;
+            });
+
+            clauses2.forEach(clause => {
+                clauseMap2[clause.number] = clause.content;
+            });
+
+            const allClauseNumbers = new Set([
+                ...Object.keys(clauseMap1),
+                ...Object.keys(clauseMap2)
+            ]);
+
+            const differences = [];
+
+            allClauseNumbers.forEach(number => {
+                const content1 = clauseMap1[number] || '';
+                const content2 = clauseMap2[number] || '';
+
+                if (content1 !== content2) {
+                    differences.push({
+                        number: number,
+                        content1: content1,
+                        content2: content2
+                    });
+                }
+            });
+
+            displayResults(differences);
+        }
+
+        function displayResults(differences) {
+            const resultsDiv = document.getElementById('results');
+            const statsDiv = document.getElementById('stats');
+            const diffContentDiv = document.getElementById('diffContent');
+
+            if (differences.length === 0) {
+                statsDiv.innerHTML = '';
+                diffContentDiv.innerHTML = '<div class="no-diff">✅ 兩份文件完全相同，沒有發現差異！</div>';
+                resultsDiv.classList.add('show');
+                return;
+            }
+
+            statsDiv.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${differences.length}</div>
+                    <div class="stat-label">條文有差異</div>
+                </div>
+            `;
+
+            let tableHTML = `
+                <table class="diff-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 100px;">條文編號</th>
+                            <th style="width: 45%;">版本 A</th>
+                            <th style="width: 45%;">版本 B</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            differences.sort((a, b) => {
+                const aParts = a.number.split('.').map(Number);
+                const bParts = b.number.split('.').map(Number);
+                for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+                    const aVal = aParts[i] || 0;
+                    const bVal = bParts[i] || 0;
+                    if (aVal !== bVal) return aVal - bVal;
+                }
+                return 0;
+            });
+
+            differences.forEach(diff => {
+                const { diff1, diff2 } = findDifferences(diff.content1, diff.content2);
+                const highlighted1 = highlightDifferences(diff1);
+                const highlighted2 = highlightDifferences(diff2);
+
+                tableHTML += `
+                    <tr>
+                        <td class="clause-number">${diff.number}</td>
+                        <td class="diff-text">${highlighted1 || '<em style="color: #999;">（無內容）</em>'}</td>
+                        <td class="diff-text">${highlighted2 || '<em style="color: #999;">（無內容）</em>'}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            diffContentDiv.innerHTML = tableHTML;
+            resultsDiv.classList.add('show');
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
