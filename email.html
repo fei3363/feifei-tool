@@ -43,12 +43,12 @@
         .tab-content.active {
             display: block;
         }
-        .flex flex-wrap space-x-2 border-b mb-4 .item {
+        .tab-link {
             cursor: pointer;
             padding: 0.5rem 1rem;
             display: inline-block;
         }
-        .flex flex-wrap space-x-2 border-b mb-4 .item.active {
+        .tab-link.active {
             border-bottom: 2px solid #00b5ad;
         }
         .copy-button {
@@ -124,11 +124,11 @@
             <div class="field">
                 <div id="count" class="text-gray-700"></div>
                 <div class="flex flex-wrap space-x-2 border-b mb-4">
-                    <a class="item active" onclick="switchTab('table')">表格視圖</a>
-                    <a class="px-4 py-2 text-blue-600" onclick="switchTab('comma')">逗號分隔</a>
-                    <a class="px-4 py-2 text-blue-600" onclick="switchTab('list')">全列表</a>
-                    <a class="px-4 py-2 text-blue-600" onclick="switchTab('sheet')">Sheet格式</a>
-                    <a class="px-4 py-2 text-blue-600" onclick="switchTab('email')">僅Email</a>
+                    <a class="tab-link active px-4 py-2 text-blue-600" onclick="switchTab('table')">表格視圖</a>
+                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('comma')">逗號分隔</a>
+                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('list')">全列表</a>
+                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('sheet')">Sheet格式</a>
+                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('email')">僅Email</a>
                 </div>
                 <div class="text-gray-700 bg-gray-500 text-white" style="margin: 0.5rem 0;">格式說明：暱稱/Email/會員編號</div>
                 
@@ -191,7 +191,7 @@
                 <div id="emailContent" class="tab-content">
                     <div class="format-options">
                         <button class="copy-button" onclick="copyToClipboard('emailOnlyResult')">複製Email列表</button>
-                        <button class="copy-button" onclick="copyToClipboard('emailCommaResult')">複製Email(逗號分隔)</button>
+                        <button class="copy-button" onclick="copyEmailComma()">複製Email(逗號分隔)</button>
                     </div>
                     <div class="result-container">
                         <div id="emailOnlyResult" class="result-text"></div>
@@ -289,26 +289,25 @@
             
             // Sheet格式 (每行一組數據：暱稱、Email、ID)
             const sheetFormat = parsedMembers.map(m => `${m.nickname}\t${m.email}\t${m.id}`).join('\n');
+            document.getElementById('sheetResult').textContent = sheetFormat;
             
             // 僅Email格式
             const emailOnlyFormat = parsedMembers.map(m => m.email).join('\n');
             document.getElementById('emailOnlyResult').textContent = emailOnlyFormat;
-            
-            // 僅Email逗號分隔
-            const emailCommaFormat = parsedMembers.map(m => m.email).join(',');
-            document.getElementById('emailCommaResult').textContent = emailCommaFormat;
         }
         
         function switchTab(tabName) {
             // 移除所有 active 類別
-            document.querySelectorAll('.flex flex-wrap space-x-2 border-b mb-4 .item').forEach(tab => {
+            document.querySelectorAll('.tab-link').forEach(tab => {
                 tab.classList.remove('active');
             });
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
+            
             // 添加 active 到選中的元素
-            document.querySelector(`.flex flex-wrap space-x-2 border-b mb-4 .item[onclick*="${tabName}"]`).classList.add('active');
+            const clickedTab = event.target;
+            clickedTab.classList.add('active');
             document.getElementById(`${tabName}Content`).classList.add('active');
         }
         
@@ -316,15 +315,18 @@
             const text = document.getElementById(elementId).textContent;
             
             navigator.clipboard.writeText(text).then(() => {
-                // 顯示已複製訊息
-                const container = document.getElementById(elementId).closest('.result-container');
-                const message = container.querySelector('.copy-message');
-                message.style.display = 'block';
-                
-                // 2秒後隱藏訊息
-                setTimeout(() => {
-                    message.style.display = 'none';
-                }, 2000);
+                showCopyMessage(elementId);
+            }).catch(err => {
+                console.error('複製失敗:', err);
+                alert('複製失敗，請手動選取文字後複製');
+            });
+        }
+        
+        function copyEmailComma() {
+            const emailCommaFormat = parsedMembers.map(m => m.email).join(',');
+            
+            navigator.clipboard.writeText(emailCommaFormat).then(() => {
+                showCopyMessage('emailOnlyResult');
             }).catch(err => {
                 console.error('複製失敗:', err);
                 alert('複製失敗，請手動選取文字後複製');
@@ -341,15 +343,7 @@
             }
             
             navigator.clipboard.writeText(text).then(() => {
-                // 顯示已複製訊息
-                const container = document.getElementById(`${format}Result`).closest('.result-container');
-                const message = container.querySelector('.copy-message');
-                message.style.display = 'block';
-                
-                // 2秒後隱藏訊息
-                setTimeout(() => {
-                    message.style.display = 'none';
-                }, 2000);
+                showCopyMessage(`${format}Result`);
             }).catch(err => {
                 console.error('複製失敗:', err);
                 alert('複製失敗，請手動選取文字後複製');
@@ -364,19 +358,22 @@
             });
             
             navigator.clipboard.writeText(tableText).then(() => {
-                // 顯示已複製訊息
-                const container = document.getElementById('tableResult').closest('.result-container');
-                const message = container.querySelector('.copy-message');
-                message.style.display = 'block';
-                
-                // 2秒後隱藏訊息
-                setTimeout(() => {
-                    message.style.display = 'none';
-                }, 2000);
+                showCopyMessage('tableResult');
             }).catch(err => {
                 console.error('複製失敗:', err);
                 alert('複製失敗，請手動選取文字後複製');
             });
+        }
+        
+        function showCopyMessage(elementId) {
+            const container = document.getElementById(elementId).closest('.result-container');
+            const message = container.querySelector('.copy-message');
+            message.style.display = 'block';
+            
+            // 2秒後隱藏訊息
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 2000);
         }
     </script>
 </body>
