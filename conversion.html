@@ -31,37 +31,76 @@
         .is-readonly {
             background-color: #f8f9fa;
         }
+        .copy-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        .copy-toast.show {
+            opacity: 1;
+        }
     </style>
 </head>
-<body>
-    <div class="container mx-auto p-4">
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto p-4 max-w-4xl">
         <!-- 導航欄 -->
-        <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
-            <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
-            <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="chinese-conversion.html">繁簡轉換</a>
-            <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
+        <div class="flex flex-wrap gap-1 sm:gap-2 border-b mb-4">
+            <a class="px-3 py-2 text-sm sm:text-base text-blue-600 hover:bg-blue-50 rounded-t" href="text-stats.html">文字統計</a>
+            <a class="px-3 py-2 text-sm sm:text-base text-blue-600 border-b-2 border-blue-500 bg-blue-50 rounded-t" href="chinese-conversion.html">繁簡轉換</a>
+            <a class="px-3 py-2 text-sm sm:text-base text-blue-600 hover:bg-blue-50 rounded-t" href="pdf-to-png.html">PDF 轉 PNG</a>
         </div>
 
-        <h1 class="text-2xl font-bold mb-4">繁簡轉換工具</h1>
+        <h1 class="text-xl sm:text-2xl font-bold mb-4">繁簡轉換工具</h1>
+        
         <div class="space-y-4 my-4">
+            <!-- 輸入區域 -->
             <div class="field">
-                <label>輸入文字:</label>
+                <label class="block mb-2 font-medium">輸入文字:</label>
                 <div id="input-text" class="editable-area" contenteditable="true" placeholder="在這裡輸入或貼上文字..."></div>
             </div>
-            <div class="field">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="convertText('simplified')">轉換為簡體</button>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="convertText('traditional')">轉換為繁體</button>
+            
+            <!-- 按鈕區域 - RWD -->
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div class="flex flex-wrap gap-2">
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors flex-1 sm:flex-none min-w-[120px]" onclick="convertText('simplified')">
+                        轉換為簡體
+                    </button>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors flex-1 sm:flex-none min-w-[120px]" onclick="convertText('traditional')">
+                        轉換為繁體
+                    </button>
+                </div>
                 <div class="flex items-center space-x-2">
-                    <input id="preserve-format" type="checkbox" checked>
-                    <label for="preserve-format">保留原始格式</label>
+                    <input id="preserve-format" type="checkbox" checked class="w-4 h-4 cursor-pointer">
+                    <label for="preserve-format" class="cursor-pointer select-none">保留原始格式</label>
                 </div>
             </div>
+            
+            <!-- 輸出區域 -->
             <div class="field">
-                <label>輸出結果:</label>
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                    <label class="font-medium">輸出結果:</label>
+                    <button id="copy-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors flex items-center justify-center gap-2 w-full sm:w-auto" onclick="copyOutput()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        複製結果
+                    </button>
+                </div>
                 <div id="output-text" class="editable-area is-readonly" contenteditable="false"></div>
             </div>
         </div>
     </div>
+
+    <!-- 複製成功提示 -->
+    <div id="copy-toast" class="copy-toast">已複製到剪貼簿！</div>
 
     <!-- Import opencc-js -->
     <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
@@ -113,11 +152,62 @@
             outputDiv.innerHTML = convertedContent;
         }
 
+        // 複製功能
+        async function copyOutput() {
+            const outputDiv = document.getElementById('output-text');
+            const preserveFormat = document.getElementById('preserve-format').checked;
+            const toast = document.getElementById('copy-toast');
+            const copyBtn = document.getElementById('copy-btn');
+            
+            try {
+                if (preserveFormat && outputDiv.innerHTML.trim()) {
+                    // 複製 HTML 格式
+                    const blob = new Blob([outputDiv.innerHTML], { type: 'text/html' });
+                    const plainBlob = new Blob([outputDiv.innerText], { type: 'text/plain' });
+                    
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            'text/html': blob,
+                            'text/plain': plainBlob
+                        })
+                    ]);
+                } else {
+                    // 複製純文本
+                    await navigator.clipboard.writeText(outputDiv.innerText);
+                }
+                
+                // 顯示成功提示
+                toast.classList.add('show');
+                copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                copyBtn.classList.add('bg-gray-500');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    copyBtn.classList.remove('bg-gray-500');
+                    copyBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                }, 2000);
+                
+            } catch (err) {
+                // 降級方案
+                const textArea = document.createElement('textarea');
+                textArea.value = outputDiv.innerText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }
+        }
+
         // 為輸入區域添加提示文字功能
         const inputArea = document.getElementById('input-text');
         
         inputArea.addEventListener('focus', function() {
-            if (this.innerHTML.trim() === '') {
+            if (this.innerHTML.trim() === '' || this.innerHTML.includes('color: #999')) {
                 this.innerHTML = '';
             }
         });
