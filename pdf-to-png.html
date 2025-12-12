@@ -10,6 +10,8 @@
     <meta name="author" content="FeiFei" />
     <!-- PDF.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- JSZip for downloading all images -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <style>
         #images img {
             margin-top: 15px;
@@ -20,59 +22,189 @@
 </head>
 <body>
     <div class="container mx-auto p-4">
-
-    <!-- 導航欄 -->
-    <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
-        <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
-        <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
-        <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="pdf-to-png.html">PDF 轉 PNG</a>
-    </div>
-
+        <!-- 導航欄 -->
+        <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
+            <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
+            <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
+            <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="pdf-to-png.html">PDF 轉 PNG</a>
+        </div>
 
         <h1 class="text-2xl font-bold mb-4">PDF 轉 PNG 轉換器</h1>
+
         <div class="space-y-4 my-4">
             <div class="field">
                 <label for="pdfInput">選擇PDF文件：</label>
                 <input type="file" id="pdfInput" class="w-full p-2 border rounded" multiple accept="application/pdf">
             </div>
-            <button id="convertButton" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">確認轉換</button>
+            <div class="flex flex-wrap gap-2">
+                <button id="convertButton" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors">確認轉換</button>
+                <button id="downloadAllButton" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition-colors hidden">
+                    <span id="downloadText">📥 一次下載全部 PNG</span>
+                    <span id="downloadLoading" class="hidden">⏳ 打包中...</span>
+                </button>
+                <button id="clearButton" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors hidden">🗑️ 清除全部</button>
+            </div>
         </div>
-        <div id="images"></div>
+
+        <div id="status" class="text-gray-600 mb-2 hidden"></div>
+        <div id="images" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
     </div>
 
     <script>
-        document.getElementById('convertButton').addEventListener('click', () => {
+        // 儲存所有轉換後的圖片資料
+        let convertedImages = [];
+
+        document.getElementById('convertButton').addEventListener('click', async () => {
             const files = document.getElementById('pdfInput').files;
+            if (files.length === 0) {
+                alert('請先選擇 PDF 文件');
+                return;
+            }
+
+            // 清除之前的結果
+            convertedImages = [];
+            document.getElementById('images').innerHTML = '';
+            document.getElementById('downloadAllButton').classList.add('hidden');
+            document.getElementById('clearButton').classList.add('hidden');
+
+            const statusEl = document.getElementById('status');
+            statusEl.classList.remove('hidden');
+            statusEl.textContent = '轉換中...';
+
             for (let i = 0; i < files.length; i++) {
-                convertPDFToImages(files[i]);
+                statusEl.textContent = `正在轉換第 ${i + 1}/${files.length} 個文件...`;
+                await convertPDFToImages(files[i]);
+            }
+
+            statusEl.textContent = `轉換完成！共 ${convertedImages.length} 張圖片`;
+            
+            if (convertedImages.length > 0) {
+                document.getElementById('downloadAllButton').classList.remove('hidden');
+                document.getElementById('clearButton').classList.remove('hidden');
             }
         });
 
+        document.getElementById('downloadAllButton').addEventListener('click', async () => {
+            if (convertedImages.length === 0) {
+                alert('沒有可下載的圖片');
+                return;
+            }
+
+            const downloadText = document.getElementById('downloadText');
+            const downloadLoading = document.getElementById('downloadLoading');
+            const downloadBtn = document.getElementById('downloadAllButton');
+
+            // 顯示載入狀態
+            downloadText.classList.add('hidden');
+            downloadLoading.classList.remove('hidden');
+            downloadBtn.disabled = true;
+
+            try {
+                const zip = new JSZip();
+                
+                // 將所有圖片加入 ZIP
+                convertedImages.forEach((imgData, index) => {
+                    // 從 base64 data URL 中提取純 base64 資料
+                    const base64Data = imgData.dataUrl.split(',')[1];
+                    const fileName = `${imgData.fileName}_page${imgData.pageNum}.png`;
+                    zip.file(fileName, base64Data, { base64: true });
+                });
+
+                // 生成 ZIP 並下載
+                const content = await zip.generateAsync({ type: 'blob' });
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `pdf-images-${Date.now()}.zip`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error('打包失敗:', error);
+                alert('下載失敗，請重試');
+            } finally {
+                // 恢復按鈕狀態
+                downloadText.classList.remove('hidden');
+                downloadLoading.classList.add('hidden');
+                downloadBtn.disabled = false;
+            }
+        });
+
+        document.getElementById('clearButton').addEventListener('click', () => {
+            convertedImages = [];
+            document.getElementById('images').innerHTML = '';
+            document.getElementById('downloadAllButton').classList.add('hidden');
+            document.getElementById('clearButton').classList.add('hidden');
+            document.getElementById('status').classList.add('hidden');
+            document.getElementById('pdfInput').value = '';
+        });
+
         async function convertPDFToImages(file) {
-            const fileReader = new FileReader();
+            return new Promise((resolve) => {
+                const fileReader = new FileReader();
+                const fileName = file.name.replace('.pdf', '');
 
-            fileReader.onload = async (e) => {
-                const typedArray = new Uint8Array(e.target.result);
-                const pdfDoc = await pdfjsLib.getDocument(typedArray).promise;
+                fileReader.onload = async (e) => {
+                    const typedArray = new Uint8Array(e.target.result);
+                    const pdfDoc = await pdfjsLib.getDocument(typedArray).promise;
 
-                for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-                    const page = await pdfDoc.getPage(pageNum);
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    const canvas = document.createElement('canvas');
-                    canvas.classList.add('rounded');
-                    const ctx = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+                    for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                        const page = await pdfDoc.getPage(pageNum);
+                        const viewport = page.getViewport({ scale: 1.5 });
 
-                    await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
 
-                    const img = document.createElement('img');
-                    img.src = canvas.toDataURL();
-                    document.getElementById('images').appendChild(img);
-                }
-            };
+                        await page.render({
+                            canvasContext: ctx,
+                            viewport: viewport
+                        }).promise;
 
-            fileReader.readAsArrayBuffer(file);
+                        const dataUrl = canvas.toDataURL('image/png');
+
+                        // 儲存圖片資料
+                        convertedImages.push({
+                            fileName: fileName,
+                            pageNum: pageNum,
+                            dataUrl: dataUrl
+                        });
+
+                        // 建立圖片容器
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'bg-white rounded-lg shadow p-3';
+
+                        // 建立圖片標題
+                        const title = document.createElement('p');
+                        title.className = 'text-sm text-gray-600 mb-2 font-medium';
+                        title.textContent = `${fileName} - 第 ${pageNum} 頁`;
+
+                        // 建立圖片
+                        const img = document.createElement('img');
+                        img.src = dataUrl;
+                        img.className = 'rounded border w-full';
+                        img.alt = `${fileName} page ${pageNum}`;
+
+                        // 建立單張下載按鈕
+                        const downloadBtn = document.createElement('a');
+                        downloadBtn.href = dataUrl;
+                        downloadBtn.download = `${fileName}_page${pageNum}.png`;
+                        downloadBtn.className = 'inline-block mt-2 text-sm text-blue-500 hover:text-blue-700 cursor-pointer';
+                        downloadBtn.textContent = '💾 下載此圖';
+
+                        imgContainer.appendChild(title);
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(downloadBtn);
+                        document.getElementById('images').appendChild(imgContainer);
+                    }
+
+                    resolve();
+                };
+
+                fileReader.readAsArrayBuffer(file);
+            });
         }
     </script>
 </body>
