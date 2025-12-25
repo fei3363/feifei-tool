@@ -2,7 +2,7 @@
 
 前端實用工具集 - 17+ 個免費線上工具，無需安裝，即開即用。
 
-[![Deploy to GitHub Pages](https://github.com/user/feifei-tool/actions/workflows/static.yml/badge.svg)](https://github.com/user/feifei-tool/actions/workflows/static.yml)
+[![Deploy to GitHub Pages](https://github.com/fei3363/feifei-tool/actions/workflows/static.yml/badge.svg)](https://github.com/fei3363/feifei-tool/actions/workflows/static.yml)
 
 **網站連結**: [https://tool.feifei.tw](https://tool.feifei.tw)
 
@@ -53,7 +53,7 @@
 
 ---
 
-## 技術棧
+## 技術
 
 | 技術 | 用途 |
 |------|------|
