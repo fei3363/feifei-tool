@@ -1,335 +1,301 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>Windows 轉 WSL 路徑 - 線上轉換工具 | FeiFei Tools</title>
+    <meta name="description" content="免費線上 Windows 路徑轉 WSL 路徑工具，支援磁碟代號、網路路徑轉換，自動儲存轉換記錄。">
+    <meta name="keywords" content="Windows路徑,WSL路徑,路徑轉換,Windows to WSL,Linux路徑">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/windows-to-wsl.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/windows-to-wsl.html">
+    <meta property="og:title" content="Windows 轉 WSL 路徑 | FeiFei Tools">
+    <meta property="og:description" content="Windows 路徑快速轉換為 WSL 路徑格式。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Windows 轉 WSL 路徑 | FeiFei Tools">
+    <meta name="twitter:description" content="Windows 路徑快速轉換為 WSL 路徑格式。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Windows 路徑轉換成 WSL 路徑</title>
-    <meta name="description" content="Windows 路徑轉換成 WSL 路徑" />
-    <meta name="keywords" content="Windows 路徑轉換成 WSL 路徑,工具" />
-    <meta name="author" content="FeiFei" />
-    <!-- Noto Sans TC 字體 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: 'Noto Sans TC', sans-serif; 
-        }
-        .path-example {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-        .result-container {
-            position: relative;
-        }
-        .copy-button {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-            z-index: 10;
-        }
-        .copy-success {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 128, 0, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            display: none;
-        }
-        .options-container {
-            margin: 1rem 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-        }
-        .history-container {
-            margin-top: 2rem;
-            border-top: 1px solid #eee;
-            padding-top: 1rem;
-        }
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
-        }
-        .history-item:hover {
-            background-color: #f8f9fa;
-        }
-        .history-path {
-            flex-grow: 1;
-            margin-right: 10px;
-        }
-        @media (max-width: 768px) {
-            .history-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .history-actions {
-                margin-top: 8px;
-                align-self: flex-end;
-            }
-            .copy-button {
-                position: static;
-                margin-top: 10px;
-                width: 100%;
-            }
-            .copy-success {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
-        }
-    </style>
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "Windows 轉 WSL 路徑", "url": "https://tool.feifei.tw/windows-to-wsl.html", "description": "Windows 路徑轉 WSL 路徑工具", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
+    <style>.touch-target { min-height: 44px; min-width: 44px; } .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
 </head>
-<body>
-    <div class="container mx-auto p-4">
-        <!-- 導航欄 (保持和其他工具一致) -->
-        <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
-            <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
-            <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
-            <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
-            <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="windows-to-wsl.html">Windows 轉 WSL 路徑</a>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">Windows 轉 WSL</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="main-content" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">🔀</span>Windows 轉 WSL 路徑</h1>
+            <p class="text-gray-600 dark:text-gray-400">將 Windows 路徑快速轉換為 WSL (Linux) 路徑格式</p>
         </div>
 
-        <h1 class="text-2xl font-bold mb-4">Windows 路徑轉換成 WSL 路徑</h1>
-        
-        <div class="bg-blue-100 border-l-4 border-blue-500 p-4 mb-4 text-blue-700">
-            <div class="content">
-                <p>在 WSL 中，Windows 的磁碟會掛載在 <code>/mnt/</code> 下，例如：</p>
-                <p>Windows 路徑: <code>C:\Users\username\Documents\file.txt</code></p>
-                <p>WSL 路徑: <code>/mnt/c/Users/username/Documents/file.txt</code></p>
+        <!-- Info -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200 mb-6">
+            <p class="mb-2">在 WSL 中，Windows 的磁碟會掛載在 <code class="bg-blue-100 dark:bg-blue-800 px-1 rounded">/mnt/</code> 下，例如：</p>
+            <div class="space-y-1 font-mono text-xs">
+                <p>Windows: <code class="bg-blue-100 dark:bg-blue-800 px-1 rounded">C:\Users\username\Documents\file.txt</code></p>
+                <p>WSL: <code class="bg-blue-100 dark:bg-blue-800 px-1 rounded">/mnt/c/Users/username/Documents/file.txt</code></p>
             </div>
         </div>
-        
-        <div class="space-y-4 my-4">
-            <div class="field">
-                <label for="windows-path">Windows 路徑</label>
-                <input type="text" id="windows-path" class="w-full p-2 border rounded" placeholder="例如: C:\Users\username\Documents\file.txt">
-                <div class="path-example">支援 Windows 常見格式，如 <code>C:\Users\username</code> 或 <code>\\server\share</code></div>
+
+        <div class="space-y-6">
+            <!-- Input -->
+            <section>
+                <label for="windows-path" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Windows 路徑</label>
+                <input type="text" id="windows-path" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm touch-target" placeholder="例如: C:\Users\username\Documents\file.txt">
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">支援 Windows 常見格式，如 <code>C:\Users\username</code> 或 <code>\\server\share</code></p>
+            </section>
+
+            <!-- Options -->
+            <section class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">轉換選項</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input id="slash-option" type="checkbox" checked class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">自動轉換反斜線 ( \ ) 為斜線 ( / )</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input id="lowercase-option" type="checkbox" checked class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">轉換磁碟代號為小寫 (C → c)</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <input id="network-path-option" type="checkbox" checked class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">轉換網路路徑 (\\server\share → /mnt/wsl/share)</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap gap-3">
+                <button onclick="convertPath()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors touch-target flex-1 sm:flex-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    轉換
+                </button>
+                <button onclick="clearInputs()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl transition-colors touch-target">清除</button>
             </div>
-            
-            <div class="options-container">
-                <h5>選項</h5>
-                <div class="flex items-center space-x-2">
-                    <input id="slash-option" type="checkbox" checked>
-                    <label for="slash-option">自動轉換反斜線 ( \ ) 為斜線 ( / )</label>
+
+            <!-- Output -->
+            <section>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="wsl-path" class="block text-sm font-medium text-gray-700 dark:text-gray-300">WSL 路徑</label>
+                    <button onclick="copyToClipboard()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        複製
+                    </button>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <input id="lowercase-option" type="checkbox" checked>
-                    <label for="lowercase-option">轉換磁碟代號為小寫 (C → c)</label>
+                <input type="text" id="wsl-path" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-700 font-mono text-sm" readonly>
+            </section>
+
+            <!-- History -->
+            <section class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-semibold">轉換記錄</h2>
+                    <button onclick="clearHistory()" class="text-sm text-red-600 dark:text-red-400 hover:underline">清除全部</button>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <input id="network-path-option" type="checkbox" checked>
-                    <label for="network-path-option">轉換網路路徑 (\\server\share → /mnt/wsl/share)</label>
-                </div>
-            </div>
-            
-            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="convertPath()">轉換</button>
-            <button class="bg-blue-500 text-white px-4 py-2 rounded is-secondary" onclick="clearInputs()">清除</button>
-            
-            <div class="field">
-                <label for="wsl-path">WSL 路徑</label>
-                <div class="result-container">
-                    <input type="text" id="wsl-path" class="w-full p-2 border rounded" readonly>
-                    <button class="copy-button bg-blue-500 text-white px-4 py-2 rounded  " onclick="copyToClipboard('wsl-path')">複製</button>
-                    <div class="copy-success">已複製！</div>
-                </div>
-            </div>
+                <div id="history-list" class="space-y-2"></div>
+            </section>
         </div>
-        
-        <div class="history-container">
-            <div class="my-2"></div>
-            <h3 class="text-2xl font-bold mb-4">轉換記錄</h3>
-            <div id="history-list"></div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5 font-medium">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
         </div>
-    </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
 
     <script>
-        // 保存轉換歷史
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
+
+        // History
         let conversionHistory = [];
         const MAX_HISTORY = 10;
-        
-        // 初始化頁面時，從 localStorage 載入歷史記錄
+
         document.addEventListener('DOMContentLoaded', () => {
             loadHistory();
             document.getElementById('windows-path').addEventListener('keyup', function(event) {
-                if (event.key === 'Enter') {
-                    convertPath();
-                }
+                if (event.key === 'Enter') convertPath();
             });
         });
-        
+
         function convertPath() {
             const windowsPath = document.getElementById('windows-path').value.trim();
-            if (!windowsPath) return;
-            
+            if (!windowsPath) { showToast('請輸入 Windows 路徑'); return; }
+
             const slashOption = document.getElementById('slash-option').checked;
             const lowercaseOption = document.getElementById('lowercase-option').checked;
             const networkPathOption = document.getElementById('network-path-option').checked;
-            
+
             let wslPath = '';
-            
-            // 檢查是否為網路路徑
+
             if (windowsPath.startsWith('\\\\') && networkPathOption) {
-                // 網路路徑格式: \\server\share\path
                 let networkPath = windowsPath.replace(/\\\\/g, '');
                 networkPath = networkPath.replace(/\\/g, '/');
                 wslPath = `/mnt/wsl/${networkPath}`;
             } else {
-                // 標準 Windows 路徑
-                // 移除可能的前後空格，並確保是有效的 Windows 路徑
                 let normalizedPath = windowsPath;
-                
-                // 轉換反斜線為斜線
-                if (slashOption) {
-                    normalizedPath = normalizedPath.replace(/\\/g, '/');
-                }
-                
-                // 檢查是否為絕對路徑 (有磁碟代號)
+                if (slashOption) normalizedPath = normalizedPath.replace(/\\/g, '/');
+
                 const driveMatch = normalizedPath.match(/^([a-zA-Z]):(.*)$/);
                 if (driveMatch) {
                     const driveLetter = lowercaseOption ? driveMatch[1].toLowerCase() : driveMatch[1];
                     const pathPart = driveMatch[2];
-                    
                     wslPath = `/mnt/${driveLetter}${pathPart}`;
                 } else {
-                    // 相對路徑或其他格式，無法轉換
                     wslPath = '錯誤: 無法識別的 Windows 路徑格式';
+                    showToast('無法識別的路徑格式');
+                    return;
                 }
             }
-            
+
             document.getElementById('wsl-path').value = wslPath;
-            
-            // 添加到歷史記錄
-            if (wslPath !== '錯誤: 無法識別的 Windows 路徑格式') {
-                addToHistory(windowsPath, wslPath);
-            }
+            addToHistory(windowsPath, wslPath);
+            showToast('轉換完成');
         }
-        
+
         function clearInputs() {
             document.getElementById('windows-path').value = '';
             document.getElementById('wsl-path').value = '';
+            showToast('已清除');
         }
-        
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            element.select();
-            document.execCommand('copy');
-            
-            // 顯示複製成功訊息
-            const successMsg = element.parentElement.querySelector('.copy-success');
-            successMsg.style.display = 'block';
-            setTimeout(() => {
-                successMsg.style.display = 'none';
-            }, 1500);
+
+        async function copyToClipboard() {
+            const wslPath = document.getElementById('wsl-path').value;
+            if (!wslPath.trim()) { showToast('沒有內容可複製'); return; }
+            try { await navigator.clipboard.writeText(wslPath); showToast('已複製到剪貼簿'); }
+            catch { showToast('複製失敗'); }
         }
-        
+
         function addToHistory(windowsPath, wslPath) {
-            // 檢查是否已在歷史記錄中
             const existingIndex = conversionHistory.findIndex(item => item.windows === windowsPath);
-            if (existingIndex !== -1) {
-                // 移除舊記錄
-                conversionHistory.splice(existingIndex, 1);
-            }
-            
-            // 添加到歷史記錄的開頭
-            conversionHistory.unshift({
-                windows: windowsPath,
-                wsl: wslPath,
-                timestamp: Date.now()
-            });
-            
-            // 保持歷史記錄不超過最大數量
-            if (conversionHistory.length > MAX_HISTORY) {
-                conversionHistory.pop();
-            }
-            
-            // 更新 UI 和儲存記錄
+            if (existingIndex !== -1) conversionHistory.splice(existingIndex, 1);
+
+            conversionHistory.unshift({ windows: windowsPath, wsl: wslPath, timestamp: Date.now() });
+            if (conversionHistory.length > MAX_HISTORY) conversionHistory.pop();
+
             renderHistory();
             saveHistory();
         }
-        
+
         function renderHistory() {
             const historyList = document.getElementById('history-list');
-            historyList.innerHTML = '';
-            
+
             if (conversionHistory.length === 0) {
-                historyList.innerHTML = '<div class="text-gray-700 is-secondary">尚無轉換記錄</div>';
+                historyList.innerHTML = '<p class="text-gray-500 dark:text-gray-400 text-sm">尚無轉換記錄</p>';
                 return;
             }
-            
-            conversionHistory.forEach((item, index) => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                
-                // 建立路徑顯示部分
-                const pathInfo = document.createElement('div');
-                pathInfo.className = 'history-path';
-                pathInfo.innerHTML = `
-                    <div class="text-gray-700 is-bold">${item.windows}</div>
-                    <div class="text-gray-700">${item.wsl}</div>
-                `;
-                
-                // 建立操作按鈕部分
-                const actions = document.createElement('div');
-                actions.className = 'history-actions';
-                actions.innerHTML = `
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded  " onclick="reloadHistory(${index})">
-                        21bb
-                    </button>
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded   bg-red-500" onclick="removeHistory(${index})">
-                        
-                    </button>
-                `;
-                
-                historyItem.appendChild(pathInfo);
-                historyItem.appendChild(actions);
-                historyList.appendChild(historyItem);
-            });
+
+            historyList.innerHTML = conversionHistory.map((item, index) => `
+                <div class="bg-white dark:bg-gray-800 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="flex-1 min-w-0">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 truncate">${item.windows}</p>
+                            <p class="text-sm font-mono text-gray-900 dark:text-gray-100 truncate">${item.wsl}</p>
+                        </div>
+                        <div class="flex gap-2 shrink-0">
+                            <button onclick="reloadHistory(${index})" class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="重新載入">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                            </button>
+                            <button onclick="removeHistory(${index})" class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" title="刪除">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
-        
+
         function reloadHistory(index) {
             if (index >= 0 && index < conversionHistory.length) {
                 document.getElementById('windows-path').value = conversionHistory[index].windows;
                 document.getElementById('wsl-path').value = conversionHistory[index].wsl;
+                showToast('已載入');
             }
         }
-        
+
         function removeHistory(index) {
             if (index >= 0 && index < conversionHistory.length) {
                 conversionHistory.splice(index, 1);
                 renderHistory();
                 saveHistory();
+                showToast('已刪除');
             }
         }
-        
+
         function clearHistory() {
             conversionHistory = [];
             renderHistory();
             saveHistory();
+            showToast('記錄已清除');
         }
-        
-        function saveHistory() {
-            localStorage.setItem('wslPathHistory', JSON.stringify(conversionHistory));
-        }
-        
+
+        function saveHistory() { localStorage.setItem('wslPathHistory', JSON.stringify(conversionHistory)); }
+
         function loadHistory() {
             const savedHistory = localStorage.getItem('wslPathHistory');
             if (savedHistory) {
-                try {
-                    conversionHistory = JSON.parse(savedHistory);
-                    renderHistory();
-                } catch (e) {
-                    console.error('無法載入歷史記錄:', e);
-                    conversionHistory = [];
-                }
+                try { conversionHistory = JSON.parse(savedHistory); renderHistory(); }
+                catch (e) { console.error('無法載入歷史記錄:', e); conversionHistory = []; }
+            } else {
+                renderHistory();
             }
         }
     </script>

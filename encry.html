@@ -1,107 +1,229 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-  <head>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>編碼/雜湊/加解密工具 - Base64, MD5, SHA-256, AES | FeiFei Tools</title>
+    <meta name="description" content="免費線上編碼加解密工具，支援 Base64 編解碼、MD5 雜湊、SHA-256 雜湊、AES 加解密。">
+    <meta name="keywords" content="Base64,MD5,SHA-256,AES,加密,解密,雜湊,編碼">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/encry.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/encry.html">
+    <meta property="og:title" content="編碼/雜湊/加解密工具 | FeiFei Tools">
+    <meta property="og:description" content="支援 Base64、MD5、SHA-256、AES 等多種加解密功能。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="編碼/雜湊/加解密工具 | FeiFei Tools">
+    <meta name="twitter:description" content="支援 Base64、MD5、SHA-256、AES 等多種加解密功能。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>編碼/雜湊/加解密</title>
-    <meta name="description" content="編碼/雜湊/加解密" />
-    <meta name="keywords" content="編碼/雜湊/加解密,工具" />
-    <meta name="author" content="FeiFei" />
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- CryptoJS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-  </head>
-  <body>
-    <div class="container mx-auto p-4">
-      <!-- 導航欄 -->
-      <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
-        <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
-        <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
-        <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
-        <a class="px-4 py-2 text-blue-600" href="resize-image.html">縮小圖片</a>
-        <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="encry.html">編碼/雜湊/加解密</a>
-      </div>
-     <div class="container">
-  <h1 class="text-2xl font-bold mb-4">Encryption Tools</h1>
-  <div class="space-y-4 my-4">
-    <h2 class="text-2xl font-bold mb-4">Base64 Encode/Decode</h2>
-    <div class="field">
-      <input type="text" id="base64Input" class="w-full p-2 border rounded" placeholder="Enter text for Base64">
-      <button onclick="encodeBase64()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Encode/進行編碼</button>
-      <button onclick="decodeBase64()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Decode/進行解碼</button>
-      <p>Result: <span id="base64Result"></span></p>
-    </div>
 
-    <h2 class="text-2xl font-bold mb-4">MD5 Hash</h2>
-    <div class="field">
-      <input type="text" id="md5Input" class="w-full p-2 border rounded" placeholder="Enter text for MD5">
-      <button onclick="generateMD5()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Hash/雜湊</button>
-      <p>Result: <span id="md5Result"></span></p>
-    </div>
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "編碼/雜湊/加解密工具", "url": "https://tool.feifei.tw/encry.html", "description": "編碼加解密工具", "applicationCategory": "DeveloperApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
 
-    <h2 class="text-2xl font-bold mb-4">SHA-256 Hash</h2>
-    <div class="field">
-      <input type="text" id="sha256Input" class="w-full p-2 border rounded" placeholder="Enter text for SHA-256">
-      <button onclick="generateSHA256()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Hash/雜湊</button>
-      <p>Result: <span id="sha256Result"></span></p>
-    </div>
+    <style>.touch-target { min-height: 44px; min-width: 44px; } .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
 
-    <h2 class="text-2xl font-bold mb-4">AES Encrypt/Decrypt</h2>
-    <div class="field">
-      <input type="text" id="aesInput" class="w-full p-2 border rounded" placeholder="Enter text for AES Encryption">
-      <input type="text" id="aesKey" class="w-full p-2 border rounded" placeholder="Enter a secret key">
-      <button onclick="encryptAES()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Encrypt/加密</button>
-      <button onclick="decryptAES()" class="bg-blue-500 text-white px-4 py-2 rounded bg-blue-600">Decrypt/解密</button>
-      <p>Result: <span id="aesResult"></span></p>
-    </div>
-  </div>
-</div>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">編碼/加解密</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="main-content" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">🔐</span>編碼/雜湊/加解密</h1>
+            <p class="text-gray-600 dark:text-gray-400">支援 Base64、MD5、SHA-256、AES 加解密</p>
+        </div>
+
+        <div class="space-y-8">
+            <!-- Base64 -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2"><span class="text-xl">📝</span>Base64 編碼/解碼</h2>
+                <div class="space-y-4">
+                    <input type="text" id="base64Input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-target" placeholder="輸入文字">
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="encodeBase64()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">編碼</button>
+                        <button onclick="decodeBase64()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg transition-colors">解碼</button>
+                        <button onclick="copyResult('base64Result')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors">複製</button>
+                    </div>
+                    <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg font-mono text-sm break-all min-h-[44px]" id="base64Result"></div>
+                </div>
+            </section>
+
+            <!-- MD5 -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2"><span class="text-xl">#️⃣</span>MD5 雜湊</h2>
+                <div class="space-y-4">
+                    <input type="text" id="md5Input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-target" placeholder="輸入文字">
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="generateMD5()" class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-medium rounded-lg transition-colors">產生雜湊</button>
+                        <button onclick="copyResult('md5Result')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors">複製</button>
+                    </div>
+                    <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg font-mono text-sm break-all min-h-[44px]" id="md5Result"></div>
+                </div>
+            </section>
+
+            <!-- SHA-256 -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2"><span class="text-xl">🔑</span>SHA-256 雜湊</h2>
+                <div class="space-y-4">
+                    <input type="text" id="sha256Input" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-target" placeholder="輸入文字">
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="generateSHA256()" class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-medium rounded-lg transition-colors">產生雜湊</button>
+                        <button onclick="copyResult('sha256Result')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors">複製</button>
+                    </div>
+                    <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg font-mono text-sm break-all min-h-[44px]" id="sha256Result"></div>
+                </div>
+            </section>
+
+            <!-- AES -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+                <h2 class="text-lg font-semibold mb-4 flex items-center gap-2"><span class="text-xl">🔒</span>AES 加密/解密</h2>
+                <div class="space-y-4">
+                    <input type="text" id="aesInput" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-target" placeholder="輸入文字或密文">
+                    <input type="password" id="aesKey" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-target" placeholder="輸入密鑰">
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="encryptAES()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors">加密</button>
+                        <button onclick="decryptAES()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">解密</button>
+                        <button onclick="copyResult('aesResult')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors">複製</button>
+                    </div>
+                    <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg font-mono text-sm break-all min-h-[44px]" id="aesResult"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5 font-medium">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
 
     <script>
-      // Base64 Encode
-function encodeBase64() {
-    var input = document.getElementById('base64Input').value;
-    var result = btoa(input);
-    document.getElementById('base64Result').innerText = result;
-}
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
 
-// Base64 Decode
-function decodeBase64() {
-    var input = document.getElementById('base64Input').value;
-    var result = atob(input);
-    document.getElementById('base64Result').innerText = result;
-}
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
 
-// Generate MD5
-function generateMD5() {
-    var input = document.getElementById('md5Input').value;
-    var result = CryptoJS.MD5(input).toString();
-    document.getElementById('md5Result').innerText = result;
-}
+        function encodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            if (!input) { showToast('請輸入文字'); return; }
+            try {
+                const result = btoa(unescape(encodeURIComponent(input)));
+                document.getElementById('base64Result').textContent = result;
+                showToast('編碼完成');
+            } catch (e) { showToast('編碼失敗'); }
+        }
 
-// Generate SHA-256
-function generateSHA256() {
-    var input = document.getElementById('sha256Input').value;
-    var result = CryptoJS.SHA256(input).toString();
-    document.getElementById('sha256Result').innerText = result;
-}
+        function decodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            if (!input) { showToast('請輸入文字'); return; }
+            try {
+                const result = decodeURIComponent(escape(atob(input)));
+                document.getElementById('base64Result').textContent = result;
+                showToast('解碼完成');
+            } catch (e) { showToast('解碼失敗，請確認輸入格式'); }
+        }
 
-// AES Encrypt
-function encryptAES() {
-    var input = document.getElementById('aesInput').value;
-    var secretKey = document.getElementById('aesKey').value;
-    var result = CryptoJS.AES.encrypt(input, secretKey).toString();
-    document.getElementById('aesResult').innerText = result;
-}
+        function generateMD5() {
+            const input = document.getElementById('md5Input').value;
+            if (!input) { showToast('請輸入文字'); return; }
+            const result = CryptoJS.MD5(input).toString();
+            document.getElementById('md5Result').textContent = result;
+            showToast('雜湊完成');
+        }
 
-// AES Decrypt
-function decryptAES() {
-    var input = document.getElementById('aesInput').value;
-    var secretKey = document.getElementById('aesKey').value;
-    var decryptedBytes = CryptoJS.AES.decrypt(input, secretKey);
-    var result = decryptedBytes.toString(CryptoJS.enc.Utf8);
-    document.getElementById('aesResult').innerText = result;
-}
+        function generateSHA256() {
+            const input = document.getElementById('sha256Input').value;
+            if (!input) { showToast('請輸入文字'); return; }
+            const result = CryptoJS.SHA256(input).toString();
+            document.getElementById('sha256Result').textContent = result;
+            showToast('雜湊完成');
+        }
 
+        function encryptAES() {
+            const input = document.getElementById('aesInput').value;
+            const key = document.getElementById('aesKey').value;
+            if (!input || !key) { showToast('請輸入文字和密鑰'); return; }
+            const result = CryptoJS.AES.encrypt(input, key).toString();
+            document.getElementById('aesResult').textContent = result;
+            showToast('加密完成');
+        }
+
+        function decryptAES() {
+            const input = document.getElementById('aesInput').value;
+            const key = document.getElementById('aesKey').value;
+            if (!input || !key) { showToast('請輸入密文和密鑰'); return; }
+            try {
+                const bytes = CryptoJS.AES.decrypt(input, key);
+                const result = bytes.toString(CryptoJS.enc.Utf8);
+                if (!result) throw new Error('解密失敗');
+                document.getElementById('aesResult').textContent = result;
+                showToast('解密完成');
+            } catch (e) { showToast('解密失敗，請確認密鑰正確'); }
+        }
+
+        async function copyResult(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            if (!text) { showToast('沒有內容可複製'); return; }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已複製到剪貼簿');
+            } catch { showToast('複製失敗'); }
+        }
     </script>
-  </body>
+</body>
 </html>

@@ -1,48 +1,160 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>盤古之白自動排版 - 中英文自動加空白 | FeiFei Tools</title>
+    <meta name="description" content="免費線上盤古之白排版工具，自動在中英文之間加入空白，提升文章可讀性，支援即時預覽。">
+    <meta name="keywords" content="盤古之白,pangu,中英文空白,自動排版,文字排版">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/pangu.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/pangu.html">
+    <meta property="og:title" content="盤古之白自動排版 | FeiFei Tools">
+    <meta property="og:description" content="自動在中英文之間加入空白，提升文章可讀性。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="盤古之白自動排版 | FeiFei Tools">
+    <meta name="twitter:description" content="自動在中英文之間加入空白，提升文章可讀性。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>盤古之白自動排版</title>
-    <meta name="description" content="盤古之白自動排版" />
-    <meta name="keywords" content="盤古之白自動排版,工具" />
-    <meta name="author" content="FeiFei" />
-    <!-- Noto Sans TC 字體 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Noto Sans TC', sans-serif; }
-    </style>
+
+    <!-- Pangu.js -->
     <script src="https://cdn.jsdelivr.net/npm/pangu@4.0.7/dist/browser/pangu.min.js"></script>
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "盤古之白自動排版", "url": "https://tool.feifei.tw/pangu.html", "description": "自動在中英文之間加入空白", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
+    <style>.touch-target { min-height: 44px; min-width: 44px; } .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
 </head>
-<body>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
 
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">盤古之白自動排版</h1>
-    <div class="space-y-4 my-4">
-        <div class="field">
-            <label for="inputText">輸入文字:</label>
-            <textarea class="w-full p-2 border rounded" id="inputText" placeholder="在這裡輸入文字...">當你凝視著bug，bug也凝視著你</textarea>
-        </div>
-        <div class="field">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="adjustSpacing()">自動排版</button>
-        </div>
-        <div class="field">
-            <label for="outputText">排版後的文字:</label>
-            <textarea class="w-full p-2 border rounded" id="outputText" readonly></textarea>
-        </div>
-    </div>
-</div>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
 
-<script>
-    function adjustSpacing() {
-        const inputText = document.getElementById('inputText').value;
-        const spacedText = pangu.spacing(inputText);
-        document.getElementById('outputText').value = spacedText;
-    }
-</script>
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">盤古之白</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
 
+    <!-- Main -->
+    <main id="main-content" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">📏</span>盤古之白自動排版</h1>
+            <p class="text-gray-600 dark:text-gray-400">自動在中英文之間加入空白，提升文章可讀性</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Input -->
+            <section>
+                <label for="inputText" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">輸入文字</label>
+                <textarea id="inputText" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[150px] touch-target" placeholder="在這裡輸入文字..." rows="6">當你凝視著bug，bug也凝視著你</textarea>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap gap-3">
+                <button onclick="adjustSpacing()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors touch-target flex-1 sm:flex-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                    自動排版
+                </button>
+                <button onclick="clearAll()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl transition-colors touch-target">清除</button>
+            </div>
+
+            <!-- Output -->
+            <section>
+                <div class="flex items-center justify-between mb-2">
+                    <label for="outputText" class="block text-sm font-medium text-gray-700 dark:text-gray-300">排版後的文字</label>
+                    <button onclick="copyOutput()" class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                        複製
+                    </button>
+                </div>
+                <textarea id="outputText" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-700 resize-y min-h-[150px]" readonly rows="6"></textarea>
+            </section>
+
+            <!-- Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
+                <p class="font-medium mb-1">什麼是盤古之白？</p>
+                <p>在中文與英文、數字之間自動加入空格，讓文章更容易閱讀。例如「你好Hello」會變成「你好 Hello」。</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5 font-medium">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
+
+    <script>
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
+
+        function adjustSpacing() {
+            const input = document.getElementById('inputText').value;
+            if (!input.trim()) { showToast('請先輸入文字'); return; }
+            document.getElementById('outputText').value = pangu.spacing(input);
+            showToast('排版完成');
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('outputText').value = '';
+            showToast('已清除');
+        }
+
+        async function copyOutput() {
+            const output = document.getElementById('outputText').value;
+            if (!output.trim()) { showToast('沒有內容可複製'); return; }
+            try { await navigator.clipboard.writeText(output); showToast('已複製到剪貼簿'); }
+            catch { showToast('複製失敗'); }
+        }
+    </script>
 </body>
 </html>

@@ -1,81 +1,159 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>HTML 轉 Markdown - 線上轉換工具 | FeiFei Tools</title>
+    <meta name="description" content="免費線上 HTML 轉 Markdown 工具，支援保留連結、圖片選項，快速將 HTML 原始碼轉換為 Markdown 格式。">
+    <meta name="keywords" content="HTML轉Markdown,HTML to Markdown,Markdown轉換,線上工具">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/html-to-markdown.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/html-to-markdown.html">
+    <meta property="og:title" content="HTML 轉 Markdown | FeiFei Tools">
+    <meta property="og:description" content="快速將 HTML 原始碼轉換為 Markdown 格式。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HTML 轉 Markdown | FeiFei Tools">
+    <meta name="twitter:description" content="快速將 HTML 原始碼轉換為 Markdown 格式。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>HTML 轉 Markdown</title>
-    <meta name="description" content="HTML 轉 Markdown" />
-    <meta name="keywords" content="HTML 轉 Markdown,工具" />
-    <meta name="author" content="FeiFei" />
-    <!-- Noto Sans TC 字體 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Turndown 庫 - 用於 HTML 轉 Markdown -->
+
+    <!-- Turndown -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turndown/7.1.1/turndown.min.js"></script>
-    <style>
-        body { 
-            font-family: 'Noto Sans TC', sans-serif; 
-        }
-        .w-full p-2 border rounded {
-            min-height: 200px;
-            overflow-y: auto;
-        }
-        .is-readonly {
-            background-color: #f8f9fa;
-        }
-        @media (max-width: 768px) {
-            .container mx-auto p-4 {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-            .bg-blue-500 text-white px-4 py-2 rounded {
-                margin-bottom: 8px;
-            }
-        }
-    </style>
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "HTML 轉 Markdown", "url": "https://tool.feifei.tw/html-to-markdown.html", "description": "HTML 轉 Markdown 線上工具", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
+    <style>.touch-target { min-height: 44px; min-width: 44px; } .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
 </head>
-<body>
-    <div class="container mx-auto p-4">
-        <!-- 導航欄 -->
-        <div class="flex flex-wrap space-x-2 border-b mb-4 is-fluid">
-            <a class="px-4 py-2 text-blue-600" href="text-stats.html">文字統計</a>
-            <a class="px-4 py-2 text-blue-600" href="chinese-conversion.html">繁簡轉換</a>
-            <a class="px-4 py-2 text-blue-600" href="pdf-to-png.html">PDF 轉 PNG</a>
-            <a class="px-4 py-2 text-blue-600 border-b-2 border-blue-500" href="html-to-markdown.html">HTML 轉 Markdown</a>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">HTML 轉 Markdown</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="main-content" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">📝</span>HTML 轉 Markdown</h1>
+            <p class="text-gray-600 dark:text-gray-400">將 HTML 原始碼快速轉換為 Markdown 格式</p>
         </div>
 
-        <h1 class="text-2xl font-bold mb-4">HTML 轉 Markdown 工具</h1>
-        
-        <div class="space-y-4 my-4">
-            <div class="field">
-                <label>HTML 原始碼:</label>
-                <textarea id="input-html" class="w-full p-2 border rounded" placeholder="在這裡貼上 HTML 原始碼..."></textarea>
-            </div>
-            <div class="field">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="convertToMarkdown()">轉換為 Markdown</button>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="clearAll()">清除內容</button>
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="copyMarkdown()">複製 Markdown</button>
-                
-                <div class="flex items-center space-x-2">
-                    <input id="preserve-links" type="checkbox" checked>
-                    <label for="preserve-links">保留連結</label>
+        <div class="space-y-6">
+            <!-- Input -->
+            <section>
+                <label for="input-html" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">HTML 原始碼</label>
+                <textarea id="input-html" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[200px] font-mono text-sm touch-target" placeholder="在這裡貼上 HTML 原始碼..." rows="8"></textarea>
+            </section>
+
+            <!-- Options -->
+            <section class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
+                <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">轉換選項</h3>
+                <div class="flex flex-wrap gap-4">
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input id="preserve-links" type="checkbox" checked class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">保留連結</span>
+                    </label>
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input id="preserve-images" type="checkbox" checked class="w-5 h-5 rounded border-gray-300 dark:border-gray-600 text-blue-600 focus:ring-blue-500">
+                        <span class="text-sm text-gray-700 dark:text-gray-300">保留圖片</span>
+                    </label>
                 </div>
-                <div class="flex items-center space-x-2">
-                    <input id="preserve-images" type="checkbox" checked>
-                    <label for="preserve-images">保留圖片</label>
-                </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap gap-3">
+                <button onclick="convertToMarkdown()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors touch-target flex-1 sm:flex-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                    轉換
+                </button>
+                <button onclick="copyMarkdown()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-xl transition-colors touch-target">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                    複製
+                </button>
+                <button onclick="clearAll()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl transition-colors touch-target">清除</button>
             </div>
-            <div class="field">
-                <label>Markdown 結果:</label>
-                <textarea id="output-markdown" class="w-full p-2 border rounded" readonly></textarea>
+
+            <!-- Output -->
+            <section>
+                <label for="output-markdown" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Markdown 結果</label>
+                <textarea id="output-markdown" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-700 resize-y min-h-[200px] font-mono text-sm" readonly rows="8"></textarea>
+            </section>
+
+            <!-- Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
+                <p class="font-medium mb-1">使用說明</p>
+                <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-300">
+                    <li>支援常見 HTML 標籤：標題、段落、列表、連結、圖片、程式碼區塊等</li>
+                    <li>可選擇是否保留連結和圖片</li>
+                    <li>使用 ATX 風格標題（# 符號）</li>
+                </ul>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5 font-medium">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
 
     <script>
-        // 初始化 TurndownService
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
+
+        // Turndown Service
         let turndownService = new TurndownService({
             headingStyle: 'atx',
             hr: '---',
@@ -85,60 +163,48 @@
 
         function convertToMarkdown() {
             const htmlContent = document.getElementById('input-html').value;
+            if (!htmlContent.trim()) { showToast('請先輸入 HTML 內容'); return; }
+
             const preserveLinks = document.getElementById('preserve-links').checked;
             const preserveImages = document.getElementById('preserve-images').checked;
-            
-            // 設定選項
-            // 重新初始化 TurndownService，根據當前設置
+
             turndownService = new TurndownService({
                 headingStyle: 'atx',
                 hr: '---',
                 bulletListMarker: '-',
                 codeBlockStyle: 'fenced'
             });
-            
-            // 如果不保留連結，添加規則覆蓋連結處理
+
             if (!preserveLinks) {
                 turndownService.addRule('removeLinks', {
                     filter: 'a',
-                    replacement: function(content) {
-                        return content;
-                    }
+                    replacement: function(content) { return content; }
                 });
             }
-            
-            // 如果不保留圖片，添加規則覆蓋圖片處理
+
             if (!preserveImages) {
                 turndownService.addRule('removeImages', {
                     filter: 'img',
-                    replacement: function() {
-                        return '';
-                    }
+                    replacement: function() { return ''; }
                 });
             }
-            
-            // 轉換 HTML 為 Markdown
+
             const markdown = turndownService.turndown(htmlContent);
             document.getElementById('output-markdown').value = markdown;
+            showToast('轉換完成');
         }
-        
+
         function clearAll() {
             document.getElementById('input-html').value = '';
             document.getElementById('output-markdown').value = '';
+            showToast('已清除');
         }
-        
-        function copyMarkdown() {
-            const markdownOutput = document.getElementById('output-markdown');
-            markdownOutput.select();
-            document.execCommand('copy');
-            
-            // 顯示複製成功提示
-            const originalText = "複製 Markdown";
-            const button = document.querySelector("button:nth-child(3)");
-            button.textContent = "已複製！";
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 1500);
+
+        async function copyMarkdown() {
+            const output = document.getElementById('output-markdown').value;
+            if (!output.trim()) { showToast('沒有內容可複製'); return; }
+            try { await navigator.clipboard.writeText(output); showToast('已複製到剪貼簿'); }
+            catch { showToast('複製失敗'); }
         }
     </script>
 </body>

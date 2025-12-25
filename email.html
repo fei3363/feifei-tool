@@ -1,232 +1,224 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>信箱與暱稱提取工具 - 批量提取 Email | FeiFei Tools</title>
+    <meta name="description" content="免費線上信箱提取工具，從會員資料中批量提取 Email 和暱稱，支援多種格式匯出。">
+    <meta name="keywords" content="Email提取,信箱提取,批量提取,會員資料,暱稱提取">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/email.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/email.html">
+    <meta property="og:title" content="信箱與暱稱提取工具 | FeiFei Tools">
+    <meta property="og:description" content="從會員資料中批量提取 Email 和暱稱。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="信箱與暱稱提取工具 | FeiFei Tools">
+    <meta name="twitter:description" content="從會員資料中批量提取 Email 和暱稱。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>信箱與暱稱提取工具</title>
-    <meta name="description" content="信箱與暱稱提取工具" />
-    <meta name="keywords" content="信箱與暱稱提取工具,工具" />
-    <meta name="author" content="FeiFei" />
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "信箱與暱稱提取工具", "url": "https://tool.feifei.tw/email.html", "description": "批量提取 Email 和暱稱", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
     <style>
-        body { 
-            font-family: 'Noto Sans TC', sans-serif; 
-            padding-bottom: 50px;
-        }
-        .result-text { 
-            word-break: break-all;
-            margin: 1rem 0;
-            white-space: pre-wrap;
-            border: 1px solid #e0e0e0;
-            padding: 10px;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .table-result {
-            margin: 1rem 0;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            overflow: hidden;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        #count { 
-            margin: 1rem 0; 
-            font-weight: 500; 
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .tab-link {
-            cursor: pointer;
-            padding: 0.5rem 1rem;
-            display: inline-block;
-        }
-        .tab-link.active {
-            border-bottom: 2px solid #00b5ad;
-        }
-        .copy-button {
-            margin: 0.5rem 0;
-            background-color: #00b5ad;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .copy-button:hover {
-            background-color: #009c95;
-        }
-        .copy-button:active {
-            background-color: #008c86;
-        }
-        .result-container {
-            position: relative;
-        }
-        .copy-message {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 181, 173, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            display: none;
-        }
-        .format-options {
-            margin: 1rem 0;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid #ddd;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-            position: sticky;
-            top: 0;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
+        .touch-target { min-height: 44px; min-width: 44px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
     </style>
 </head>
-<body>
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold mb-4">信箱與暱稱提取工具</h1>
-        <div class="space-y-4 my-4">
-            <div class="field">
-                <label for="inputText">輸入文字:</label>
-                <textarea class="w-full p-2 border rounded" id="inputText" rows="8" placeholder="輸入含有信箱與暱稱的會員資料"></textarea>
-            </div>
-            <div class="field">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded" onclick="extractAndDisplay()">提取資料</button>
-            </div>
-            <div class="field">
-                <div id="count" class="text-gray-700"></div>
-                <div class="flex flex-wrap space-x-2 border-b mb-4">
-                    <a class="tab-link active px-4 py-2 text-blue-600" onclick="switchTab('table')">表格視圖</a>
-                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('comma')">逗號分隔</a>
-                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('list')">全列表</a>
-                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('sheet')">Sheet格式</a>
-                    <a class="tab-link px-4 py-2 text-blue-600" onclick="switchTab('email')">僅Email</a>
-                </div>
-                <div class="text-gray-700 bg-gray-500 text-white" style="margin: 0.5rem 0;">格式說明：暱稱/Email/會員編號</div>
-                
-                <div id="tableContent" class="tab-content active">
-                    <div class="format-options">
-                        <button class="copy-button" onclick="copyTableToClipboard()">複製表格內容</button>
-                    </div>
-                    <div class="result-container">
-                        <div id="tableResult" class="table-result">
-                            <table id="dataTable">
-                                <thead>
-                                    <tr>
-                                        <th>暱稱/會員名</th>
-                                        <th>Email</th>
-                                        <th>會員編號</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="copy-message">已複製!</div>
-                    </div>
-                </div>
-                
-                <div id="commaContent" class="tab-content">
-                    <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('commaResult')">複製全部</button>
-                        <button class="copy-button" onclick="copyColumn('comma', 'nickname')">複製暱稱</button>
-                        <button class="copy-button" onclick="copyColumn('comma', 'email')">複製Email</button>
-                    </div>
-                    <div class="result-container">
-                        <div id="commaResult" class="result-text"></div>
-                        <div class="copy-message">已複製!</div>
-                    </div>
-                </div>
-                
-                <div id="listContent" class="tab-content">
-                    <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('listResult')">複製全部</button>
-                        <button class="copy-button" onclick="copyColumn('list', 'nickname')">複製暱稱</button>
-                        <button class="copy-button" onclick="copyColumn('list', 'email')">複製Email</button>
-                    </div>
-                    <div class="result-container">
-                        <div id="listResult" class="result-text"></div>
-                        <div class="copy-message">已複製!</div>
-                    </div>
-                </div>
-                
-                <div id="sheetContent" class="tab-content">
-                    <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('sheetResult')">複製Sheet格式</button>
-                    </div>
-                    <div class="result-container">
-                        <div id="sheetResult" class="result-text"></div>
-                        <div class="copy-message">已複製!</div>
-                    </div>
-                </div>
-                
-                <div id="emailContent" class="tab-content">
-                    <div class="format-options">
-                        <button class="copy-button" onclick="copyToClipboard('emailOnlyResult')">複製Email列表</button>
-                        <button class="copy-button" onclick="copyEmailComma()">複製Email(逗號分隔)</button>
-                    </div>
-                    <div class="result-container">
-                        <div id="emailOnlyResult" class="result-text"></div>
-                        <div class="copy-message">已複製!</div>
-                    </div>
-                </div>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">信箱提取</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
             </div>
         </div>
-    </div>
+    </header>
+
+    <!-- Main -->
+    <main id="main-content" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">📧</span>信箱與暱稱提取</h1>
+            <p class="text-gray-600 dark:text-gray-400">從會員資料中批量提取 Email 和暱稱</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Input -->
+            <section>
+                <label for="inputText" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">輸入會員資料</label>
+                <textarea id="inputText" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[150px] touch-target" placeholder="輸入含有信箱與暱稱的會員資料" rows="8"></textarea>
+            </section>
+
+            <!-- Action -->
+            <div class="flex flex-wrap gap-3">
+                <button onclick="extractAndDisplay()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors touch-target flex-1 sm:flex-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                    提取資料
+                </button>
+                <button onclick="clearAll()" class="inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl transition-colors touch-target">清除</button>
+            </div>
+
+            <!-- Count -->
+            <div id="count" class="hidden text-lg font-medium text-blue-600 dark:text-blue-400"></div>
+
+            <!-- Tabs -->
+            <div id="resultSection" class="hidden space-y-4">
+                <!-- Tab Nav -->
+                <div class="flex flex-wrap gap-1 border-b border-gray-200 dark:border-gray-700">
+                    <button onclick="switchTab('table')" class="tab-link active px-4 py-2 text-sm font-medium border-b-2 border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 -mb-px">表格視圖</button>
+                    <button onclick="switchTab('comma')" class="tab-link px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">逗號分隔</button>
+                    <button onclick="switchTab('list')" class="tab-link px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">全列表</button>
+                    <button onclick="switchTab('sheet')" class="tab-link px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">Sheet格式</button>
+                    <button onclick="switchTab('email')" class="tab-link px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">僅Email</button>
+                </div>
+
+                <!-- Format Hint -->
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2 text-sm text-gray-600 dark:text-gray-400">
+                    格式說明：暱稱 / Email / 會員編號
+                </div>
+
+                <!-- Tab Content: Table -->
+                <div id="tableContent" class="tab-content">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button onclick="copyTableToClipboard()" class="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                            複製表格
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-xl">
+                        <table class="w-full text-sm">
+                            <thead class="bg-gray-100 dark:bg-gray-800 sticky top-0">
+                                <tr>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">暱稱/會員名</th>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">Email</th>
+                                    <th class="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300">會員編號</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab Content: Comma -->
+                <div id="commaContent" class="tab-content hidden">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button onclick="copyToClipboard('commaResult')" class="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors">複製全部</button>
+                        <button onclick="copyColumn('comma', 'nickname')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg transition-colors">複製暱稱</button>
+                        <button onclick="copyColumn('comma', 'email')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg transition-colors">複製Email</button>
+                    </div>
+                    <div id="commaResult" class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-mono max-h-[300px] overflow-y-auto whitespace-pre-wrap break-all"></div>
+                </div>
+
+                <!-- Tab Content: List -->
+                <div id="listContent" class="tab-content hidden">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button onclick="copyToClipboard('listResult')" class="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors">複製全部</button>
+                        <button onclick="copyColumn('list', 'nickname')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg transition-colors">複製暱稱</button>
+                        <button onclick="copyColumn('list', 'email')" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg transition-colors">複製Email</button>
+                    </div>
+                    <div id="listResult" class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-mono max-h-[300px] overflow-y-auto whitespace-pre-wrap"></div>
+                </div>
+
+                <!-- Tab Content: Sheet -->
+                <div id="sheetContent" class="tab-content hidden">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button onclick="copyToClipboard('sheetResult')" class="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors">複製Sheet格式</button>
+                    </div>
+                    <div id="sheetResult" class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-mono max-h-[300px] overflow-y-auto whitespace-pre-wrap"></div>
+                </div>
+
+                <!-- Tab Content: Email Only -->
+                <div id="emailContent" class="tab-content hidden">
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <button onclick="copyToClipboard('emailOnlyResult')" class="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium rounded-lg transition-colors">複製Email列表</button>
+                        <button onclick="copyEmailComma()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-lg transition-colors">複製(逗號分隔)</button>
+                    </div>
+                    <div id="emailOnlyResult" class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-mono max-h-[300px] overflow-y-auto whitespace-pre-wrap"></div>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
+                <p class="font-medium mb-1">使用說明</p>
+                <p>將會員資料貼入輸入框，支援解析包含暱稱、Email 和會員編號的資料格式。</p>
+                <p class="mt-1 text-blue-600 dark:text-blue-300">提示：Sheet 格式可直接貼到 Excel 或 Google Sheets</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5 font-medium">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
+
     <script>
-        // 儲存解析後的資料
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
+
         let parsedMembers = [];
-        
+
         function extractMemberInfo(text) {
             const lines = text.split('\n');
             const members = [];
             let currentMember = {};
-            
+
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i].trim();
-                
-                // 跳過標題行或空行
-                if (line === '' || line.includes('**會員已開通課程註冊時間**')) {
-                    continue;
-                }
-                
-                // 檢查是否是用戶名與ID行（包含 # 號）
+
+                if (line === '' || line.includes('**會員已開通課程註冊時間**')) continue;
+
                 const nicknameMatch = line.match(/^(.+)\s+#(\d+)/);
                 if (nicknameMatch) {
-                    // 如果已經有當前用戶，先保存它
-                    if (currentMember.nickname) {
-                        members.push(currentMember);
-                    }
-                    
-                    // 開始一個新用戶
+                    if (currentMember.nickname) members.push(currentMember);
                     currentMember = {
                         nickname: nicknameMatch[1].trim(),
                         id: nicknameMatch[2],
@@ -235,145 +227,116 @@
                     };
                     continue;
                 }
-                
-                // 檢查是否是email行
+
                 const emailMatch = line.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
                 if (emailMatch && currentMember.nickname) {
                     currentMember.email = emailMatch[1];
                     continue;
                 }
-                
-                // 檢查是否包含註冊時間
-                if (line.includes('已註冊') && i+1 < lines.length) {
-                    const nextLine = lines[i+1].trim();
+
+                if (line.includes('已註冊') && i + 1 < lines.length) {
+                    const nextLine = lines[i + 1].trim();
                     const dateMatch = nextLine.match(/(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})/);
-                    if (dateMatch) {
-                        currentMember.regTime = dateMatch[1];
-                    }
+                    if (dateMatch) currentMember.regTime = dateMatch[1];
                 }
             }
-            
-            // 不要忘記添加最後一個用戶
-            if (currentMember.nickname) {
-                members.push(currentMember);
-            }
-            
+
+            if (currentMember.nickname) members.push(currentMember);
             return members;
         }
-        
+
         function extractAndDisplay() {
             const content = document.getElementById('inputText').value;
+            if (!content.trim()) { showToast('請先輸入會員資料'); return; }
+
             parsedMembers = extractMemberInfo(content);
-            
-            document.getElementById('count').textContent = `會員數量：${parsedMembers.length}`;
-            
-            // 清空表格
-            const tableBody = document.querySelector('#dataTable tbody');
-            tableBody.innerHTML = '';
-            
-            // 填充表格數據
-            parsedMembers.forEach(member => {
-                const row = tableBody.insertRow();
-                row.insertCell(0).innerText = member.nickname || '';
-                row.insertCell(1).innerText = member.email || '';
-                row.insertCell(2).innerText = member.id || '';
-            });
-            
-            // 逗號分隔格式
-            const commaFormat = parsedMembers.map(m => `${m.nickname}, ${m.email}, ${m.id}`).join(',');
-            document.getElementById('commaResult').textContent = commaFormat;
-            
-            // 列表格式
-            const listFormat = parsedMembers.map(m => `${m.nickname}, ${m.email}, ${m.id}`).join('\n');
-            document.getElementById('listResult').textContent = listFormat;
-            
-            // Sheet格式 (每行一組數據：暱稱、Email、ID)
-            const sheetFormat = parsedMembers.map(m => `${m.nickname}\t${m.email}\t${m.id}`).join('\n');
-            document.getElementById('sheetResult').textContent = sheetFormat;
-            
-            // 僅Email格式
-            const emailOnlyFormat = parsedMembers.map(m => m.email).join('\n');
-            document.getElementById('emailOnlyResult').textContent = emailOnlyFormat;
-        }
-        
-        function switchTab(tabName) {
-            // 移除所有 active 類別
-            document.querySelectorAll('.tab-link').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // 添加 active 到選中的元素
-            const clickedTab = event.target;
-            clickedTab.classList.add('active');
-            document.getElementById(`${tabName}Content`).classList.add('active');
-        }
-        
-        function copyToClipboard(elementId) {
-            const text = document.getElementById(elementId).textContent;
-            
-            navigator.clipboard.writeText(text).then(() => {
-                showCopyMessage(elementId);
-            }).catch(err => {
-                console.error('複製失敗:', err);
-                alert('複製失敗，請手動選取文字後複製');
-            });
-        }
-        
-        function copyEmailComma() {
-            const emailCommaFormat = parsedMembers.map(m => m.email).join(',');
-            
-            navigator.clipboard.writeText(emailCommaFormat).then(() => {
-                showCopyMessage('emailOnlyResult');
-            }).catch(err => {
-                console.error('複製失敗:', err);
-                alert('複製失敗，請手動選取文字後複製');
-            });
-        }
-        
-        function copyColumn(format, column) {
-            let text = '';
-            
-            if (column === 'nickname') {
-                text = parsedMembers.map(m => m.nickname).join(format === 'comma' ? ',' : '\n');
-            } else if (column === 'email') {
-                text = parsedMembers.map(m => m.email).join(format === 'comma' ? ',' : '\n');
+
+            if (parsedMembers.length === 0) {
+                showToast('未找到有效的會員資料');
+                return;
             }
-            
-            navigator.clipboard.writeText(text).then(() => {
-                showCopyMessage(`${format}Result`);
-            }).catch(err => {
-                console.error('複製失敗:', err);
-                alert('複製失敗，請手動選取文字後複製');
-            });
+
+            document.getElementById('count').textContent = `會員數量：${parsedMembers.length}`;
+            document.getElementById('count').classList.remove('hidden');
+            document.getElementById('resultSection').classList.remove('hidden');
+
+            // Table
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = parsedMembers.map(m => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
+                    <td class="px-4 py-3 text-gray-900 dark:text-gray-100">${m.nickname || ''}</td>
+                    <td class="px-4 py-3 text-gray-600 dark:text-gray-400">${m.email || ''}</td>
+                    <td class="px-4 py-3 text-gray-500 dark:text-gray-500">${m.id || ''}</td>
+                </tr>
+            `).join('');
+
+            // Comma format
+            document.getElementById('commaResult').textContent = parsedMembers.map(m => `${m.nickname}, ${m.email}, ${m.id}`).join(',');
+
+            // List format
+            document.getElementById('listResult').textContent = parsedMembers.map(m => `${m.nickname}, ${m.email}, ${m.id}`).join('\n');
+
+            // Sheet format
+            document.getElementById('sheetResult').textContent = parsedMembers.map(m => `${m.nickname}\t${m.email}\t${m.id}`).join('\n');
+
+            // Email only
+            document.getElementById('emailOnlyResult').textContent = parsedMembers.map(m => m.email).filter(e => e).join('\n');
+
+            showToast(`已提取 ${parsedMembers.length} 筆資料`);
         }
-        
-        function copyTableToClipboard() {
-            // 構建表格數據
-            let tableText = "暱稱/會員名\tEmail\t會員編號\n";
-            parsedMembers.forEach(member => {
-                tableText += `${member.nickname || ''}\t${member.email || ''}\t${member.id || ''}\n`;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-link').forEach(tab => {
+                tab.classList.remove('active', 'border-b-2', 'border-blue-600', 'text-blue-600', 'dark:text-blue-400', 'dark:border-blue-400', '-mb-px');
+                tab.classList.add('text-gray-500', 'dark:text-gray-400');
             });
-            
-            navigator.clipboard.writeText(tableText).then(() => {
-                showCopyMessage('tableResult');
-            }).catch(err => {
-                console.error('複製失敗:', err);
-                alert('複製失敗，請手動選取文字後複製');
-            });
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+
+            event.target.classList.add('active', 'border-b-2', 'border-blue-600', 'text-blue-600', 'dark:text-blue-400', 'dark:border-blue-400', '-mb-px');
+            event.target.classList.remove('text-gray-500', 'dark:text-gray-400');
+            document.getElementById(`${tabName}Content`).classList.remove('hidden');
         }
-        
-        function showCopyMessage(elementId) {
-            const container = document.getElementById(elementId).closest('.result-container');
-            const message = container.querySelector('.copy-message');
-            message.style.display = 'block';
-            
-            // 2秒後隱藏訊息
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 2000);
+
+        async function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已複製到剪貼簿');
+            } catch { showToast('複製失敗'); }
+        }
+
+        async function copyEmailComma() {
+            const text = parsedMembers.map(m => m.email).filter(e => e).join(',');
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已複製到剪貼簿');
+            } catch { showToast('複製失敗'); }
+        }
+
+        async function copyColumn(format, column) {
+            const separator = format === 'comma' ? ',' : '\n';
+            const text = parsedMembers.map(m => column === 'nickname' ? m.nickname : m.email).filter(v => v).join(separator);
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已複製到剪貼簿');
+            } catch { showToast('複製失敗'); }
+        }
+
+        async function copyTableToClipboard() {
+            let text = "暱稱/會員名\tEmail\t會員編號\n";
+            text += parsedMembers.map(m => `${m.nickname || ''}\t${m.email || ''}\t${m.id || ''}`).join('\n');
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已複製表格到剪貼簿');
+            } catch { showToast('複製失敗'); }
+        }
+
+        function clearAll() {
+            document.getElementById('inputText').value = '';
+            document.getElementById('count').classList.add('hidden');
+            document.getElementById('resultSection').classList.add('hidden');
+            parsedMembers = [];
+            showToast('已清除');
         }
     </script>
 </body>

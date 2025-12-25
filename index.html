@@ -1,81 +1,464 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO 基礎 -->
+    <title>前端實用工具集 - 免費線上工具 | FeiFei Tools</title>
+    <meta name="description" content="FeiFei Tools 前端實用工具集 - 17+ 個免費線上工具，包含字數統計、繁簡轉換、PDF 轉 PNG、編碼加密等，無需安裝即開即用。">
+    <meta name="keywords" content="前端工具,線上工具,字數統計,繁簡轉換,PDF轉PNG,編碼加密,免費工具">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/">
+    <meta property="og:title" content="前端實用工具集 | FeiFei Tools">
+    <meta property="og:description" content="17+ 個免費線上工具，包含字數統計、繁簡轉換、PDF 轉 PNG、編碼加密等。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+    <meta property="og:locale" content="zh_TW">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="前端實用工具集 | FeiFei Tools">
+    <meta name="twitter:description" content="17+ 個免費線上工具，包含字數統計、繁簡轉換、PDF 轉 PNG、編碼加密等。">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-B20B804DQS');
+    </script>
+
+    <!-- 防止主題閃爍 -->
+    <script>
+        (function() {
+            const saved = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (saved === 'dark' || (!saved && prefersDark)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>前端實用工具集</title>
-    <meta name="description" content="前端實用工具集" />
-    <meta name="keywords" content="前端實用工具集,工具" />
-    <meta name="author" content="FeiFei" />
-    <!-- Noto Sans TC 字體 -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- 結構化資料 -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "FeiFei Tools",
+        "url": "https://tool.feifei.tw/",
+        "description": "前端實用工具集 - 17+ 個免費線上工具",
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://tool.feifei.tw/?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; }
-        .tool-link { margin-top: 20px; }
+        /* 觸控友善 */
+        .touch-target { min-height: 44px; min-width: 44px; }
+        /* 隱藏但可讀取 */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        .focus\:not-sr-only:focus { position: static; width: auto; height: auto; padding: inherit; margin: inherit; overflow: visible; clip: auto; white-space: normal; }
     </style>
 </head>
-<body>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
 
-<div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">前端實用工具集</h1>
-    <p>歡迎使用前端實用工具集。請選擇以下工具進行操作：</p>
-    
-    
-    <!--TOC_START-->
-    <div class="tool-link">
-        <a class="ts-button" href="bash.html">終端指令提取工具</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="card.html">自動裁剪圖片空白和水印</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="chinese-conversion.html">繁簡轉換工具</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="conversion.html">繁簡轉換工具(保留原始格式)</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="email.html">信箱與暱稱提取工具</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="encry.html">編碼/雜湊/加解密</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="exif.html">照片 Exif 資料讀取器</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="highlight_replace.html">文字識別和取代</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="html-to-markdown.html">HTML 轉 Markdown</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="iso-diff-tool.html">ISO文件差異對照工具</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="pangu.html">盤古之白自動排版</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="pdf-to-png.html">PDF 轉 PNG </a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="resize-image.html">縮小圖片</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="text-diff-tool.html">文字差異比對工具</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="text-stats.html">字數統計工具</a>
-    </div>
-    <div class="tool-link">
-        <a class="ts-button" href="windows-to-wsl.html">Windows 路徑轉換成 WSL 路徑</a>
-    </div>
-<!--TOC_END-->
-    
-</div>
+    <!-- Skip Link -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">
+        跳至主要內容
+    </a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="index.html" class="flex items-center gap-2 touch-target" aria-label="FeiFei Tools 首頁">
+                    <span class="text-2xl" aria-hidden="true">🛠️</span>
+                    <span class="font-bold text-xl">FeiFei Tools</span>
+                </a>
+
+                <!-- Nav Links -->
+                <nav class="flex items-center gap-1" aria-label="分類導覽">
+                    <a href="#text-tools" class="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target">
+                        文字工具
+                    </a>
+                    <a href="#image-tools" class="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target">
+                        圖片工具
+                    </a>
+                    <a href="#dev-tools" class="px-4 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target">
+                        開發工具
+                    </a>
+                </nav>
+
+                <!-- Theme Toggle -->
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+                    </svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="pb-20 md:pb-8">
+
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-800 dark:to-gray-900 text-white py-12 md:py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-3xl md:text-5xl font-bold mb-4">
+                    前端實用工具集
+                </h1>
+                <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8">
+                    17+ 個免費線上工具，無需安裝，即開即用
+                </p>
+
+                <!-- Search -->
+                <div class="max-w-md mx-auto">
+                    <label for="search" class="sr-only">搜尋工具</label>
+                    <div class="relative">
+                        <input type="search" id="search" placeholder="搜尋工具..."
+                               class="w-full px-4 py-3 pl-12 rounded-xl bg-white/10 backdrop-blur border border-white/20 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/50 touch-target"
+                               autocomplete="off">
+                        <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <p id="search-result" class="text-sm text-blue-200 mt-2 h-5" aria-live="polite"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Grid -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+            <!-- Text Tools -->
+            <div id="text-tools" class="mb-12 scroll-mt-20 tool-section">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <span class="text-2xl" aria-hidden="true">📝</span>
+                    文字處理工具
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+<!--TEXT_TOOLS_START-->
+                    <a href="chinese-conversion.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="繁簡 轉換 簡體 繁體 中文 chinese">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🔄</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">繁簡轉換工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上繁簡轉換工具，支援繁體中文與簡體中文互轉，使用 OpenCC 精準轉換，即時處理無需安裝。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="conversion.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="繁簡 轉換 格式 保留 html">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🔄</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">繁簡轉換 Pro</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上繁簡轉換工具 Pro 版，支援保留原始 HTML 格式的繁體簡體互轉，適合複製貼上含有...</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="email.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="信箱 email 郵件 暱稱 提取 extract">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📧</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">信箱與暱稱提取工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上信箱提取工具，從會員資料中批量提取 Email 和暱稱，支援多種格式匯出。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="highlight_replace.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="取代 替換 replace 識別 highlight">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🖍️</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">文字識別與取代工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上文字識別與取代工具，自動將大陸用語轉換為台灣用語，支援自訂詞彙對照表。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="pangu.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="盤古 空白 排版 中英文 pangu spacing">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📏</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">盤古之白自動排版</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上盤古之白排版工具，自動在中英文之間加入空白，提升文章可讀性，支援即時預覽。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="text-diff-tool.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="差異 比對 diff 比較 文字">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🔍</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">文字差異比對工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上文字差異比對工具，比較兩段文字的差異，標示新增、刪除和修改的部分，支援多種顯示模式。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="text-stats.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="字數 統計 字元 詞數 行數 count">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🔢</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">字數統計工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上字數統計工具，支援中文字數、英文單詞、字元數、段落數統計，即時計算無需安裝。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+<!--TEXT_TOOLS_END-->
+                </div>
+            </div>
+
+            <!-- Image Tools -->
+            <div id="image-tools" class="mb-12 scroll-mt-20 tool-section">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <span class="text-2xl" aria-hidden="true">🖼️</span>
+                    圖片處理工具
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+<!--IMAGE_TOOLS_START-->
+                    <a href="card.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="裁剪 圖片 空白 水印 crop trim">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">✂️</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">自動裁剪圖片工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上圖片裁剪工具，自動檢測和裁剪圖片邊緣空白區域，可選擇移除底部水印。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="exif.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="exif 照片 資訊 相機 gps 元資料">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📷</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">照片 EXIF 資料讀取器</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上 EXIF 資料讀取工具，查看照片的拍攝日期、相機型號、光圈、快門、ISO 等詳細資訊。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="pdf-to-png.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="pdf png 轉換 圖片 convert">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📄</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">PDF 轉 PNG 轉換器</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上 PDF 轉 PNG 工具，支援多頁 PDF 轉換，可一次下載全部圖片或單張下載。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="resize-image.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="縮小 圖片 resize 調整 尺寸 壓縮">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📐</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">縮小圖片工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上圖片縮放工具，快速調整圖片寬度或高度，自動等比例縮放。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+<!--IMAGE_TOOLS_END-->
+                </div>
+            </div>
+
+            <!-- Dev Tools -->
+            <div id="dev-tools" class="mb-12 scroll-mt-20 tool-section">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <span class="text-2xl" aria-hidden="true">💻</span>
+                    開發者工具
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+<!--DEV_TOOLS_START-->
+                    <a href="bash.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="終端 指令 bash shell command terminal">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">💻</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">終端指令提取工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上終端指令提取工具，從終端輸出中自動識別並提取執行的指令，支援多種提示符格式。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="encry.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="編碼 加密 解密 base64 md5 sha aes hash">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🔐</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">編碼/雜湊/加解密工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上編碼加解密工具，支援 Base64 編解碼、MD5 雜湊、SHA-256 雜湊、AES...</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="html-to-markdown.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="html markdown 轉換 convert md">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📝</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">HTML 轉 Markdown</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上 HTML 轉 Markdown 工具，支援保留連結、圖片選項，快速將 HTML 原始...</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="iso-diff-tool.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="iso 差異 比對 文件 版本">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">📋</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">ISO 文件差異對照工具</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上 ISO 文件差異對照工具，支援條文編號解析、差異標記，快速比對兩個版本的 ISO 文...</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+
+                    <a href="windows-to-wsl.html" class="tool-card group block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-lg hover:shadow-blue-500/10 transition-all touch-target" data-keywords="windows wsl linux 路徑 轉換 path">
+                        <div class="flex items-start gap-3">
+                            <span class="text-3xl flex-shrink-0" aria-hidden="true">🪟</span>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Windows 轉 WSL 路徑</h3>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">免費線上 Windows 路徑轉 WSL 路徑工具，支援磁碟代號、網路路徑轉換，自動儲存轉換記錄。</p>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </div>
+                    </a>
+<!--DEV_TOOLS_END-->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);" aria-label="行動版導覽">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" aria-current="page" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg>
+                <span class="text-xs mt-0.5 font-medium">首頁</span>
+            </a>
+            <a href="#text-tools" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors touch-target">
+                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg>
+                <span class="text-xs mt-0.5">文字</span>
+            </a>
+            <a href="#image-tools" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors touch-target">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                <span class="text-xs mt-0.5">圖片</span>
+            </a>
+            <a href="#dev-tools" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors touch-target">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                <span class="text-xs mt-0.5">開發</span>
+            </a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors touch-target" aria-label="切換主題">
+                <svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"/></svg>
+                <svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                <span class="text-xs mt-0.5">主題</span>
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        // ========== Theme Toggle ==========
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // ========== Search ==========
+        const searchInput = document.getElementById('search');
+        const searchResult = document.getElementById('search-result');
+        const toolCards = document.querySelectorAll('.tool-card');
+        const toolSections = document.querySelectorAll('.tool-section');
+
+        searchInput?.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            if (!query) {
+                // 顯示所有
+                toolCards.forEach(card => card.style.display = '');
+                toolSections.forEach(section => section.style.display = '');
+                searchResult.textContent = '';
+                return;
+            }
+
+            let visibleCount = 0;
+
+            toolCards.forEach(card => {
+                const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+                const keywords = card.dataset.keywords?.toLowerCase() || '';
+                const matches = title.includes(query) || desc.includes(query) || keywords.includes(query);
+
+                card.style.display = matches ? '' : 'none';
+                if (matches) visibleCount++;
+            });
+
+            // 隱藏空的分類
+            toolSections.forEach(section => {
+                const visibleCards = section.querySelectorAll('.tool-card:not([style*="display: none"])');
+                section.style.display = visibleCards.length > 0 ? '' : 'none';
+            });
+
+            searchResult.textContent = visibleCount > 0 ? `找到 ${visibleCount} 個工具` : '沒有找到符合的工具';
+        });
+
+        // ESC 清除搜尋
+        searchInput?.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+            }
+        });
+    </script>
 
 </body>
 </html>
