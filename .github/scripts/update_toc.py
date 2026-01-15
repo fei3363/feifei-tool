@@ -30,6 +30,7 @@ TOOL_CATEGORIES = {
     'html-to-markdown.html': 'dev',
     'windows-to-wsl.html': 'dev',
     'iso-diff-tool.html': 'dev',
+    'gsheet-to-markdown.html': 'dev',
 }
 
 # 工具圖示設定
@@ -50,6 +51,7 @@ TOOL_ICONS = {
     'html-to-markdown.html': '📝',
     'windows-to-wsl.html': '🪟',
     'iso-diff-tool.html': '📋',
+    'gsheet-to-markdown.html': '📊',
 }
 
 # 工具關鍵字 (用於搜尋)
@@ -70,6 +72,7 @@ TOOL_KEYWORDS = {
     'html-to-markdown.html': 'html markdown 轉換 convert md',
     'windows-to-wsl.html': 'windows wsl linux 路徑 轉換 path',
     'iso-diff-tool.html': 'iso 差異 比對 文件 版本',
+    'gsheet-to-markdown.html': 'google sheet markdown 表格 試算表 excel spreadsheet 轉換',
 }
 
 
