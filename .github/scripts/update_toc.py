@@ -17,6 +17,7 @@ TOOL_CATEGORIES = {
     'text-diff-tool.html': 'text',
     'highlight_replace.html': 'text',
     'email.html': 'text',
+    'word-replace.html': 'text',
 
     # 圖片工具
     'pdf-to-png.html': 'image',
@@ -31,6 +32,7 @@ TOOL_CATEGORIES = {
     'windows-to-wsl.html': 'dev',
     'iso-diff-tool.html': 'dev',
     'gsheet-to-markdown.html': 'dev',
+    'markdown-viewer.html': 'dev',
 }
 
 # 工具圖示設定
@@ -42,6 +44,7 @@ TOOL_ICONS = {
     'text-diff-tool.html': '🔍',
     'highlight_replace.html': '🖍️',
     'email.html': '📧',
+    'word-replace.html': '📃',
     'pdf-to-png.html': '📄',
     'resize-image.html': '📐',
     'card.html': '✂️',
@@ -52,6 +55,7 @@ TOOL_ICONS = {
     'windows-to-wsl.html': '🪟',
     'iso-diff-tool.html': '📋',
     'gsheet-to-markdown.html': '📊',
+    'markdown-viewer.html': '📖',
 }
 
 # 工具關鍵字 (用於搜尋)
@@ -63,6 +67,7 @@ TOOL_KEYWORDS = {
     'text-diff-tool.html': '差異 比對 diff 比較 文字',
     'highlight_replace.html': '取代 替換 replace 識別 highlight',
     'email.html': '信箱 email 郵件 暱稱 提取 extract',
+    'word-replace.html': 'word docx 批次 取代 替換 文件 office replace batch',
     'pdf-to-png.html': 'pdf png 轉換 圖片 convert',
     'resize-image.html': '縮小 圖片 resize 調整 尺寸 壓縮',
     'card.html': '裁剪 圖片 空白 水印 crop trim',
@@ -73,6 +78,7 @@ TOOL_KEYWORDS = {
     'windows-to-wsl.html': 'windows wsl linux 路徑 轉換 path',
     'iso-diff-tool.html': 'iso 差異 比對 文件 版本',
     'gsheet-to-markdown.html': 'google sheet markdown 表格 試算表 excel spreadsheet 轉換',
+    'markdown-viewer.html': 'markdown 預覽 上傳 檢視 viewer preview md gfm',
 }
 
 
