@@ -37,6 +37,7 @@
 | 工具 | 說明 |
 |------|------|
 | [PDF 轉 PNG](https://tool.feifei.tw/pdf-to-png.html) | 將 PDF 轉換為圖片 |
+| [PDF 轉 TXT](https://tool.feifei.tw/pdf-to-txt.html) | 擷取 PDF 純文字內容 |
 | [縮小圖片](https://tool.feifei.tw/resize-image.html) | 調整圖片尺寸大小 |
 | [裁剪圖片](https://tool.feifei.tw/card.html) | 自動裁剪空白和水印 |
 | [EXIF 讀取](https://tool.feifei.tw/exif.html) | 讀取照片 EXIF 資訊 |
