@@ -39,13 +39,18 @@
 | [PDF 轉 PNG](https://tool.feifei.tw/pdf-to-png.html) | 將 PDF 轉換為圖片 |
 | [PDF 轉 TXT](https://tool.feifei.tw/pdf-to-txt.html) | 擷取 PDF 純文字內容 |
 | [縮小圖片](https://tool.feifei.tw/resize-image.html) | 調整圖片尺寸大小 |
+| [圖片轉 Base64](https://tool.feifei.tw/image-to-base64.html) | 圖片轉 Data URL（PNG/JPEG/WebP） |
 | [裁剪圖片](https://tool.feifei.tw/card.html) | 自動裁剪空白和水印 |
 | [EXIF 讀取](https://tool.feifei.tw/exif.html) | 讀取照片 EXIF 資訊 |
+| [QR Code 產生器](https://tool.feifei.tw/qr-generator.html) | 產生 QR Code，下載 PNG / SVG |
 
 ### 開發者工具
 
 | 工具 | 說明 |
 |------|------|
+| [JSON 格式化](https://tool.feifei.tw/json-formatter.html) | JSON 美化、壓縮、驗證、樹狀檢視 |
+| [URL 編解碼](https://tool.feifei.tw/url-encode.html) | URL Encode / Decode 與查詢字串拆解 |
+| [JWT 解碼器](https://tool.feifei.tw/jwt-decoder.html) | JWT Token 解析 Header / Payload |
 | [終端指令提取](https://tool.feifei.tw/bash.html) | 從終端輸出中提取指令 |
 | [編碼/加解密](https://tool.feifei.tw/encry.html) | Base64、MD5、SHA、AES |
 | [HTML 轉 Markdown](https://tool.feifei.tw/html-to-markdown.html) | 將 HTML 轉換為 Markdown |
