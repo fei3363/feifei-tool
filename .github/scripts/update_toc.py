@@ -21,9 +21,11 @@ TOOL_CATEGORIES = {
 
     # 圖片工具
     'pdf-to-png.html': 'image',
+    'pdf-to-txt.html': 'image',
     'resize-image.html': 'image',
     'card.html': 'image',
     'exif.html': 'image',
+    'image-to-base64.html': 'image',
 
     # 開發工具
     'bash.html': 'dev',
@@ -33,6 +35,10 @@ TOOL_CATEGORIES = {
     'iso-diff-tool.html': 'dev',
     'gsheet-to-markdown.html': 'dev',
     'markdown-viewer.html': 'dev',
+    'json-formatter.html': 'dev',
+    'url-encode.html': 'dev',
+    'jwt-decoder.html': 'dev',
+    'qr-generator.html': 'dev',
 }
 
 # 工具圖示設定
@@ -46,9 +52,11 @@ TOOL_ICONS = {
     'email.html': '📧',
     'word-replace.html': '📃',
     'pdf-to-png.html': '📄',
+    'pdf-to-txt.html': '📄',
     'resize-image.html': '📐',
     'card.html': '✂️',
     'exif.html': '📷',
+    'image-to-base64.html': '🖼️',
     'bash.html': '💻',
     'encry.html': '🔐',
     'html-to-markdown.html': '📝',
@@ -56,6 +64,10 @@ TOOL_ICONS = {
     'iso-diff-tool.html': '📋',
     'gsheet-to-markdown.html': '📊',
     'markdown-viewer.html': '📖',
+    'json-formatter.html': '{ }',
+    'url-encode.html': '🔗',
+    'jwt-decoder.html': '🔑',
+    'qr-generator.html': '▦',
 }
 
 # 工具關鍵字 (用於搜尋)
@@ -69,9 +81,11 @@ TOOL_KEYWORDS = {
     'email.html': '信箱 email 郵件 暱稱 提取 extract',
     'word-replace.html': 'word docx 批次 取代 替換 文件 office replace batch',
     'pdf-to-png.html': 'pdf png 轉換 圖片 convert',
+    'pdf-to-txt.html': 'pdf txt 純文字 擷取 抽取 文字 extract text',
     'resize-image.html': '縮小 圖片 resize 調整 尺寸 壓縮',
     'card.html': '裁剪 圖片 空白 水印 crop trim',
     'exif.html': 'exif 照片 資訊 相機 gps 元資料',
+    'image-to-base64.html': '圖片 base64 data url 編碼 image to base64 dataurl',
     'bash.html': '終端 指令 bash shell command terminal',
     'encry.html': '編碼 加密 解密 base64 md5 sha aes hash',
     'html-to-markdown.html': 'html markdown 轉換 convert md',
@@ -79,6 +93,10 @@ TOOL_KEYWORDS = {
     'iso-diff-tool.html': 'iso 差異 比對 文件 版本',
     'gsheet-to-markdown.html': 'google sheet markdown 表格 試算表 excel spreadsheet 轉換',
     'markdown-viewer.html': 'markdown 預覽 上傳 檢視 viewer preview md gfm',
+    'json-formatter.html': 'json 格式化 美化 壓縮 驗證 樹狀 formatter prettify minify validate',
+    'url-encode.html': 'url 編碼 解碼 encode decode encodeURIComponent 查詢字串 query string',
+    'jwt-decoder.html': 'jwt token 解碼 解析 jwt decoder 認證 auth',
+    'qr-generator.html': 'qr code 二維碼 產生器 generator png svg',
 }
 
 
