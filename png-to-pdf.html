@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>PNG 轉 PDF 轉換器 - 線上免費合併圖片成 PDF | FeiFei Tools</title>
+    <meta name="description" content="免費線上 PNG 轉 PDF 工具，支援多張圖片合併為單一 PDF，可調整頁面方向、尺寸與排序，所有處理皆在瀏覽器完成。">
+    <meta name="keywords" content="PNG轉PDF,圖片轉PDF,JPG轉PDF,圖片合併PDF,線上轉換">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/png-to-pdf.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/png-to-pdf.html">
+    <meta property="og:title" content="PNG 轉 PDF 轉換器 | FeiFei Tools">
+    <meta property="og:description" content="免費線上 PNG 轉 PDF 工具，支援多張圖片合併為單一 PDF。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="PNG 轉 PDF 轉換器 | FeiFei Tools">
+    <meta name="twitter:description" content="免費線上 PNG 轉 PDF 工具，支援多張圖片合併為單一 PDF。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "PNG 轉 PDF 轉換器", "url": "https://tool.feifei.tw/png-to-pdf.html", "description": "PNG 轉 PDF 轉換工具", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
+    <style>.touch-target { min-height: 44px; min-width: 44px; } .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }</style>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">PNG 轉 PDF</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">🖼️</span>PNG 轉 PDF 轉換器</h1>
+            <p class="text-gray-600 dark:text-gray-400">將多張圖片合併為單一 PDF 文件，可調整方向與尺寸</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Upload -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-colors">
+                <label for="imageInput" class="cursor-pointer block">
+                    <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    <p class="text-lg font-medium mb-1">選擇圖片</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">或拖放圖片到此處（支援 PNG / JPEG / WebP，可多選）</p>
+                    <input type="file" id="imageInput" class="hidden" multiple accept="image/png,image/jpeg,image/webp">
+                </label>
+            </section>
+
+            <!-- Options -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="pageSize" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">頁面尺寸</label>
+                    <select id="pageSize" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 touch-target">
+                        <option value="fit">符合圖片尺寸</option>
+                        <option value="a4">A4</option>
+                        <option value="letter">Letter</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="orientation" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">頁面方向</label>
+                    <select id="orientation" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 touch-target">
+                        <option value="auto">自動（依圖片）</option>
+                        <option value="portrait">直向</option>
+                        <option value="landscape">橫向</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="margin" class="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">頁面邊距 (mm)</label>
+                    <input type="number" id="margin" value="0" min="0" max="50" class="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 touch-target">
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex flex-wrap gap-3">
+                <button id="convertButton" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors touch-target flex-1 sm:flex-none">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                    <span id="convertText">產生 PDF</span>
+                    <span id="convertLoading" class="hidden">產生中...</span>
+                </button>
+                <button id="clearButton" class="hidden inline-flex items-center justify-center gap-2 px-4 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 font-medium rounded-xl transition-colors touch-target">清除全部</button>
+            </div>
+
+            <!-- Status -->
+            <div id="status" class="hidden text-center py-4 text-gray-600 dark:text-gray-400"></div>
+
+            <!-- Preview Grid -->
+            <div id="preview" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+
+            <!-- Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
+                <p class="font-medium mb-1">使用說明</p>
+                <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-300">
+                    <li>支援一次選擇多張圖片，依加入順序合併為單一 PDF</li>
+                    <li>「符合圖片尺寸」會讓每頁大小等於圖片本身</li>
+                    <li>可拖曳預覽縮圖調整頁面順序，點擊 ✕ 可移除單張圖片</li>
+                    <li>所有處理皆在瀏覽器本機完成，圖片不會上傳至伺服器</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5">文字</span></a>
+            <a href="png-to-pdf.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5 font-medium">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
+
+    <script>
+        const { jsPDF } = window.jspdf;
+
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
+
+        // images: { id, name, dataUrl, width, height }
+        let images = [];
+        let nextId = 0;
+        let dragId = null;
+
+        const imageInput = document.getElementById('imageInput');
+        const previewEl = document.getElementById('preview');
+        const dropZone = document.querySelector('section.border-dashed');
+
+        imageInput.addEventListener('change', (e) => addFiles(e.target.files));
+
+        // Drag & drop upload
+        ['dragenter', 'dragover'].forEach(evt => dropZone.addEventListener(evt, (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500'); }));
+        ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, (e) => { e.preventDefault(); dropZone.classList.remove('border-blue-500'); }));
+        dropZone.addEventListener('drop', (e) => addFiles(e.dataTransfer.files));
+
+        async function addFiles(fileList) {
+            const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+            if (files.length === 0) { showToast('請選擇圖片檔案'); return; }
+            for (const file of files) {
+                await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.onload = () => {
+                            images.push({ id: nextId++, name: file.name, dataUrl: e.target.result, width: img.naturalWidth, height: img.naturalHeight });
+                            resolve();
+                        };
+                        img.onerror = () => { showToast(`無法讀取：${file.name}`); resolve(); };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+            imageInput.value = '';
+            renderPreview();
+        }
+
+        function renderPreview() {
+            previewEl.innerHTML = '';
+            images.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'relative bg-white dark:bg-gray-800 rounded-xl shadow p-2 cursor-move';
+                card.draggable = true;
+                card.dataset.id = item.id;
+
+                card.addEventListener('dragstart', () => { dragId = item.id; });
+                card.addEventListener('dragover', (e) => e.preventDefault());
+                card.addEventListener('drop', (e) => { e.preventDefault(); reorder(dragId, item.id); });
+
+                card.innerHTML = `
+                    <span class="absolute top-1 left-1 bg-blue-600 text-white text-xs font-medium rounded px-1.5 py-0.5 z-10">${index + 1}</span>
+                    <button data-remove="${item.id}" class="absolute top-1 right-1 bg-gray-900/70 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm z-10" aria-label="移除">✕</button>
+                    <img src="${item.dataUrl}" class="rounded-lg w-full h-32 object-contain bg-gray-50 dark:bg-gray-900" alt="${item.name}">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate" title="${item.name}">${item.name}</p>
+                `;
+                previewEl.appendChild(card);
+            });
+
+            previewEl.querySelectorAll('[data-remove]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    images = images.filter(i => i.id !== Number(btn.dataset.remove));
+                    renderPreview();
+                });
+            });
+
+            document.getElementById('clearButton').classList.toggle('hidden', images.length === 0);
+        }
+
+        function reorder(fromId, toId) {
+            if (fromId === null || fromId === toId) return;
+            const fromIdx = images.findIndex(i => i.id === fromId);
+            const toIdx = images.findIndex(i => i.id === toId);
+            if (fromIdx === -1 || toIdx === -1) return;
+            const [moved] = images.splice(fromIdx, 1);
+            images.splice(toIdx, 0, moved);
+            dragId = null;
+            renderPreview();
+        }
+
+        document.getElementById('clearButton').addEventListener('click', () => {
+            images = [];
+            renderPreview();
+            document.getElementById('status').classList.add('hidden');
+            showToast('已清除');
+        });
+
+        document.getElementById('convertButton').addEventListener('click', async () => {
+            if (images.length === 0) { showToast('請先選擇圖片'); return; }
+
+            const convertText = document.getElementById('convertText');
+            const convertLoading = document.getElementById('convertLoading');
+            const convertBtn = document.getElementById('convertButton');
+            convertText.classList.add('hidden');
+            convertLoading.classList.remove('hidden');
+            convertBtn.disabled = true;
+
+            const statusEl = document.getElementById('status');
+            statusEl.classList.remove('hidden');
+
+            try {
+                const pageSize = document.getElementById('pageSize').value;
+                const orientationOpt = document.getElementById('orientation').value;
+                const margin = Math.max(0, Number(document.getElementById('margin').value) || 0);
+                const PX_TO_MM = 0.2645833333; // 96 dpi
+
+                let pdf = null;
+
+                for (let i = 0; i < images.length; i++) {
+                    statusEl.textContent = `正在加入第 ${i + 1}/${images.length} 張圖片...`;
+                    const item = images[i];
+                    const imgWmm = item.width * PX_TO_MM;
+                    const imgHmm = item.height * PX_TO_MM;
+
+                    let pageW, pageH;
+                    if (pageSize === 'fit') {
+                        pageW = imgWmm + margin * 2;
+                        pageH = imgHmm + margin * 2;
+                    } else {
+                        const dims = pageSize === 'a4' ? [210, 297] : [215.9, 279.4];
+                        const landscape = orientationOpt === 'landscape' || (orientationOpt === 'auto' && imgWmm > imgHmm);
+                        pageW = landscape ? dims[1] : dims[0];
+                        pageH = landscape ? dims[0] : dims[1];
+                    }
+
+                    const orientation = pageW > pageH ? 'landscape' : 'portrait';
+                    if (pdf === null) {
+                        pdf = new jsPDF({ orientation, unit: 'mm', format: [pageW, pageH] });
+                    } else {
+                        pdf.addPage([pageW, pageH], orientation);
+                    }
+
+                    // Fit image into the page content area, preserving aspect ratio
+                    const availW = pageW - margin * 2;
+                    const availH = pageH - margin * 2;
+                    const ratio = Math.min(availW / imgWmm, availH / imgHmm);
+                    const drawW = imgWmm * ratio;
+                    const drawH = imgHmm * ratio;
+                    const x = margin + (availW - drawW) / 2;
+                    const y = margin + (availH - drawH) / 2;
+
+                    const format = item.dataUrl.startsWith('data:image/jpeg') ? 'JPEG' : 'PNG';
+                    pdf.addImage(item.dataUrl, format, x, y, drawW, drawH);
+                }
+
+                pdf.save(`images-${Date.now()}.pdf`);
+                statusEl.textContent = `完成！已合併 ${images.length} 張圖片`;
+                showToast('PDF 產生完成');
+            } catch (error) {
+                console.error('產生 PDF 失敗:', error);
+                statusEl.textContent = '產生 PDF 失敗，請重試';
+                showToast('產生失敗，請重試');
+            } finally {
+                convertText.classList.remove('hidden');
+                convertLoading.classList.add('hidden');
+                convertBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
