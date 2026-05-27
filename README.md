@@ -37,6 +37,7 @@
 | 工具 | 說明 |
 |------|------|
 | [PDF 轉 PNG](https://tool.feifei.tw/pdf-to-png.html) | 將 PDF 轉換為圖片 |
+| [PNG 轉 PDF](https://tool.feifei.tw/png-to-pdf.html) | 將多張圖片合併為 PDF |
 | [PDF 轉 TXT](https://tool.feifei.tw/pdf-to-txt.html) | 擷取 PDF 純文字內容 |
 | [縮小圖片](https://tool.feifei.tw/resize-image.html) | 調整圖片尺寸大小 |
 | [圖片轉 Base64](https://tool.feifei.tw/image-to-base64.html) | 圖片轉 Data URL（PNG/JPEG/WebP） |

@@ -24,6 +24,7 @@ const TOOLS = {
     ],
     image: [
         { id: 'pdf-to-png', name: 'PDF 轉 PNG', icon: '📄', href: 'pdf-to-png.html', desc: '將 PDF 轉換為圖片' },
+        { id: 'png-to-pdf', name: 'PNG 轉 PDF', icon: '🖼️', href: 'png-to-pdf.html', desc: '將多張圖片合併為 PDF' },
         { id: 'resize-image', name: '縮小圖片', icon: '📐', href: 'resize-image.html', desc: '調整圖片尺寸大小' },
         { id: 'card', name: '裁剪圖片', icon: '✂️', href: 'card.html', desc: '自動裁剪空白和水印' },
         { id: 'exif', name: 'EXIF 讀取', icon: '📷', href: 'exif.html', desc: '讀取照片 EXIF 資訊' },
