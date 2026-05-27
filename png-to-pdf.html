@@ -78,6 +78,7 @@
                     <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                     <p class="text-lg font-medium mb-1">選擇圖片</p>
                     <p class="text-sm text-gray-500 dark:text-gray-400">或拖放圖片到此處（支援 PNG / JPEG / WebP，可多選）</p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">單檔不得超過 5MB</p>
                     <input type="file" id="imageInput" class="hidden" multiple accept="image/png,image/jpeg,image/webp">
                 </label>
             </section>
@@ -129,6 +130,7 @@
                     <li>支援一次選擇多張圖片，依加入順序合併為單一 PDF</li>
                     <li>「符合圖片尺寸」會讓每頁大小等於圖片本身</li>
                     <li>可拖曳預覽縮圖調整頁面順序，點擊 ✕ 可移除單張圖片</li>
+                    <li>單張圖片檔案不得超過 5MB，超過將自動略過</li>
                     <li>所有處理皆在瀏覽器本機完成，圖片不會上傳至伺服器</li>
                 </ul>
             </div>
@@ -182,9 +184,19 @@
         ['dragleave', 'drop'].forEach(evt => dropZone.addEventListener(evt, (e) => { e.preventDefault(); dropZone.classList.remove('border-blue-500'); }));
         dropZone.addEventListener('drop', (e) => addFiles(e.dataTransfer.files));
 
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
         async function addFiles(fileList) {
-            const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
-            if (files.length === 0) { showToast('請選擇圖片檔案'); return; }
+            const all = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+            if (all.length === 0) { showToast('請選擇圖片檔案'); return; }
+
+            const oversized = all.filter(f => f.size > MAX_FILE_SIZE);
+            const files = all.filter(f => f.size <= MAX_FILE_SIZE);
+            if (oversized.length > 0) {
+                showToast(`已略過 ${oversized.length} 個檔案，單檔不得超過 5MB`, 3000);
+                if (files.length === 0) { imageInput.value = ''; return; }
+            }
+
             for (const file of files) {
                 await new Promise((resolve) => {
                     const reader = new FileReader();
