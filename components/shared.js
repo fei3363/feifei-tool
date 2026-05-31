@@ -47,6 +47,7 @@ const TOOLS = {
     ],
     life: [
         { id: 'tarot', name: '星辰塔羅', icon: '🔮', href: 'tarot.html', desc: '線上塔羅占卜，多種牌陣' },
+        { id: 'astro-dice', name: '占星骰子', icon: '🎲', href: 'astro-dice.html', desc: '行星 × 星座 × 宮位 三骰擲卜' },
     ]
 };
 

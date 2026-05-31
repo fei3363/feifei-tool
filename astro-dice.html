@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>占星骰子 - 線上占星骰擲骰 | FeiFei Tools</title>
+<meta name="description" content="線上占星骰子工具，擲出行星、星座、宮位三顆骰子，依「能量 × 表達 × 領域」結構提供解讀，可複製結果。">
+<meta name="keywords" content="占星,占星骰,Astro Dice,行星,星座,宮位,占卜">
+<link rel="canonical" href="https://tool.feifei.tw/astro-dice.html">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tool.feifei.tw/astro-dice.html">
+<meta property="og:title" content="占星骰子 | FeiFei Tools">
+<meta property="og:description" content="線上占星骰擲骰，行星 × 星座 × 宮位的三骰解讀。">
+
+<!-- GA -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg0:#070512; --bg1:#0f0b24; --bg2:#170f33;
+    --gold:#e8c976; --gold-bright:#f6e3a3; --gold-deep:#c79a3e;
+    --ink:#ece6ff; --muted:#a89cc9;
+    --line:rgba(232,201,118,.28);
+    --panel:rgba(22,16,46,.72);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{min-height:100%;}
+  body{
+    font-family:'Noto Serif TC','Cinzel',serif;
+    color:var(--ink);
+    background:
+      radial-gradient(900px 600px at 78% -8%, rgba(123,86,196,.30), transparent 60%),
+      radial-gradient(800px 600px at 12% 110%, rgba(60,40,120,.32), transparent 60%),
+      linear-gradient(160deg,var(--bg0),var(--bg1) 55%,var(--bg2));
+    background-attachment:fixed;
+    min-height:100vh; overflow-x:hidden; position:relative;
+  }
+  body::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      radial-gradient(1.4px 1.4px at 20% 30%, rgba(255,255,255,.9), transparent),
+      radial-gradient(1.2px 1.2px at 70% 20%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.8), transparent),
+      radial-gradient(1.6px 1.6px at 85% 65%, rgba(255,245,210,.9), transparent),
+      radial-gradient(1px 1px at 12% 85%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1.2px 1.2px at 55% 45%, rgba(255,255,255,.65), transparent);
+    background-repeat:no-repeat;
+    animation:twinkle 6s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{from{opacity:.45}to{opacity:.95}}
+
+  .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:26px 16px 80px;}
+
+  header{text-align:center; margin-bottom:22px;}
+  .crest{font-size:30px; color:var(--gold); filter:drop-shadow(0 0 10px rgba(232,201,118,.5)); margin-bottom:6px;}
+  h1{
+    font-family:'Cinzel Decorative','Noto Serif TC',serif; font-weight:700;
+    letter-spacing:.12em; font-size:clamp(26px,7vw,40px);
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    line-height:1.15;
+  }
+  .sub{color:var(--muted); letter-spacing:.42em; font-size:12px; text-transform:uppercase; margin-top:8px; font-family:'Cinzel',serif;}
+  .rule{height:1px; width:60%; margin:16px auto 0;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:.7;}
+
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px;
+    padding:18px 16px; margin-bottom:16px; backdrop-filter:blur(6px);
+    box-shadow:0 8px 30px rgba(0,0,0,.35), inset 0 0 40px rgba(123,86,196,.05);
+  }
+  .label{font-family:'Cinzel',serif; color:var(--gold); letter-spacing:.18em; font-size:13px;
+    text-transform:uppercase; margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+  .label::before{content:"✦"; color:var(--gold-deep); font-size:11px;}
+
+  textarea#question{
+    width:100%; min-height:62px; resize:vertical; border-radius:12px;
+    border:1px solid var(--line); background:rgba(7,5,18,.55); color:var(--ink);
+    padding:12px 14px; font-family:inherit; font-size:16px; line-height:1.6; outline:none;
+  }
+  textarea#question::placeholder{color:rgba(168,156,201,.6);}
+  textarea#question:focus{border-color:var(--gold); box-shadow:0 0 0 2px rgba(232,201,118,.18);}
+
+  /* dice */
+  .dice-row{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:6px 0 10px;}
+  .die{
+    aspect-ratio:1/1; border-radius:18px;
+    border:1.5px solid var(--gold-deep);
+    background:radial-gradient(circle at 30% 25%, rgba(232,201,118,.18), transparent 55%),
+               linear-gradient(135deg,#241753,#160d33);
+    box-shadow:0 8px 24px rgba(0,0,0,.5), inset 0 0 30px rgba(232,201,118,.06);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:10px; text-align:center; position:relative; overflow:hidden;
+  }
+  .die::before{content:""; position:absolute; inset:6px; border:1px solid rgba(232,201,118,.32); border-radius:13px; pointer-events:none;}
+  .die .kind{font-family:'Cinzel',serif; font-size:11px; letter-spacing:.18em; color:var(--gold); text-transform:uppercase;}
+  .die .glyph{font-size:clamp(40px,11vw,68px); color:var(--gold-bright); line-height:1; filter:drop-shadow(0 0 12px rgba(232,201,118,.45)); margin:6px 0;}
+  .die .nm{font-size:15px; color:var(--ink); font-weight:600;}
+  .die .nm small{display:block; font-family:'Cinzel',serif; font-size:10px; letter-spacing:.06em; color:var(--muted); margin-top:2px;}
+  .die.rolling .glyph{animation:roll .08s steps(1) infinite;}
+  @keyframes roll{0%{transform:rotate(-10deg) scale(.9);opacity:.6}50%{transform:rotate(10deg) scale(1.08);opacity:1}100%{transform:rotate(-6deg) scale(.95);opacity:.7}}
+
+  .actions{display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:6px 0 4px;}
+  .btn{
+    font-family:'Cinzel',serif; letter-spacing:.12em; font-size:15px; cursor:pointer;
+    border-radius:30px; padding:14px 30px; border:1px solid var(--gold);
+    color:#1a1330; background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));
+    box-shadow:0 6px 22px rgba(232,201,118,.28); transition:.18s; font-weight:600;
+  }
+  .btn:hover{transform:translateY(-2px); box-shadow:0 10px 28px rgba(232,201,118,.42);}
+  .btn:active{transform:translateY(0);}
+  .btn.ghost{background:transparent; color:var(--gold); box-shadow:none;}
+  .btn.ghost:hover{background:rgba(232,201,118,.1);}
+  .btn[disabled]{opacity:.5; cursor:not-allowed; transform:none; box-shadow:none;}
+
+  .hint{text-align:center; color:var(--muted); font-size:14px; margin:14px 0; letter-spacing:.04em;}
+
+  /* reading */
+  #reading{display:none;}
+  #reading.show{display:block; animation:rise .5s ease both;}
+  @keyframes rise{from{opacity:0; transform:translateY(14px)}to{opacity:1; transform:none}}
+  .qline{color:var(--muted); font-size:14px; margin-bottom:14px; font-style:italic;}
+  .qline b{color:var(--gold); font-style:normal;}
+  .read-line{padding:12px 0; border-bottom:1px solid rgba(232,201,118,.14); display:flex; gap:12px; align-items:flex-start;}
+  .read-line:last-child{border-bottom:none;}
+  .read-glyph{flex:0 0 44px; height:44px; border-radius:10px; border:1px solid var(--gold-deep);
+    background:linear-gradient(135deg,#241753,#160d33); color:var(--gold-bright);
+    display:flex; align-items:center; justify-content:center; font-size:24px;}
+  .read-body{flex:1; min-width:0;}
+  .read-kind{font-family:'Cinzel',serif; font-size:11px; letter-spacing:.14em; color:var(--gold-deep); text-transform:uppercase;}
+  .read-name{font-size:16px; font-weight:600; margin:2px 0 4px;}
+  .read-name .en{font-family:'Cinzel',serif; font-size:12px; color:var(--muted); margin-left:6px; letter-spacing:.06em;}
+  .read-kw{color:var(--muted); font-size:14px; line-height:1.65;}
+
+  .summary{
+    margin-top:18px; padding:14px 16px; border-radius:12px;
+    background:linear-gradient(135deg,rgba(232,201,118,.10),rgba(123,86,196,.10));
+    border:1px solid rgba(232,201,118,.22); color:var(--ink); line-height:1.8; font-size:15px;
+  }
+  .summary b{color:var(--gold);}
+
+  .copynote{text-align:center; color:var(--gold-bright); font-family:'Cinzel',serif; letter-spacing:.14em;
+    font-size:13px; margin-top:12px; opacity:0; transition:opacity .3s; pointer-events:none;}
+  .copynote.show{opacity:1;}
+
+  footer{text-align:center; color:rgba(168,156,201,.55); font-size:11.5px; margin-top:30px; letter-spacing:.05em; line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="crest">☉ ☽ ✦</div>
+    <h1>占星骰子</h1>
+    <div class="sub">Astro Dice</div>
+    <div class="rule"></div>
+  </header>
+
+  <div class="panel">
+    <div class="label">默想你的問題</div>
+    <textarea id="question" placeholder="在心中虔誠默想想問的問題，並寫在這裡（可留白）…"></textarea>
+  </div>
+
+  <div class="panel">
+    <div class="label">三顆骰子</div>
+    <div class="dice-row">
+      <div class="die" id="diePlanet">
+        <div class="kind">行星</div>
+        <div class="glyph">✧</div>
+        <div class="nm">尚未擲骰<small>Planet</small></div>
+      </div>
+      <div class="die" id="dieSign">
+        <div class="kind">星座</div>
+        <div class="glyph">✧</div>
+        <div class="nm">尚未擲骰<small>Sign</small></div>
+      </div>
+      <div class="die" id="dieHouse">
+        <div class="kind">宮位</div>
+        <div class="glyph">✧</div>
+        <div class="nm">尚未擲骰<small>House</small></div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="rollBtn">擲　骰</button>
+      <button class="btn ghost" id="resetBtn" style="display:none;">重新占卜</button>
+    </div>
+    <div class="hint" id="hint">在心中凝神想著問題，按下【擲骰】。</div>
+  </div>
+
+  <div class="panel" id="reading">
+    <div class="label">骰子解讀</div>
+    <div class="qline" id="qline"></div>
+    <div id="readList"></div>
+    <div class="summary" id="summary"></div>
+    <div class="actions" style="margin-top:18px;">
+      <button class="btn" id="copyBtn">複製結果</button>
+    </div>
+    <div class="copynote" id="copyNote">已複製到剪貼簿 ✦</div>
+  </div>
+
+  <footer>
+    占星骰子 · 自我省思與內在探索 ✦ 行星 × 星座 × 宮位<br>
+    解讀結構：能量 ╳ 表達方式 ╳ 生活領域
+  </footer>
+</div>
+
+<script>
+const PLANETS=[
+ ['☉','太陽','Sun','自我認同 · 核心意志 · 生命力'],
+ ['☽','月亮','Moon','情緒 · 潛意識 · 內在需求'],
+ ['☿','水星','Mercury','溝通 · 思考 · 學習與表達'],
+ ['♀','金星','Venus','愛 · 美感 · 價值與關係'],
+ ['♂','火星','Mars','行動 · 慾望 · 競爭與勇氣'],
+ ['♃','木星','Jupiter','擴展 · 機會 · 信念與祝福'],
+ ['♄','土星','Saturn','責任 · 結構 · 限制與成熟'],
+ ['♅','天王星','Uranus','變革 · 自由 · 突破與創新'],
+ ['♆','海王星','Neptune','夢 · 靈性 · 想像與消融'],
+ ['♇','冥王星','Pluto','深層轉化 · 力量 · 重生'],
+ ['⚷','凱龍星','Chiron','創傷 · 療癒 · 智慧之師'],
+ ['☊','北交點','North Node','命運方向 · 靈魂課題'],
+];
+
+const SIGNS=[
+ ['♈','牡羊座','Aries','直接 · 開創 · 行動力'],
+ ['♉','金牛座','Taurus','穩定 · 感官 · 物質安全'],
+ ['♊','雙子座','Gemini','靈活 · 好奇 · 多元溝通'],
+ ['♋','巨蟹座','Cancer','情感 · 滋養 · 家的歸屬'],
+ ['♌','獅子座','Leo','表現 · 自信 · 創造光彩'],
+ ['♍','處女座','Virgo','細節 · 實用 · 服務與精進'],
+ ['♎','天秤座','Libra','平衡 · 和諧 · 關係與美感'],
+ ['♏','天蠍座','Scorpio','深刻 · 轉化 · 直觀洞察'],
+ ['♐','射手座','Sagittarius','探索 · 自由 · 信念遠方'],
+ ['♑','摩羯座','Capricorn','結構 · 紀律 · 長程實現'],
+ ['♒','水瓶座','Aquarius','創新 · 獨立 · 群體理想'],
+ ['♓','雙魚座','Pisces','包容 · 靈性 · 同理消融'],
+];
+
+const HOUSES=[
+ ['1','第一宮','自我 · 外在形象 · 開始'],
+ ['2','第二宮','金錢 · 物質 · 自我價值'],
+ ['3','第三宮','溝通 · 學習 · 手足與短途'],
+ ['4','第四宮','家庭 · 根源 · 內在安全感'],
+ ['5','第五宮','創造 · 戀愛 · 子女與遊戲'],
+ ['6','第六宮','工作 · 健康 · 日常服務'],
+ ['7','第七宮','伴侶 · 合作 · 一對一關係'],
+ ['8','第八宮','共享資源 · 深度 · 轉化與秘密'],
+ ['9','第九宮','哲學 · 信仰 · 遠方與高等教育'],
+ ['10','第十宮','事業 · 社會地位 · 公眾形象'],
+ ['11','第十一宮','朋友 · 團體 · 願景與理想'],
+ ['12','第十二宮','潛意識 · 靈性 · 隱秘與消融'],
+];
+
+const ALL_PLANET_GLYPHS=PLANETS.map(p=>p[0]);
+const ALL_SIGN_GLYPHS=SIGNS.map(s=>s[0]);
+const ALL_HOUSE_NUMS=HOUSES.map(h=>h[0]);
+
+const planetEl=document.getElementById('diePlanet');
+const signEl=document.getElementById('dieSign');
+const houseEl=document.getElementById('dieHouse');
+const rollBtn=document.getElementById('rollBtn');
+const resetBtn=document.getElementById('resetBtn');
+const hint=document.getElementById('hint');
+const readingEl=document.getElementById('reading');
+
+let result=null;
+
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+
+function setDie(el,glyph,name,enOrLabel){
+  el.querySelector('.glyph').textContent=glyph;
+  el.querySelector('.nm').innerHTML=`${name}<small>${enOrLabel}</small>`;
+}
+
+function spinDice(durationMs){
+  return new Promise(resolve=>{
+    [planetEl,signEl,houseEl].forEach(d=>d.classList.add('rolling'));
+    const t0=Date.now();
+    const id=setInterval(()=>{
+      planetEl.querySelector('.glyph').textContent=pick(ALL_PLANET_GLYPHS);
+      signEl.querySelector('.glyph').textContent=pick(ALL_SIGN_GLYPHS);
+      houseEl.querySelector('.glyph').textContent=pick(ALL_HOUSE_NUMS);
+      if(Date.now()-t0>=durationMs){
+        clearInterval(id);
+        [planetEl,signEl,houseEl].forEach(d=>d.classList.remove('rolling'));
+        resolve();
+      }
+    },70);
+  });
+}
+
+rollBtn.onclick=async()=>{
+  rollBtn.disabled=true;
+  hint.textContent='星辰旋轉中…';
+  readingEl.classList.remove('show');
+  await spinDice(900);
+
+  const p=PLANETS[Math.floor(Math.random()*PLANETS.length)];
+  const s=SIGNS[Math.floor(Math.random()*SIGNS.length)];
+  const h=HOUSES[Math.floor(Math.random()*HOUSES.length)];
+  result={planet:p,sign:s,house:h};
+
+  setDie(planetEl,p[0],p[1],p[2]);
+  setDie(signEl,s[0],s[1],s[2]);
+  setDie(houseEl,h[0],h[1],'House '+h[0]);
+
+  buildReading();
+  rollBtn.disabled=false;
+  rollBtn.textContent='重新擲骰';
+  resetBtn.style.display='inline-block';
+  hint.innerHTML='骰子已落定 ✦ 細看下方解讀';
+};
+
+resetBtn.onclick=()=>{
+  result=null;
+  setDie(planetEl,'✧','尚未擲骰','Planet');
+  setDie(signEl,'✧','尚未擲骰','Sign');
+  setDie(houseEl,'✧','尚未擲骰','House');
+  readingEl.classList.remove('show');
+  rollBtn.textContent='擲　骰';
+  resetBtn.style.display='none';
+  hint.textContent='在心中凝神想著問題，按下【擲骰】。';
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+
+function buildReading(){
+  const q=document.getElementById('question').value.trim();
+  document.getElementById('qline').innerHTML = q
+    ? `你詢問的是：<b>「${escapeHtml(q)}」</b>`
+    : `這是一次開放式的指引擲骰。`;
+
+  const list=document.getElementById('readList');
+  list.innerHTML='';
+  const rows=[
+    {kind:'行星 / 能量',  glyph:result.planet[0], name:result.planet[1], en:result.planet[2], kw:result.planet[3]},
+    {kind:'星座 / 表達',  glyph:result.sign[0],   name:result.sign[1],   en:result.sign[2],   kw:result.sign[3]},
+    {kind:'宮位 / 領域',  glyph:result.house[0],  name:result.house[1],  en:'House '+result.house[0], kw:result.house[2]},
+  ];
+  rows.forEach(r=>{
+    const el=document.createElement('div');
+    el.className='read-line';
+    el.innerHTML=`
+      <div class="read-glyph">${r.glyph}</div>
+      <div class="read-body">
+        <div class="read-kind">${r.kind}</div>
+        <div class="read-name">${r.name}<span class="en">${r.en}</span></div>
+        <div class="read-kw">${r.kw}</div>
+      </div>`;
+    list.appendChild(el);
+  });
+
+  document.getElementById('summary').innerHTML =
+    `當前對你而言：<b>${result.planet[1]}</b>的能量，正以<b>${result.sign[1]}</b>的方式展現，` +
+    `落在<b>${result.house[1]}</b>所代表的「${result.house[2].split(' · ')[0]}」這個生活領域。` +
+    `<br>留意你最近在這個領域中，這份能量是如何被你體驗、被你選擇、被你回應的。`;
+
+  readingEl.classList.add('show');
+  setTimeout(()=>readingEl.scrollIntoView({behavior:'smooth',block:'start'}),120);
+}
+
+document.getElementById('copyBtn').addEventListener('click',async function(){
+  const q=document.getElementById('question').value.trim();
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  const stamp=`${now.getFullYear()}/${pad(now.getMonth()+1)}/${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  let t='✦ 占星骰子 · 占卜結果 ✦\n';
+  t+=q?`問題：「${q}」\n`:`問題：開放式指引擲骰\n`;
+  t+=`時間：${stamp}\n`;
+  t+='────────────────────\n';
+  t+=`行星：${result.planet[0]} ${result.planet[1]}（${result.planet[2]}）\n   ${result.planet[3].replace(/ · /g,'、')}\n`;
+  t+=`星座：${result.sign[0]} ${result.sign[1]}（${result.sign[2]}）\n   ${result.sign[3].replace(/ · /g,'、')}\n`;
+  t+=`宮位：${result.house[1]}\n   ${result.house[2].replace(/ · /g,'、')}\n`;
+  t+='────────────────────\n';
+  t+=`綜合：${result.planet[1]}的能量以${result.sign[1]}的方式表達，落在${result.house[1]}的生活領域。\n`;
+  t+='\n※ 供自我省思與內在探索';
+
+  const ok=await copyText(t);
+  const note=document.getElementById('copyNote');
+  if(ok){
+    note.textContent='已複製到剪貼簿 ✦';
+    note.classList.add('show');
+    this.textContent='已複製 ✓';
+    setTimeout(()=>{note.classList.remove('show'); this.textContent='複製結果';},2000);
+  }else{
+    note.textContent='無法自動複製，請長按下方文字選取';
+    note.classList.add('show');
+    if(!document.getElementById('copyFallback')){
+      const pre=document.createElement('textarea');
+      pre.id='copyFallback'; pre.value=t; pre.readOnly=true;
+      pre.style.cssText='width:100%;min-height:160px;margin-top:12px;border-radius:12px;border:1px solid var(--line);background:rgba(7,5,18,.55);color:var(--ink);padding:12px;font:inherit;font-size:14px;line-height:1.7;';
+      document.getElementById('reading').appendChild(pre);
+    }
+  }
+});
+
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); return true; }catch(e){}
+  try{
+    const ta=document.createElement('textarea');
+    ta.value=text; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.top='0'; ta.style.left='0'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    ta.setSelectionRange(0,text.length);
+    const ok=document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  }catch(e){ return false; }
+}
+
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
+</script>
+</body>
+</html>
