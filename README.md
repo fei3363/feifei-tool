@@ -63,6 +63,7 @@
 | 工具 | 說明 |
 |------|------|
 | [星辰塔羅](https://tool.feifei.tw/tarot.html) | 線上塔羅占卜，多種牌陣與自訂張數 |
+| [占星骰子](https://tool.feifei.tw/astro-dice.html) | 行星 × 星座 × 宮位 三骰擲卜 |
 
 ---
 

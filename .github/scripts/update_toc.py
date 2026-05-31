@@ -43,6 +43,7 @@ TOOL_CATEGORIES = {
 
     # 生活工具
     'tarot.html': 'life',
+    'astro-dice.html': 'life',
 }
 
 # 工具圖示設定
@@ -74,6 +75,7 @@ TOOL_ICONS = {
     'jwt-decoder.html': '🔑',
     'qr-generator.html': '▦',
     'tarot.html': '🔮',
+    'astro-dice.html': '🎲',
 }
 
 # 工具關鍵字 (用於搜尋)
@@ -105,6 +107,7 @@ TOOL_KEYWORDS = {
     'jwt-decoder.html': 'jwt token 解碼 解析 jwt decoder 認證 auth',
     'qr-generator.html': 'qr code 二維碼 產生器 generator png svg',
     'tarot.html': '塔羅 占卜 tarot 牌陣 萊德偉特 星辰',
+    'astro-dice.html': '占星 骰子 astro dice 行星 星座 宮位 占卜',
 }
 
 
