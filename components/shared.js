@@ -35,12 +35,15 @@ const TOOLS = {
         { id: 'html-to-markdown', name: 'HTML 轉 Markdown', icon: '📝', href: 'html-to-markdown.html', desc: '將 HTML 轉換為 Markdown' },
         { id: 'windows-to-wsl', name: 'Windows 轉 WSL', icon: '🪟', href: 'windows-to-wsl.html', desc: '路徑格式轉換' },
         { id: 'iso-diff', name: 'ISO 差異對照', icon: '📋', href: 'iso-diff-tool.html', desc: 'ISO 文件版本比對' },
+    ],
+    life: [
+        { id: 'tarot', name: '星辰塔羅', icon: '🔮', href: 'tarot.html', desc: '線上塔羅占卜，多種牌陣' },
     ]
 };
 
 // 取得所有工具的扁平列表
 function getAllTools() {
-    return [...TOOLS.text, ...TOOLS.image, ...TOOLS.dev];
+    return [...TOOLS.text, ...TOOLS.image, ...TOOLS.dev, ...TOOLS.life];
 }
 
 // 根據 ID 或 href 找工具
