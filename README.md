@@ -58,6 +58,12 @@
 | [Windows 轉 WSL](https://tool.feifei.tw/windows-to-wsl.html) | 路徑格式轉換 |
 | [ISO 差異對照](https://tool.feifei.tw/iso-diff-tool.html) | ISO 文件版本比對 |
 
+### 生活工具
+
+| 工具 | 說明 |
+|------|------|
+| [星辰塔羅](https://tool.feifei.tw/tarot.html) | 線上塔羅占卜，多種牌陣與自訂張數 |
+
 ---
 
 ## 技術

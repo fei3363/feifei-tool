@@ -37,7 +37,7 @@
 # 1. 在 TOOL_CATEGORIES 新增分類
 TOOL_CATEGORIES = {
     # ...
-    'your-tool.html': 'text',  # 可選: text, image, dev
+    'your-tool.html': 'text',  # 可選: text, image, dev, life
 }
 
 # 2. 在 TOOL_ICONS 新增圖示
@@ -53,7 +53,26 @@ TOOL_KEYWORDS = {
 }
 ```
 
-### 步驟三：推送更新
+> 若新增的是現有 4 個分類（text / image / dev / life）以外的新分類，還要：
+> 1. 在 `update_toc.py` 的 `categories` 列表加入新項目（含 START/END 標記名稱）
+> 2. 在 `index.html` 加入對應的 section 與 `<!--XXX_TOOLS_START/END-->` 標記
+
+### 步驟三：同步 README 與 shared.js
+
+`update_toc.py` 只會自動更新 `index.html`。下列檔案需要**手動**補：
+
+1. **`README.md`** — 在對應分類表格中加入一行
+   ```md
+   | [你的工具](https://tool.feifei.tw/your-tool.html) | 一句話描述 |
+   ```
+
+2. **`components/shared.js`** — 在 `TOOLS` 物件的對應分類陣列加入一筆
+   ```js
+   { id: 'your-tool', name: '你的工具', icon: '🔧', href: 'your-tool.html', desc: '一句話描述' },
+   ```
+   若新增分類，同時更新 `getAllTools()` 的回傳。
+
+### 步驟四：推送更新
 
 ```bash
 git add .
@@ -190,6 +209,7 @@ GitHub Actions 會自動：
 | 文字工具 | `text` | 文字處理相關 |
 | 圖片工具 | `image` | 圖片處理相關 |
 | 開發工具 | `dev` | 開發者相關 |
+| 生活工具 | `life` | 占卜、生活雜項等 |
 
 ### 標記說明
 
@@ -210,6 +230,11 @@ index.html 中的標記位置：
 <!--DEV_TOOLS_START-->
 ... 自動生成的卡片 ...
 <!--DEV_TOOLS_END-->
+
+<!-- 生活工具區 -->
+<!--LIFE_TOOLS_START-->
+... 自動生成的卡片 ...
+<!--LIFE_TOOLS_END-->
 ```
 
 > ⚠️ 請勿手動編輯標記之間的內容，會被自動覆蓋。
@@ -276,7 +301,7 @@ index.html 中的標記位置：
 ### 新增工具前
 
 - [ ] 確認工具名稱和功能描述
-- [ ] 選擇適當的分類（text/image/dev）
+- [ ] 選擇適當的分類（text / image / dev / life）
 - [ ] 選擇適當的圖示 emoji
 - [ ] 準備搜尋關鍵字（中英文）
 
@@ -297,13 +322,20 @@ index.html 中的標記位置：
 
 ### 自動化設定
 
-- [ ] `TOOL_CATEGORIES` 已新增
-- [ ] `TOOL_ICONS` 已新增
-- [ ] `TOOL_KEYWORDS` 已新增
+- [ ] `update_toc.py` 的 `TOOL_CATEGORIES` 已新增
+- [ ] `update_toc.py` 的 `TOOL_ICONS` 已新增
+- [ ] `update_toc.py` 的 `TOOL_KEYWORDS` 已新增
+- [ ] 若新增分類：`update_toc.py` 的 `categories` 列表、`index.html` 的 section 與標記皆已新增
+
+### 同步其他清單
+
+- [ ] `README.md` 對應分類表格已新增一行
+- [ ] `components/shared.js` 的 `TOOLS.<分類>` 陣列已新增一筆
+- [ ] 若新增分類：`components/shared.js` 的 `TOOLS` 物件新增 key，`getAllTools()` 一併更新
 
 ### 推送前
 
-- [ ] 本地測試通過
+- [ ] 本地跑過 `python3 .github/scripts/update_toc.py`，無「未分類」警告
 - [ ] 檔案名稱正確（小寫、連字號）
 - [ ] commit message 清楚
 

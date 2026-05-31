@@ -22,6 +22,7 @@ TOOL_CATEGORIES = {
     # 圖片工具
     'pdf-to-png.html': 'image',
     'pdf-to-txt.html': 'image',
+    'png-to-pdf.html': 'image',
     'resize-image.html': 'image',
     'card.html': 'image',
     'exif.html': 'image',
@@ -39,6 +40,9 @@ TOOL_CATEGORIES = {
     'url-encode.html': 'dev',
     'jwt-decoder.html': 'dev',
     'qr-generator.html': 'dev',
+
+    # 生活工具
+    'tarot.html': 'life',
 }
 
 # 工具圖示設定
@@ -53,6 +57,7 @@ TOOL_ICONS = {
     'word-replace.html': '📃',
     'pdf-to-png.html': '📄',
     'pdf-to-txt.html': '📄',
+    'png-to-pdf.html': '🖼️',
     'resize-image.html': '📐',
     'card.html': '✂️',
     'exif.html': '📷',
@@ -68,6 +73,7 @@ TOOL_ICONS = {
     'url-encode.html': '🔗',
     'jwt-decoder.html': '🔑',
     'qr-generator.html': '▦',
+    'tarot.html': '🔮',
 }
 
 # 工具關鍵字 (用於搜尋)
@@ -82,6 +88,7 @@ TOOL_KEYWORDS = {
     'word-replace.html': 'word docx 批次 取代 替換 文件 office replace batch',
     'pdf-to-png.html': 'pdf png 轉換 圖片 convert',
     'pdf-to-txt.html': 'pdf txt 純文字 擷取 抽取 文字 extract text',
+    'png-to-pdf.html': 'png pdf 圖片 合併 轉換 jpg jpeg convert merge',
     'resize-image.html': '縮小 圖片 resize 調整 尺寸 壓縮',
     'card.html': '裁剪 圖片 空白 水印 crop trim',
     'exif.html': 'exif 照片 資訊 相機 gps 元資料',
@@ -97,6 +104,7 @@ TOOL_KEYWORDS = {
     'url-encode.html': 'url 編碼 解碼 encode decode encodeURIComponent 查詢字串 query string',
     'jwt-decoder.html': 'jwt token 解碼 解析 jwt decoder 認證 auth',
     'qr-generator.html': 'qr code 二維碼 產生器 generator png svg',
+    'tarot.html': '塔羅 占卜 tarot 牌陣 萊德偉特 星辰',
 }
 
 
@@ -201,6 +209,7 @@ def update_index():
         ('text', '<!--TEXT_TOOLS_START-->', '<!--TEXT_TOOLS_END-->'),
         ('image', '<!--IMAGE_TOOLS_START-->', '<!--IMAGE_TOOLS_END-->'),
         ('dev', '<!--DEV_TOOLS_START-->', '<!--DEV_TOOLS_END-->'),
+        ('life', '<!--LIFE_TOOLS_START-->', '<!--LIFE_TOOLS_END-->'),
     ]
 
     for cat_name, start_marker, end_marker in categories:
