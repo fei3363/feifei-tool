@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>幸運抽獎 - 線上隨機抽獎工具 | FeiFei Tools</title>
+<meta name="description" content="線上幸運抽獎工具，貼上名單即可隨機抽出中獎者，支援多人抽出、中獎後移出名單、慶祝動畫與彩帶特效。">
+<meta name="keywords" content="抽獎,隨機抽獎,Lucky Draw,抽籤,線上抽獎,名單抽獎">
+<link rel="canonical" href="https://tool.feifei.tw/lucky-draw.html">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tool.feifei.tw/lucky-draw.html">
+<meta property="og:title" content="幸運抽獎 | FeiFei Tools">
+<meta property="og:description" content="線上幸運抽獎工具，貼上名單即可隨機抽出中獎者。">
+
+<!-- GA -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+<script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#160a08;
+    --bg2:#241310;
+    --panel:#2c1812;
+    --panel-line:#46291f;
+    --gold:#e7b94a;
+    --gold-bright:#ffd970;
+    --gold-deep:#a87b22;
+    --red:#c5352a;
+    --red-bright:#e85d3d;
+    --cream:#f5ead6;
+    --muted:#a98a73;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Noto Sans TC",sans-serif;
+    color:var(--cream);
+    background:
+      radial-gradient(1200px 700px at 50% -10%, #3a1d14 0%, transparent 60%),
+      radial-gradient(900px 600px at 100% 100%, #2a120c 0%, transparent 55%),
+      var(--bg);
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* 細微紋理 */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:radial-gradient(rgba(231,185,74,.05) 1px, transparent 1px);
+    background-size:22px 22px;
+    mask-image:radial-gradient(circle at 50% 40%, #000 0%, transparent 75%);
+  }
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:60}
+
+  .wrap{
+    position:relative;z-index:1;
+    max-width:1160px;margin:0 auto;
+    padding:42px 26px 80px;
+  }
+
+  /* 標題 */
+  header{text-align:center;margin-bottom:38px}
+  .kicker{
+    font-family:"Bebas Neue",sans-serif;letter-spacing:.42em;
+    font-size:15px;color:var(--gold);opacity:.85;
+    text-indent:.42em;margin-bottom:6px;
+  }
+  h1{
+    font-family:"Noto Serif TC",serif;font-weight:900;
+    font-size:clamp(40px,7vw,72px);line-height:1;
+    letter-spacing:.06em;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold) 45%,var(--gold-deep));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 3px 0 rgba(0,0,0,.35));
+    position:relative;display:inline-block;
+  }
+  h1::after{
+    content:"";display:block;width:90px;height:3px;margin:16px auto 0;
+    background:linear-gradient(90deg,transparent,var(--red-bright),transparent);
+  }
+
+  .layout{
+    display:grid;grid-template-columns:340px 1fr;gap:26px;align-items:start;
+  }
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr}
+  }
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--panel-line);
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 24px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,220,150,.06);
+  }
+  .panel h2{
+    font-family:"Noto Serif TC",serif;font-weight:700;font-size:19px;
+    color:var(--gold-bright);margin-bottom:4px;letter-spacing:.04em;
+    display:flex;align-items:center;gap:9px;
+  }
+  .panel h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--red-bright);box-shadow:0 0 10px var(--red-bright)}
+  .hint{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+
+  textarea{
+    width:100%;height:240px;resize:vertical;
+    background:rgba(0,0,0,.28);
+    border:1px solid var(--panel-line);border-radius:12px;
+    color:var(--cream);font-family:"Noto Sans TC",sans-serif;
+    font-size:15px;line-height:1.7;padding:13px 14px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(231,185,74,.15)}
+  textarea::placeholder{color:#6f5544}
+
+  .opts{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+  .opt{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:14px;color:var(--cream);
+  }
+  /* 開關 */
+  .switch{position:relative;width:46px;height:26px;flex:none}
+  .switch input{opacity:0;width:0;height:0}
+  .slider{
+    position:absolute;inset:0;cursor:pointer;border-radius:30px;
+    background:#3a2118;border:1px solid var(--panel-line);transition:.25s;
+  }
+  .slider::before{
+    content:"";position:absolute;height:18px;width:18px;left:3px;top:3px;
+    background:var(--muted);border-radius:50%;transition:.25s;
+  }
+  .switch input:checked + .slider{background:var(--red);border-color:var(--red-bright)}
+  .switch input:checked + .slider::before{transform:translateX(20px);background:var(--gold-bright)}
+
+  .count-row{display:flex;align-items:center;justify-content:space-between;font-size:14px}
+  .stepper{display:flex;align-items:center;gap:0;background:rgba(0,0,0,.28);border:1px solid var(--panel-line);border-radius:10px;overflow:hidden}
+  .stepper button{
+    width:34px;height:34px;background:transparent;border:none;color:var(--gold);
+    font-size:20px;cursor:pointer;transition:background .15s;
+  }
+  .stepper button:hover{background:rgba(231,185,74,.12)}
+  .stepper span{width:40px;text-align:center;font-family:"Bebas Neue",sans-serif;font-size:22px;color:var(--cream)}
+
+  .meta{
+    margin-top:16px;padding-top:14px;border-top:1px dashed var(--panel-line);
+    display:flex;justify-content:space-between;font-size:13px;color:var(--muted);
+  }
+  .meta b{color:var(--gold-bright);font-family:"Bebas Neue",sans-serif;font-size:18px;font-weight:400}
+
+  /* 抽獎機 */
+  .stage{
+    background:
+      radial-gradient(600px 320px at 50% 0%, rgba(197,53,42,.18), transparent 70%),
+      linear-gradient(180deg,var(--panel),var(--bg2));
+    border:1px solid var(--panel-line);
+    border-radius:20px;padding:30px;
+    box-shadow:0 28px 70px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,220,150,.06);
+    display:flex;flex-direction:column;align-items:center;
+  }
+
+  .machine{
+    position:relative;width:100%;max-width:520px;height:300px;
+    border-radius:16px;overflow:hidden;
+    background:linear-gradient(180deg,#120705,#1c0d09);
+    border:2px solid var(--gold-deep);
+    box-shadow:inset 0 0 60px rgba(0,0,0,.7), 0 0 0 6px rgba(0,0,0,.25);
+  }
+  .machine::before,.machine::after{
+    content:"";position:absolute;left:0;right:0;height:96px;z-index:3;pointer-events:none;
+  }
+  .machine::before{top:0;background:linear-gradient(180deg,#120705 8%,transparent)}
+  .machine::after{bottom:0;background:linear-gradient(0deg,#120705 8%,transparent)}
+  /* 中央高亮窗 */
+  .window-line{
+    position:absolute;left:14px;right:14px;top:50%;height:100px;transform:translateY(-50%);
+    border-top:2px solid rgba(231,185,74,.55);border-bottom:2px solid rgba(231,185,74,.55);
+    z-index:4;pointer-events:none;
+    box-shadow:0 0 30px rgba(231,185,74,.25) inset;
+  }
+  .window-line .tri{position:absolute;top:50%;transform:translateY(-50%);width:0;height:0}
+  .window-line .tri.l{left:-2px;border-top:9px solid transparent;border-bottom:9px solid transparent;border-left:14px solid var(--red-bright)}
+  .window-line .tri.r{right:-2px;border-top:9px solid transparent;border-bottom:9px solid transparent;border-right:14px solid var(--red-bright)}
+
+  .reel{position:absolute;left:0;right:0;top:0;will-change:transform}
+  .reel .item{
+    height:100px;display:flex;align-items:center;justify-content:center;
+    font-family:"Noto Serif TC",serif;font-weight:700;
+    font-size:clamp(26px,5vw,40px);color:var(--cream);
+    padding:0 18px;text-align:center;
+  }
+  .reel .item.win{color:var(--gold-bright);text-shadow:0 0 24px rgba(255,217,112,.6)}
+
+  .machine.empty .placeholder{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#6f5544;font-size:17px;text-align:center;padding:0 30px;z-index:2;
+  }
+
+  /* 抽獎機脈動光暈 */
+  .machine.celebrate{animation:glow 1.4s ease}
+  @keyframes glow{
+    0%{box-shadow:inset 0 0 60px rgba(0,0,0,.7), 0 0 0 6px rgba(0,0,0,.25)}
+    40%{box-shadow:inset 0 0 60px rgba(255,217,112,.35), 0 0 50px 6px rgba(231,185,74,.6)}
+    100%{box-shadow:inset 0 0 60px rgba(0,0,0,.7), 0 0 0 6px rgba(0,0,0,.25)}
+  }
+
+  .draw-btn{
+    margin-top:26px;
+    font-family:"Noto Serif TC",serif;font-weight:900;letter-spacing:.18em;
+    font-size:23px;color:#2a0c07;
+    padding:17px 64px;border:none;border-radius:50px;cursor:pointer;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold) 55%,var(--gold-deep));
+    box-shadow:0 10px 0 #7c5616, 0 16px 26px rgba(0,0,0,.45);
+    transition:transform .08s, box-shadow .08s, filter .2s;
+    position:relative;
+  }
+  .draw-btn:hover{filter:brightness(1.06)}
+  .draw-btn:active{transform:translateY(7px);box-shadow:0 3px 0 #7c5616, 0 8px 16px rgba(0,0,0,.4)}
+  .draw-btn:disabled{filter:grayscale(.6) brightness(.7);cursor:not-allowed;box-shadow:0 10px 0 #5a431a}
+
+  .stage .status{margin-top:16px;font-size:14px;color:var(--muted);min-height:20px;letter-spacing:.03em}
+
+  /* 中獎名單 */
+  .winners{margin-top:26px}
+  .winners-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .winners-head h2{
+    font-family:"Noto Serif TC",serif;font-weight:700;font-size:20px;color:var(--gold-bright);
+    display:flex;align-items:center;gap:9px;letter-spacing:.04em;
+  }
+  .winners-head h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+  .ghost-btn{
+    background:transparent;border:1px solid var(--panel-line);color:var(--muted);
+    font-family:"Noto Sans TC",sans-serif;font-size:13px;padding:7px 14px;border-radius:9px;cursor:pointer;transition:.2s;
+  }
+  .ghost-btn:hover{border-color:var(--red-bright);color:var(--red-bright)}
+
+  .winner-grid{display:flex;flex-wrap:wrap;gap:11px}
+  .chip{
+    display:flex;align-items:center;gap:10px;
+    background:linear-gradient(180deg,#33190f,#22110b);
+    border:1px solid var(--panel-line);border-radius:12px;
+    padding:11px 16px 11px 12px;
+    animation:pop .35s cubic-bezier(.2,1.3,.4,1) both;
+  }
+  @keyframes pop{from{opacity:0;transform:scale(.7) translateY(8px)}to{opacity:1;transform:none}}
+  .chip .num{
+    font-family:"Bebas Neue",sans-serif;font-size:18px;
+    width:28px;height:28px;border-radius:50%;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--red);color:var(--gold-bright);
+  }
+  .chip .nm{font-family:"Noto Serif TC",serif;font-weight:700;font-size:17px;color:var(--cream)}
+  .empty-note{color:var(--muted);font-size:13.5px}
+
+  /* 中獎彈窗 */
+  .modal{
+    position:fixed;inset:0;z-index:80;display:none;
+    align-items:center;justify-content:center;
+    background:rgba(8,4,3,.78);backdrop-filter:blur(3px);
+  }
+  .modal.show{display:flex;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .card{
+    text-align:center;padding:46px 56px;border-radius:24px;
+    background:radial-gradient(500px 300px at 50% 0%, #3a1d14, var(--bg2));
+    border:2px solid var(--gold);
+    box-shadow:0 0 0 8px rgba(231,185,74,.12), 0 40px 90px rgba(0,0,0,.6);
+    animation:rise .45s cubic-bezier(.2,1.2,.3,1) both;max-width:90vw;
+  }
+  @keyframes rise{from{opacity:0;transform:scale(.85) translateY(20px)}to{opacity:1;transform:none}}
+  .card .lbl{font-family:"Bebas Neue",sans-serif;letter-spacing:.4em;color:var(--gold);font-size:17px;margin-bottom:6px}
+  .card .who{
+    font-family:"Noto Serif TC",serif;font-weight:900;
+    font-size:clamp(44px,9vw,80px);line-height:1.1;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 2px 0 rgba(0,0,0,.3));margin:6px 0 4px;
+  }
+  .card .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .card button{
+    font-family:"Noto Sans TC",sans-serif;font-weight:700;font-size:16px;
+    padding:12px 40px;border:none;border-radius:40px;cursor:pointer;color:#2a0c07;
+    background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));
+    box-shadow:0 6px 16px rgba(0,0,0,.4);
+  }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">LUCKY DRAW</div>
+    <h1>幸運抽獎</h1>
+  </header>
+
+  <div class="layout">
+    <!-- 左：名單與設定 -->
+    <section class="panel">
+      <h2><span class="dot"></span>參加名單</h2>
+      <p class="hint">每行輸入一個名字</p>
+      <textarea id="names" placeholder="王小明&#10;陳大文&#10;林志玲&#10;張惠妹&#10;周杰倫"></textarea>
+
+      <div class="opts">
+        <div class="opt">
+          <span>中獎後移出名單</span>
+          <label class="switch">
+            <input type="checkbox" id="removeWinner" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="opt count-row">
+          <span>本次抽出人數</span>
+          <div class="stepper">
+            <button id="minus" aria-label="減少">−</button>
+            <span id="drawCount">1</span>
+            <button id="plus" aria-label="增加">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <span>剩餘可抽　<b id="poolCount">0</b></span>
+        <span>已中獎　<b id="wonCount">0</b></span>
+      </div>
+    </section>
+
+    <!-- 右：抽獎機 -->
+    <section class="stage">
+      <div class="machine empty" id="machine">
+        <div class="window-line"><span class="tri l"></span><span class="tri r"></span></div>
+        <div class="reel" id="reel"></div>
+        <div class="placeholder" id="placeholder">在左邊輸入名單，準備開抽！</div>
+      </div>
+
+      <button class="draw-btn" id="drawBtn">開始抽獎</button>
+      <div class="status" id="status"></div>
+    </section>
+  </div>
+
+  <!-- 中獎名單 -->
+  <div class="winners">
+    <div class="winners-head">
+      <h2><span class="dot"></span>中獎名單</h2>
+      <button class="ghost-btn" id="resetBtn">全部重置</button>
+    </div>
+    <div class="winner-grid" id="winnerGrid">
+      <span class="empty-note">還沒有人中獎～</span>
+    </div>
+  </div>
+</div>
+
+<!-- 中獎彈窗 -->
+<div class="modal" id="modal">
+  <div class="card">
+    <div class="lbl">WINNER</div>
+    <div class="who" id="modalName">—</div>
+    <div class="sub" id="modalSub">恭喜中獎！</div>
+    <button id="modalClose">太棒了！</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ITEM_H = 100;           // 每格高度，需與 CSS .reel .item / .window-line 一致
+  const VISIBLE_CENTER = 1;     // 窗口中央對齊用的偏移格數（機台高 300px → 中央在第 1.5 格，用 transform 微調）
+
+  const $ = id => document.getElementById(id);
+  const namesEl = $('names'), reel = $('reel'), machine = $('machine'),
+        placeholder = $('placeholder'), drawBtn = $('drawBtn'), statusEl = $('status'),
+        poolCountEl = $('poolCount'), wonCountEl = $('wonCount'),
+        winnerGrid = $('winnerGrid'), removeWinner = $('removeWinner'),
+        drawCountEl = $('drawCount'), modal = $('modal'), modalName = $('modalName'),
+        modalSub = $('modalSub');
+
+  let winners = [];     // 已中獎者
+  let drawCount = 1;
+  let spinning = false;
+
+  // 取得目前名單（去除空白、重複）
+  function parseNames(){
+    const raw = namesEl.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    const seen = new Set(), out = [];
+    for(const n of raw){ if(!seen.has(n)){ seen.add(n); out.push(n); } }
+    return out;
+  }
+  // 可抽池子（扣掉已中獎，若有開啟移除）
+  function pool(){
+    const all = parseNames();
+    if(!removeWinner.checked) return all;
+    const won = new Set(winners);
+    return all.filter(n=>!won.has(n));
+  }
+
+  function updateMeta(){
+    poolCountEl.textContent = pool().length;
+    wonCountEl.textContent = winners.length;
+    const p = pool();
+    if(p.length === 0){
+      machine.classList.add('empty');
+      placeholder.textContent = parseNames().length ? '名單都抽完囉！' : '在左邊輸入名單，準備開抽！';
+      reel.innerHTML = '';
+    } else {
+      machine.classList.remove('empty');
+    }
+    // 抽出人數不可超過池子
+    if(drawCount > Math.max(1,p.length)){ drawCount = Math.max(1,p.length); drawCountEl.textContent = drawCount; }
+    drawBtn.disabled = p.length === 0 || spinning;
+  }
+
+  function renderWinners(){
+    if(winners.length === 0){
+      winnerGrid.innerHTML = '<span class="empty-note">還沒有人中獎～</span>';
+      return;
+    }
+    winnerGrid.innerHTML = winners.map((n,i)=>
+      `<div class="chip"><span class="num">${i+1}</span><span class="nm">${escapeHtml(n)}</span></div>`
+    ).join('');
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // 建立轉輪內容：把池子重複多次填滿，最後讓 winner 停在中央
+  function buildReel(poolArr, winner){
+    const loops = 12;
+    let list = [];
+    for(let i=0;i<loops;i++){
+      // 每圈打亂一下，視覺更自然
+      list = list.concat(shuffle(poolArr.slice()));
+    }
+    // 在靠後段塞入 winner 當作停留點
+    const stopIndex = list.length - poolArr.length - 2; // 留點緩衝
+    list[stopIndex] = winner;
+    reel.innerHTML = list.map((n,i)=>
+      `<div class="item${i===stopIndex?' win':''}">${escapeHtml(n)}</div>`
+    ).join('');
+    return stopIndex;
+  }
+
+  function shuffle(a){
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  // 中央對齊：機台高 300，中央 y=150，項目高 100，中央項目應落在 100~200 → 其頂部 y=100
+  // translateY = -(stopIndex*ITEM_H) + 100
+  function spinTo(stopIndex){
+    return new Promise(resolve=>{
+      const target = -(stopIndex*ITEM_H) + 100;
+      reel.style.transition = 'none';
+      reel.style.transform = 'translateY(0px)';
+      // 強制 reflow 後再加 transition
+      void reel.offsetHeight;
+      reel.style.transition = 'transform 4.4s cubic-bezier(.12,.62,.18,1)';
+      reel.style.transform = `translateY(${target}px)`;
+      let done = false;
+      const finish = ()=>{ if(done) return; done=true; reel.removeEventListener('transitionend',finish); resolve(); };
+      reel.addEventListener('transitionend',finish);
+      setTimeout(finish,4700); // 保險
+    });
+  }
+
+  async function drawOne(){
+    const p = pool();
+    if(p.length === 0) return null;
+    const winner = p[Math.floor(Math.random()*p.length)];
+    const stopIndex = buildReel(p, winner);
+    statusEl.textContent = '抽獎中…命運轉動！';
+    await spinTo(stopIndex);
+    return winner;
+  }
+
+  async function startDraw(){
+    if(spinning) return;
+    const p = pool();
+    if(p.length === 0){ updateMeta(); return; }
+    spinning = true; drawBtn.disabled = true;
+
+    const n = Math.min(drawCount, p.length);
+    const picked = [];
+    for(let k=0;k<n;k++){
+      const w = await drawOne();
+      if(w==null) break;
+      picked.push(w);
+      winners.push(w);
+      renderWinners();
+      // 慶祝
+      machine.classList.remove('celebrate'); void machine.offsetHeight; machine.classList.add('celebrate');
+      burstConfetti();
+      if(k < n-1){ await sleep(650); } // 連抽間的短暫停頓
+    }
+
+    spinning = false;
+    statusEl.textContent = '恭喜中獎！';
+    showModal(picked);
+    updateMeta();
+  }
+
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+  function showModal(picked){
+    if(picked.length === 1){
+      modalName.textContent = picked[0];
+      modalName.style.fontSize = '';
+    } else {
+      modalName.innerHTML = picked.map(escapeHtml).join('<br>');
+      modalName.style.fontSize = 'clamp(30px,6vw,52px)';
+    }
+    modalSub.textContent = picked.length>1 ? `本輪共 ${picked.length} 位中獎` : '恭喜中獎！';
+    modal.classList.add('show');
+    bigConfetti();
+  }
+
+  // ===== 彩帶 =====
+  const cv = $('confetti'), ctx = cv.getContext('2d');
+  let parts = [];
+  function resize(){ cv.width = innerWidth; cv.height = innerHeight; }
+  resize(); addEventListener('resize',resize);
+  const COLORS = ['#ffd970','#e7b94a','#e85d3d','#c5352a','#f5ead6','#a87b22'];
+  function spawn(n, cx, cy, spread){
+    for(let i=0;i<n;i++){
+      const ang = Math.random()*Math.PI*2;
+      const sp = Math.random()*spread + 2;
+      parts.push({
+        x:cx, y:cy,
+        vx:Math.cos(ang)*sp*(.5+Math.random()),
+        vy:Math.sin(ang)*sp - Math.random()*6,
+        g:.18+Math.random()*.12,
+        s:5+Math.random()*7,
+        rot:Math.random()*Math.PI, vr:(Math.random()-.5)*.3,
+        c:COLORS[Math.floor(Math.random()*COLORS.length)],
+        life:90+Math.random()*40
+      });
+    }
+  }
+  function burstConfetti(){ spawn(70, innerWidth/2, innerHeight*0.4, 9); }
+  function bigConfetti(){ spawn(160, innerWidth/2, innerHeight*0.35, 13); }
+  function loop(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    parts.forEach(p=>{
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot);
+      ctx.fillStyle = p.c; ctx.globalAlpha = Math.max(0,Math.min(1,p.life/40));
+      ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s*1.6);
+      ctx.restore();
+    });
+    parts = parts.filter(p=>p.life>0 && p.y < cv.height+40);
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // ===== 事件 =====
+  drawBtn.addEventListener('click', startDraw);
+  namesEl.addEventListener('input', ()=>{ if(!spinning) updateMeta(); });
+  removeWinner.addEventListener('change', updateMeta);
+  $('plus').addEventListener('click', ()=>{ const max=Math.max(1,pool().length); drawCount=Math.min(max,drawCount+1); drawCountEl.textContent=drawCount; });
+  $('minus').addEventListener('click', ()=>{ drawCount=Math.max(1,drawCount-1); drawCountEl.textContent=drawCount; });
+  $('modalClose').addEventListener('click', ()=> modal.classList.remove('show'));
+  modal.addEventListener('click', e=>{ if(e.target===modal) modal.classList.remove('show'); });
+  $('resetBtn').addEventListener('click', ()=>{
+    if(winners.length && !confirm('確定要清空中獎名單嗎？')) return;
+    winners = []; renderWinners(); updateMeta(); statusEl.textContent='';
+  });
+
+  // 初始
+  renderWinners();
+  updateMeta();
+})();
+</script>
+</body>
+</html>
