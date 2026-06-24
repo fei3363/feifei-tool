@@ -18,6 +18,7 @@ TOOL_CATEGORIES = {
     'highlight_replace.html': 'text',
     'email.html': 'text',
     'word-replace.html': 'text',
+    'speech-timer.html': 'text',
 
     # 圖片工具
     'pdf-to-png.html': 'image',
@@ -57,6 +58,7 @@ TOOL_ICONS = {
     'highlight_replace.html': '🖍️',
     'email.html': '📧',
     'word-replace.html': '📃',
+    'speech-timer.html': '⏱️',
     'pdf-to-png.html': '📄',
     'pdf-to-txt.html': '📄',
     'png-to-pdf.html': '🖼️',
@@ -90,6 +92,7 @@ TOOL_KEYWORDS = {
     'highlight_replace.html': '取代 替換 replace 識別 highlight',
     'email.html': '信箱 email 郵件 暱稱 提取 extract',
     'word-replace.html': 'word docx 批次 取代 替換 文件 office replace batch',
+    'speech-timer.html': '演講 時間 計算 簡報 語速 speech timer presentation wpm 推銷 腳本',
     'pdf-to-png.html': 'pdf png 轉換 圖片 convert',
     'pdf-to-txt.html': 'pdf txt 純文字 擷取 抽取 文字 extract text',
     'png-to-pdf.html': 'png pdf 圖片 合併 轉換 jpg jpeg convert merge',
