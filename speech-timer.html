@@ -290,7 +290,6 @@
     <script>
         // Initialize shared components
         FeiFeiTools.init({ currentPage: '演講時間計算機', currentCategory: 'text' });
-        const showToast = FeiFeiTools.showToast;
 
         // State
         let currentSpeed = 170;
@@ -329,7 +328,7 @@ TechFlow 用 AI 驅動的知識圖譜技術，讓企業資訊的存取速度提�
             if (currentTab !== 'text') switchTab('text');
             document.getElementById('text-input').value = EXAMPLES[key];
             calculate();
-            showToast('已載入範例');
+            FeiFeiTools.showToast('已載入範例');
         }
 
         // Tab switching
@@ -488,7 +487,7 @@ TechFlow 用 AI 驅動的知識圖譜技術，讓企業資訊的存取速度提�
             document.getElementById('buffer-range').value = 10;
             updateBuffer();
             calculate();
-            showToast('已清除');
+            FeiFeiTools.showToast('已清除');
         }
 
         async function copyResult() {
