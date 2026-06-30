@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO -->
+    <title>篩選未寄出名單工具 - 名單比對篩選 | FeiFei Tools</title>
+    <meta name="description" content="免費線上名單篩選工具，輸入已寄出名單與完整名單，自動找出還沒寄出的名單。支援忽略大小寫、自動擷取 Email 比對，可複製與下載結果。">
+    <meta name="keywords" content="名單篩選,未寄出名單,名單比對,差集,email比對,扣除名單,寄信名單">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/filter-unsent-list.html">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/filter-unsent-list.html">
+    <meta property="og:title" content="篩選未寄出名單工具 | FeiFei Tools">
+    <meta property="og:description" content="輸入已寄出名單與完整名單，自動找出還沒寄出的名單。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="篩選未寄出名單工具 | FeiFei Tools">
+    <meta name="twitter:description" content="輸入已寄出名單與完整名單，自動找出還沒寄出的名單。">
+
+    <!-- GA -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <!-- 防止主題閃爍 -->
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "篩選未寄出名單工具", "url": "https://tool.feifei.tw/filter-unsent-list.html", "description": "輸入已寄出名單與完整名單，自動找出還沒寄出的名單", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
+    <style>
+        .touch-target { min-height: 44px; min-width: 44px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <!-- Desktop Header -->
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">篩選未寄出名單</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">📤</span>篩選未寄出名單</h1>
+            <p class="text-gray-600 dark:text-gray-400">輸入「已寄出名單」與「完整名單」，自動找出還沒寄出的名單（完整名單 − 已寄出名單）</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Input Section -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="listA" class="block text-sm font-medium text-gray-700 dark:text-gray-300">A 名單（已寄出）<span id="countA" class="text-gray-400 font-normal ml-1">0 筆</span></label>
+                        <button onclick="clearField('listA')" class="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">清空</button>
+                    </div>
+                    <textarea id="listA" oninput="updateCounts()" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[280px] font-mono text-sm" placeholder="貼上已經寄出的名單，一行一筆。&#10;&#10;例如：&#10;alice@example.com&#10;bob@example.com&#10;王小明 <ming@example.com>" rows="12"></textarea>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="listB" class="block text-sm font-medium text-gray-700 dark:text-gray-300">B 名單（完整名單）<span id="countB" class="text-gray-400 font-normal ml-1">0 筆</span></label>
+                        <button onclick="clearField('listB')" class="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">清空</button>
+                    </div>
+                    <textarea id="listB" oninput="updateCounts()" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y min-h-[280px] font-mono text-sm" placeholder="貼上完整名單，一行一筆。&#10;&#10;例如：&#10;alice@example.com&#10;bob@example.com&#10;carol@example.com&#10;王小明 <ming@example.com>" rows="12"></textarea>
+                </div>
+            </section>
+
+            <!-- Options -->
+            <section class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
+                <div class="flex flex-wrap gap-x-6 gap-y-3">
+                    <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
+                        <input type="checkbox" id="optIgnoreCase" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+                        <span>忽略大小寫</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
+                        <input type="checkbox" id="optExtractEmail" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+                        <span>以 Email 比對<span class="text-gray-400">（自動擷取「名稱 &lt;email&gt;」中的信箱）</span></span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
+                        <input type="checkbox" id="optTrim" checked class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+                        <span>忽略前後空白</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- Actions -->
+            <div class="flex justify-center">
+                <button onclick="filterList()" class="inline-flex items-center justify-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors touch-target">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L14 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 018 21v-7.586L3.293 6.707A1 1 0 013 6V4z"/></svg>
+                    開始篩選
+                </button>
+            </div>
+
+            <!-- Results -->
+            <section id="results" class="hidden">
+                <!-- Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 text-center">
+                        <div id="statTotal" class="text-2xl font-bold text-gray-900 dark:text-white">0</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">完整名單</div>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 text-center">
+                        <div id="statSent" class="text-2xl font-bold text-green-600 dark:text-green-400">0</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">已寄出（命中）</div>
+                    </div>
+                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center ring-2 ring-blue-500">
+                        <div id="statUnsent" class="text-2xl font-bold text-blue-600 dark:text-blue-400">0</div>
+                        <div class="text-xs text-blue-700 dark:text-blue-300 mt-1">未寄出</div>
+                    </div>
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 text-center">
+                        <div id="statExtra" class="text-2xl font-bold text-amber-600 dark:text-amber-400">0</div>
+                        <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">A 有、B 沒有</div>
+                    </div>
+                </div>
+
+                <!-- Unsent output -->
+                <div class="mb-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                        <h2 class="text-xl font-bold flex items-center gap-2">📋 未寄出名單 <span id="unsentBadge" class="text-sm font-normal text-gray-500 dark:text-gray-400"></span></h2>
+                        <div class="flex gap-2">
+                            <button onclick="copyResult()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors touch-target">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                複製
+                            </button>
+                            <button onclick="downloadResult()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-sm font-medium rounded-lg transition-colors touch-target">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                                下載
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="unsentOutput" readonly class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 resize-y min-h-[240px] font-mono text-sm" placeholder="未寄出的名單會顯示在這裡..."></textarea>
+                </div>
+
+                <!-- Extra (A only) -->
+                <details id="extraDetails" class="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-4 hidden">
+                    <summary class="cursor-pointer font-medium text-amber-800 dark:text-amber-200">⚠️ A 名單中有、但完整名單沒有的項目（<span id="extraCount">0</span> 筆）</summary>
+                    <p class="text-sm text-amber-700 dark:text-amber-300 mt-2 mb-2">這些項目在「已寄出」名單裡，卻不在「完整名單」中，可能是輸入錯誤、重複或來源不一致，請確認。</p>
+                    <textarea id="extraOutput" readonly class="w-full p-3 border border-amber-300 dark:border-amber-700 rounded-lg bg-white dark:bg-gray-800 resize-y min-h-[120px] font-mono text-sm"></textarea>
+                </details>
+            </section>
+
+            <!-- Info -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
+                <p class="font-medium mb-1">使用說明</p>
+                <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-300">
+                    <li>一行代表一筆名單（Email、名稱或「名稱 &lt;email&gt;」皆可）。</li>
+                    <li>「未寄出名單」= 完整名單中、尚未出現在已寄出名單裡的項目，輸出時保留完整名單的原始內容。</li>
+                    <li>勾選「以 Email 比對」時，會自動擷取每行中的信箱作為比對依據，名稱不同也能正確比對。</li>
+                    <li>完整名單中的重複項目只會輸出一次。</li>
+                    <li>所有處理皆在瀏覽器本機完成，名單不會上傳到任何伺服器。</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5 font-medium">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
+
+    <script>
+        // Theme
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        // Toast
+        function showToast(msg, duration = 2000) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, duration);
+        }
+
+        const EMAIL_RE = /[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/;
+
+        // 將一行轉成比對用的鍵值
+        function makeKey(line, opts) {
+            let key = opts.trim ? line.trim() : line;
+            if (opts.extractEmail) {
+                const m = key.match(EMAIL_RE);
+                if (m) key = m[0];
+            }
+            if (opts.ignoreCase) key = key.toLowerCase();
+            return key;
+        }
+
+        // 解析名單，回傳 [{ raw, key }]，自動忽略空白行
+        function parseList(text, opts) {
+            return text.split(/\r?\n/)
+                .map(raw => ({ raw, key: makeKey(raw, opts) }))
+                .filter(item => item.key !== '');
+        }
+
+        function getOptions() {
+            return {
+                ignoreCase: document.getElementById('optIgnoreCase').checked,
+                extractEmail: document.getElementById('optExtractEmail').checked,
+                trim: document.getElementById('optTrim').checked,
+            };
+        }
+
+        function countLines(text) {
+            return text.split(/\r?\n/).filter(l => l.trim() !== '').length;
+        }
+
+        function updateCounts() {
+            document.getElementById('countA').textContent = countLines(document.getElementById('listA').value) + ' 筆';
+            document.getElementById('countB').textContent = countLines(document.getElementById('listB').value) + ' 筆';
+        }
+
+        function clearField(id) {
+            document.getElementById(id).value = '';
+            updateCounts();
+        }
+
+        function filterList() {
+            const opts = getOptions();
+            const textA = document.getElementById('listA').value;
+            const textB = document.getElementById('listB').value;
+
+            if (!textB.trim()) {
+                showToast('請先輸入「完整名單」（B 名單）');
+                return;
+            }
+
+            const sent = parseList(textA, opts);
+            const full = parseList(textB, opts);
+
+            const sentKeys = new Set(sent.map(item => item.key));
+            const fullKeys = new Set(full.map(item => item.key));
+
+            // 完整名單 − 已寄出名單，依完整名單原順序，重複的鍵只保留第一筆
+            const unsent = [];
+            const seen = new Set();
+            let hitCount = 0;
+            full.forEach(item => {
+                if (sentKeys.has(item.key)) {
+                    hitCount++;
+                    return;
+                }
+                if (seen.has(item.key)) return;
+                seen.add(item.key);
+                unsent.push(item.raw.trim());
+            });
+
+            // A 有、B 沒有的項目（可能是輸入錯誤或來源不一致）
+            const extra = [];
+            const extraSeen = new Set();
+            sent.forEach(item => {
+                if (fullKeys.has(item.key)) return;
+                if (extraSeen.has(item.key)) return;
+                extraSeen.add(item.key);
+                extra.push(item.raw.trim());
+            });
+
+            // 統計
+            document.getElementById('statTotal').textContent = full.length;
+            document.getElementById('statSent').textContent = hitCount;
+            document.getElementById('statUnsent').textContent = unsent.length;
+            document.getElementById('statExtra').textContent = extra.length;
+
+            // 未寄出輸出
+            document.getElementById('unsentOutput').value = unsent.join('\n');
+            document.getElementById('unsentBadge').textContent = unsent.length > 0 ? `共 ${unsent.length} 筆` : '（已全部寄出）';
+
+            // A 有、B 沒有
+            const extraDetails = document.getElementById('extraDetails');
+            if (extra.length > 0) {
+                document.getElementById('extraCount').textContent = extra.length;
+                document.getElementById('extraOutput').value = extra.join('\n');
+                extraDetails.classList.remove('hidden');
+            } else {
+                extraDetails.classList.add('hidden');
+            }
+
+            document.getElementById('results').classList.remove('hidden');
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (unsent.length === 0) {
+                showToast('完整名單都已寄出！');
+            } else {
+                showToast(`篩選完成：${unsent.length} 筆尚未寄出`);
+            }
+        }
+
+        async function copyResult() {
+            const text = document.getElementById('unsentOutput').value;
+            if (!text) { showToast('沒有可複製的內容'); return; }
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('已複製未寄出名單');
+            } catch (e) {
+                const ta = document.getElementById('unsentOutput');
+                ta.select();
+                document.execCommand('copy');
+                showToast('已複製未寄出名單');
+            }
+        }
+
+        function downloadResult() {
+            const text = document.getElementById('unsentOutput').value;
+            if (!text) { showToast('沒有可下載的內容'); return; }
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'unsent-list.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('已下載 unsent-list.txt');
+        }
+
+        updateCounts();
+    </script>
+</body>
+</html>

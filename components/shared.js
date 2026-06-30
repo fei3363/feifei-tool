@@ -23,6 +23,7 @@ const TOOLS = {
         { id: 'email', name: '信箱提取', icon: '📧', href: 'email.html', desc: '從文字中提取信箱與暱稱' },
         { id: 'word-replace', name: 'Word 批次取代', icon: '📃', href: 'word-replace.html', desc: 'Word/docx 文件批次取代' },
         { id: 'speech-timer', name: '演講時間計算機', icon: '⏱️', href: 'speech-timer.html', desc: '估算演講、簡報所需時長' },
+        { id: 'filter-unsent-list', name: '篩選未寄出名單', icon: '📤', href: 'filter-unsent-list.html', desc: '從完整名單扣除已寄出，找出未寄名單' },
     ],
     image: [
         { id: 'pdf-to-png', name: 'PDF 轉 PNG', icon: '📄', href: 'pdf-to-png.html', desc: '將 PDF 轉換為圖片' },
