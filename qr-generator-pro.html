@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>QR Code 產生器 Pro - 網址/WiFi/名片/簡訊 QR 碼 | FeiFei Tools</title>
+    <meta name="description" content="免費線上 QR Code 產生器進階版，支援網址、文字、WiFi 連線、vCard 名片、Email、簡訊與電話，可自訂顏色、容錯、尺寸並下載 PNG / SVG，所有處理在瀏覽器完成。">
+    <meta name="keywords" content="QR Code,QR碼,二維碼,WiFi QR,vCard,名片QR,簡訊QR,QR Code產生器">
+    <meta name="author" content="FeiFei">
+    <link rel="canonical" href="https://tool.feifei.tw/qr-generator-pro.html">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tool.feifei.tw/qr-generator-pro.html">
+    <meta property="og:title" content="QR Code 產生器 Pro | FeiFei Tools">
+    <meta property="og:description" content="支援網址、WiFi、名片、簡訊等多種 QR Code，可下載 PNG / SVG。">
+    <meta property="og:image" content="https://tool.feifei.tw/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="QR Code 產生器 Pro | FeiFei Tools">
+    <meta name="twitter:description" content="支援網址、WiFi、名片、簡訊等多種 QR Code。">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B20B804DQS"></script>
+    <script>window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-B20B804DQS');</script>
+
+    <script>(function() { const saved = localStorage.getItem('theme'); const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches; if (saved === 'dark' || (!saved && prefersDark)) { document.documentElement.classList.add('dark'); } })();</script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Noto Sans TC', 'system-ui', 'sans-serif'] } } } }</script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- QRCode -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+    <script type="application/ld+json">{ "@context": "https://schema.org", "@type": "WebApplication", "name": "QR Code 產生器 Pro", "url": "https://tool.feifei.tw/qr-generator-pro.html", "description": "支援網址、WiFi、名片、簡訊等多種 QR Code 產生工具", "applicationCategory": "UtilityApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "TWD" } }</script>
+
+    <style>
+        .touch-target { min-height: 44px; min-width: 44px; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        .field { width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font-size: 0.875rem; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-blue-600 text-white px-4 py-2 rounded-lg z-[100]">跳至主要內容</a>
+
+    <header class="hidden md:block sticky top-0 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2 touch-target"><span class="text-2xl">🛠️</span><span class="font-bold text-xl">FeiFei Tools</span></a>
+                <nav class="flex items-center gap-1"><a href="index.html" class="px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">首頁</a><span class="text-gray-300 dark:text-gray-600">/</span><span class="px-3 py-2 text-gray-900 dark:text-white font-medium text-sm">QR Code 產生器 Pro</span></nav>
+                <button id="theme-toggle-desktop" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors touch-target" aria-label="切換深色模式">
+                    <svg class="w-6 h-6 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg class="w-6 h-6 block dark:hidden text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8">
+        <div class="mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3"><span class="text-3xl">▦</span>QR Code 產生器 Pro</h1>
+            <p class="text-gray-600 dark:text-gray-400">支援網址、文字、WiFi、名片、Email、簡訊、電話等多種類型，即時預覽並下載 PNG / SVG</p>
+        </div>
+
+        <!-- Type tabs -->
+        <div class="flex flex-wrap gap-2 mb-4" id="typeTabs" role="tablist">
+            <button data-type="url" class="type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors">🔗 網址 / 文字</button>
+            <button data-type="wifi" class="type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors">📶 WiFi</button>
+            <button data-type="vcard" class="type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors">👤 聯絡人名片</button>
+            <button data-type="email" class="type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors">✉️ Email</button>
+            <button data-type="sms" class="type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors">💬 簡訊</button>
+            <button data-type="tel" class="type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors">📞 電話</button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <!-- Settings -->
+            <section class="lg:col-span-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 md:p-6 space-y-5">
+                <!-- Dynamic content panels -->
+                <div id="panels">
+                    <!-- URL / Text -->
+                    <div data-panel="url">
+                        <label class="block text-sm font-medium mb-2">內容（網址或任意文字）</label>
+                        <textarea id="f_url" spellcheck="false" placeholder="例如 https://tool.feifei.tw" class="field h-32 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 font-mono focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+
+                    <!-- WiFi -->
+                    <div data-panel="wifi" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">WiFi 名稱（SSID）</label>
+                            <input id="f_wifi_ssid" type="text" placeholder="MyWiFi" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">加密方式</label>
+                                <select id="f_wifi_enc" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                                    <option value="WPA">WPA / WPA2</option>
+                                    <option value="WEP">WEP</option>
+                                    <option value="nopass">無密碼</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">密碼</label>
+                                <input id="f_wifi_pass" type="text" placeholder="密碼" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+                        <label class="flex items-center gap-2 cursor-pointer select-none text-sm">
+                            <input id="f_wifi_hidden" type="checkbox" class="w-4 h-4 rounded text-blue-600 focus:ring-blue-500">
+                            <span>隱藏網路（Hidden SSID）</span>
+                        </label>
+                    </div>
+
+                    <!-- vCard -->
+                    <div data-panel="vcard" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">姓名</label>
+                            <input id="f_vc_name" type="text" placeholder="王小明" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">電話</label>
+                            <input id="f_vc_tel" type="text" placeholder="0912345678" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input id="f_vc_email" type="text" placeholder="ming@example.com" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">公司</label>
+                            <input id="f_vc_org" type="text" placeholder="飛飛科技" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">職稱</label>
+                            <input id="f_vc_title" type="text" placeholder="工程師" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">網站</label>
+                            <input id="f_vc_url" type="text" placeholder="https://example.com" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div data-panel="email" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">收件人 Email</label>
+                            <input id="f_em_to" type="text" placeholder="hello@example.com" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">主旨</label>
+                            <input id="f_em_subject" type="text" placeholder="主旨（選填）" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">內容</label>
+                            <textarea id="f_em_body" placeholder="信件內容（選填）" class="field h-24 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- SMS -->
+                    <div data-panel="sms" class="hidden space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">電話號碼</label>
+                            <input id="f_sms_to" type="text" placeholder="0912345678" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">訊息內容</label>
+                            <textarea id="f_sms_body" placeholder="預先填入的簡訊內容（選填）" class="field h-24 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Tel -->
+                    <div data-panel="tel" class="hidden">
+                        <label class="block text-sm font-medium mb-2">電話號碼</label>
+                        <input id="f_tel" type="text" placeholder="0912345678" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <hr class="border-gray-200 dark:border-gray-700">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">容錯等級</label>
+                        <select id="ecLevel" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                            <option value="L">L（7%）</option>
+                            <option value="M" selected>M（15%）</option>
+                            <option value="Q">Q（25%）</option>
+                            <option value="H">H（30%）</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">輸出尺寸</label>
+                        <select id="sizeSel" class="field bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 focus:outline-none focus:border-blue-500">
+                            <option value="256">256 px</option>
+                            <option value="512" selected>512 px</option>
+                            <option value="1024">1024 px</option>
+                            <option value="2048">2048 px</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-2">前景色</label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="fgColor" value="#000000" class="w-12 h-10 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer bg-transparent">
+                            <input type="text" id="fgHex" value="#000000" class="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-2">背景色</label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="bgColor" value="#ffffff" class="w-12 h-10 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer bg-transparent">
+                            <input type="text" id="bgHex" value="#ffffff" class="flex-1 px-3 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg font-mono text-sm focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">邊框寬度（modules）</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="marginRange" min="0" max="8" value="2" class="flex-1 accent-blue-600">
+                        <span id="marginVal" class="font-mono text-sm w-8 text-right">2</span>
+                    </div>
+                </div>
+
+                <div id="status" class="hidden px-3 py-2 rounded-lg text-sm"></div>
+            </section>
+
+            <!-- Preview -->
+            <section class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 md:p-6 flex flex-col">
+                <h2 class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">預覽</h2>
+                <div class="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900 rounded-lg p-4 min-h-[280px]">
+                    <canvas id="qrCanvas" class="max-w-full max-h-[400px] hidden" style="image-rendering: pixelated"></canvas>
+                    <div id="placeholder" class="text-center text-gray-400 dark:text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 4h6v6H4V4zm10 0h6v6h-6V4zM4 14h6v6H4v-6zm10 0h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2z"/></svg>
+                        <p class="text-sm">填入內容後將顯示 QR Code</p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2 mt-4">
+                    <button id="downloadPngBtn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 dark:disabled:bg-gray-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors touch-target" disabled>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        下載 PNG
+                    </button>
+                    <button id="downloadSvgBtn" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium rounded-lg transition-colors touch-target" disabled>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        下載 SVG
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200 mt-4">
+            <p class="font-medium mb-1">使用說明</p>
+            <ul class="list-disc list-inside space-y-1 text-blue-700 dark:text-blue-300">
+                <li>切換上方類型（網址、WiFi、名片、Email、簡訊、電話）填入對應欄位即可即時產生。</li>
+                <li>WiFi QR 可讓手機相機掃描後直接連線；名片 QR 掃描後可一鍵存入通訊錄。</li>
+                <li>容錯等級越高越能容忍遮蔽（H 級約 30%）；若要印刷建議下載 SVG 保留畫質。</li>
+                <li>所有產生都在瀏覽器本地完成，不會上傳任何資料。</li>
+            </ul>
+        </div>
+    </main>
+
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-lg border-t border-gray-200 dark:border-gray-700" style="padding-bottom: env(safe-area-inset-bottom, 0);">
+        <div class="grid grid-cols-5 h-16">
+            <a href="index.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/></svg><span class="text-xs mt-0.5">首頁</span></a>
+            <a href="text-stats.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/></svg><span class="text-xs mt-0.5">文字</span></a>
+            <a href="pdf-to-png.html" class="flex flex-col items-center justify-center text-blue-600 dark:text-blue-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span class="text-xs mt-0.5 font-medium">圖片</span></a>
+            <a href="encry.html" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg><span class="text-xs mt-0.5">開發</span></a>
+            <button id="theme-toggle-mobile" class="flex flex-col items-center justify-center text-gray-600 dark:text-gray-400 touch-target"><svg class="w-6 h-6 hidden dark:block" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0z"/></svg><svg class="w-6 h-6 block dark:hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/></svg><span class="text-xs mt-0.5">主題</span></button>
+        </div>
+    </nav>
+
+    <div id="toast" class="fixed bottom-24 md:bottom-8 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-4 py-2 rounded-lg shadow-lg transform transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-[60]"><span id="toast-message"></span></div>
+
+    <script>
+        function toggleTheme() { const isDark = document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); }
+        document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+        document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => { toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none'); toast.classList.remove('opacity-100', 'translate-y-0'); }, 2000);
+        }
+
+        const ecLevel = document.getElementById('ecLevel');
+        const sizeSel = document.getElementById('sizeSel');
+        const fgColor = document.getElementById('fgColor');
+        const bgColor = document.getElementById('bgColor');
+        const fgHex = document.getElementById('fgHex');
+        const bgHex = document.getElementById('bgHex');
+        const marginRange = document.getElementById('marginRange');
+        const marginVal = document.getElementById('marginVal');
+        const qrCanvas = document.getElementById('qrCanvas');
+        const placeholder = document.getElementById('placeholder');
+        const statusEl = document.getElementById('status');
+        const downloadPngBtn = document.getElementById('downloadPngBtn');
+        const downloadSvgBtn = document.getElementById('downloadSvgBtn');
+
+        let currentType = 'url';
+
+        function showError(msg) {
+            statusEl.classList.remove('hidden');
+            statusEl.className = 'px-3 py-2 rounded-lg text-sm bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-200 border border-red-200 dark:border-red-800';
+            statusEl.textContent = '⚠ ' + msg;
+        }
+        function hideStatus() { statusEl.classList.add('hidden'); }
+
+        function val(id) { return document.getElementById(id).value.trim(); }
+
+        // 依 WiFi / vCard 規範跳脫特殊字元
+        function escWifi(s) { return s.replace(/([\\;,:"])/g, '\\$1'); }
+        function escVcard(s) { return s.replace(/([\\;,])/g, '\\$1').replace(/\n/g, '\\n'); }
+
+        // 根據目前類型組出 QR 內容字串
+        function buildContent() {
+            switch (currentType) {
+                case 'url':
+                    return document.getElementById('f_url').value;
+                case 'wifi': {
+                    const ssid = val('f_wifi_ssid');
+                    if (!ssid) return '';
+                    const enc = document.getElementById('f_wifi_enc').value;
+                    const pass = val('f_wifi_pass');
+                    const hidden = document.getElementById('f_wifi_hidden').checked;
+                    const t = enc === 'nopass' ? 'nopass' : enc;
+                    let s = `WIFI:T:${t};S:${escWifi(ssid)};`;
+                    if (enc !== 'nopass') s += `P:${escWifi(pass)};`;
+                    if (hidden) s += 'H:true;';
+                    return s + ';';
+                }
+                case 'vcard': {
+                    const name = val('f_vc_name');
+                    const tel = val('f_vc_tel');
+                    const email = val('f_vc_email');
+                    const org = val('f_vc_org');
+                    const title = val('f_vc_title');
+                    const url = val('f_vc_url');
+                    if (!name && !tel && !email && !org) return '';
+                    const lines = ['BEGIN:VCARD', 'VERSION:3.0'];
+                    if (name) { lines.push(`N:${escVcard(name)}`); lines.push(`FN:${escVcard(name)}`); }
+                    if (org) lines.push(`ORG:${escVcard(org)}`);
+                    if (title) lines.push(`TITLE:${escVcard(title)}`);
+                    if (tel) lines.push(`TEL;TYPE=CELL:${tel}`);
+                    if (email) lines.push(`EMAIL:${email}`);
+                    if (url) lines.push(`URL:${url}`);
+                    lines.push('END:VCARD');
+                    return lines.join('\n');
+                }
+                case 'email': {
+                    const to = val('f_em_to');
+                    if (!to) return '';
+                    const subject = val('f_em_subject');
+                    const body = document.getElementById('f_em_body').value;
+                    const params = [];
+                    if (subject) params.push('subject=' + encodeURIComponent(subject));
+                    if (body) params.push('body=' + encodeURIComponent(body));
+                    return 'mailto:' + to + (params.length ? '?' + params.join('&') : '');
+                }
+                case 'sms': {
+                    const to = val('f_sms_to');
+                    if (!to) return '';
+                    const body = document.getElementById('f_sms_body').value;
+                    return body ? `SMSTO:${to}:${body}` : `SMSTO:${to}`;
+                }
+                case 'tel': {
+                    const t = val('f_tel');
+                    return t ? 'tel:' + t : '';
+                }
+                default:
+                    return '';
+            }
+        }
+
+        function syncColor(color, hex) {
+            color.addEventListener('input', () => { hex.value = color.value; render(); });
+            hex.addEventListener('input', () => {
+                const v = hex.value.trim();
+                if (/^#[0-9a-fA-F]{6}$/.test(v)) { color.value = v; render(); }
+            });
+        }
+        syncColor(fgColor, fgHex);
+        syncColor(bgColor, bgHex);
+
+        marginRange.addEventListener('input', () => { marginVal.textContent = marginRange.value; render(); });
+        [ecLevel, sizeSel].forEach(el => el.addEventListener('change', render));
+        // 所有輸入欄位變更即時重繪
+        document.getElementById('panels').addEventListener('input', render);
+        document.getElementById('panels').addEventListener('change', render);
+
+        // 類型切換
+        function selectType(type) {
+            currentType = type;
+            document.querySelectorAll('.type-tab').forEach(btn => {
+                const active = btn.dataset.type === type;
+                btn.className = 'type-tab px-4 py-2 rounded-lg text-sm font-medium touch-target transition-colors ' +
+                    (active
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700');
+            });
+            document.querySelectorAll('[data-panel]').forEach(p => {
+                p.classList.toggle('hidden', p.dataset.panel !== type);
+            });
+            render();
+        }
+        document.getElementById('typeTabs').addEventListener('click', (e) => {
+            const btn = e.target.closest('.type-tab');
+            if (btn) selectType(btn.dataset.type);
+        });
+
+        async function render() {
+            const text = buildContent();
+            if (!text) {
+                qrCanvas.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                downloadPngBtn.disabled = true;
+                downloadSvgBtn.disabled = true;
+                hideStatus();
+                return;
+            }
+            const opts = {
+                errorCorrectionLevel: ecLevel.value,
+                width: parseInt(sizeSel.value, 10),
+                margin: parseInt(marginRange.value, 10),
+                color: { dark: fgColor.value, light: bgColor.value }
+            };
+            try {
+                await QRCode.toCanvas(qrCanvas, text, opts);
+                qrCanvas.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+                downloadPngBtn.disabled = false;
+                downloadSvgBtn.disabled = false;
+                hideStatus();
+            } catch (e) {
+                showError(e.message || '產生失敗');
+                qrCanvas.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                downloadPngBtn.disabled = true;
+                downloadSvgBtn.disabled = true;
+            }
+        }
+
+        function safeFilename() {
+            const prefix = { url: 'qrcode', wifi: 'wifi', vcard: 'contact', email: 'email', sms: 'sms', tel: 'tel' }[currentType] || 'qrcode';
+            return prefix;
+        }
+
+        downloadPngBtn.addEventListener('click', () => {
+            const url = qrCanvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = url; a.download = `${safeFilename()}.png`;
+            document.body.appendChild(a); a.click(); a.remove();
+            showToast('已下載 PNG');
+        });
+
+        downloadSvgBtn.addEventListener('click', async () => {
+            const text = buildContent();
+            if (!text) return;
+            const opts = {
+                errorCorrectionLevel: ecLevel.value,
+                margin: parseInt(marginRange.value, 10),
+                color: { dark: fgColor.value, light: bgColor.value },
+                width: parseInt(sizeSel.value, 10)
+            };
+            try {
+                const svg = await QRCode.toString(text, { ...opts, type: 'svg' });
+                const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = `${safeFilename()}.svg`;
+                document.body.appendChild(a); a.click(); a.remove();
+                URL.revokeObjectURL(url);
+                showToast('已下載 SVG');
+            } catch (e) { showError(e.message || '產生 SVG 失敗'); }
+        });
+
+        // 初始化
+        selectType('url');
+    </script>
+</body>
+</html>

@@ -19,6 +19,8 @@ TOOL_CATEGORIES = {
     'email.html': 'text',
     'word-replace.html': 'text',
     'speech-timer.html': 'text',
+    'filter-unsent-list.html': 'text',
+    'whitespace-converter.html': 'text',
 
     # 圖片工具
     'pdf-to-png.html': 'image',
@@ -41,6 +43,7 @@ TOOL_CATEGORIES = {
     'url-encode.html': 'dev',
     'jwt-decoder.html': 'dev',
     'qr-generator.html': 'dev',
+    'qr-generator-pro.html': 'dev',
 
     # 生活工具
     'tarot.html': 'life',
@@ -59,6 +62,8 @@ TOOL_ICONS = {
     'email.html': '📧',
     'word-replace.html': '📃',
     'speech-timer.html': '⏱️',
+    'filter-unsent-list.html': '📤',
+    'whitespace-converter.html': '␣',
     'pdf-to-png.html': '📄',
     'pdf-to-txt.html': '📄',
     'png-to-pdf.html': '🖼️',
@@ -77,6 +82,7 @@ TOOL_ICONS = {
     'url-encode.html': '🔗',
     'jwt-decoder.html': '🔑',
     'qr-generator.html': '▦',
+    'qr-generator-pro.html': '▦',
     'tarot.html': '🔮',
     'astro-dice.html': '🎲',
     'lucky-draw.html': '🎰',
@@ -93,6 +99,8 @@ TOOL_KEYWORDS = {
     'email.html': '信箱 email 郵件 暱稱 提取 extract',
     'word-replace.html': 'word docx 批次 取代 替換 文件 office replace batch',
     'speech-timer.html': '演講 時間 計算 簡報 語速 speech timer presentation wpm 推銷 腳本',
+    'filter-unsent-list.html': '名單 篩選 未寄出 比對 差集 扣除 email 寄信 unsent filter list',
+    'whitespace-converter.html': '空白 換行 轉換 零寬度空格 ig fb instagram threads 貼文 排版 縮排 空行 zero width space whitespace',
     'pdf-to-png.html': 'pdf png 轉換 圖片 convert',
     'pdf-to-txt.html': 'pdf txt 純文字 擷取 抽取 文字 extract text',
     'png-to-pdf.html': 'png pdf 圖片 合併 轉換 jpg jpeg convert merge',
@@ -111,6 +119,7 @@ TOOL_KEYWORDS = {
     'url-encode.html': 'url 編碼 解碼 encode decode encodeURIComponent 查詢字串 query string',
     'jwt-decoder.html': 'jwt token 解碼 解析 jwt decoder 認證 auth',
     'qr-generator.html': 'qr code 二維碼 產生器 generator png svg',
+    'qr-generator-pro.html': 'qr code 二維碼 產生器 generator wifi vcard 名片 email sms 簡訊 電話 png svg pro',
     'tarot.html': '塔羅 占卜 tarot 牌陣 萊德偉特 星辰',
     'astro-dice.html': '占星 骰子 astro dice 行星 星座 宮位 占卜',
     'lucky-draw.html': '抽獎 隨機 lucky draw 抽籤 名單 中獎',
