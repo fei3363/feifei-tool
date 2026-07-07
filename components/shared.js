@@ -24,6 +24,7 @@ const TOOLS = {
         { id: 'word-replace', name: 'Word 批次取代', icon: '📃', href: 'word-replace.html', desc: 'Word/docx 文件批次取代' },
         { id: 'speech-timer', name: '演講時間計算機', icon: '⏱️', href: 'speech-timer.html', desc: '估算演講、簡報所需時長' },
         { id: 'filter-unsent-list', name: '篩選未寄出名單', icon: '📤', href: 'filter-unsent-list.html', desc: '從完整名單扣除已寄出，找出未寄名單' },
+        { id: 'whitespace-converter', name: '空白換行轉換器', icon: '␣', href: 'whitespace-converter.html', desc: '讓 IG／FB 貼文保留連續空格與空行' },
     ],
     image: [
         { id: 'pdf-to-png', name: 'PDF 轉 PNG', icon: '📄', href: 'pdf-to-png.html', desc: '將 PDF 轉換為圖片' },
@@ -34,6 +35,7 @@ const TOOLS = {
         { id: 'exif', name: 'EXIF 讀取', icon: '📷', href: 'exif.html', desc: '讀取照片 EXIF 資訊' },
         { id: 'image-to-base64', name: '圖片轉 Base64', icon: '🖼️', href: 'image-to-base64.html', desc: '圖片轉 Data URL（PNG/JPEG/WebP）' },
         { id: 'qr-generator', name: 'QR Code 產生器', icon: '▦', href: 'qr-generator.html', desc: '產生 QR Code，下載 PNG / SVG' },
+        { id: 'qr-generator-pro', name: 'QR Code 產生器 Pro', icon: '▦', href: 'qr-generator-pro.html', desc: '網址/WiFi/名片/簡訊等多類型 QR Code' },
     ],
     dev: [
         { id: 'json-formatter', name: 'JSON 格式化', icon: '{ }', href: 'json-formatter.html', desc: 'JSON 美化、壓縮、驗證、樹狀檢視' },
