@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>HTML 編輯器</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; background: #1e1e1e; color: #ccc; }
+
+.toolbar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; background: #2d2d2d; border-bottom: 1px solid #444;
+  flex-wrap: wrap;
+}
+.toolbar button, .toolbar label {
+  padding: 6px 14px; border: 1px solid #555; border-radius: 4px;
+  background: #3c3c3c; color: #ddd; cursor: pointer; font-size: 13px;
+}
+.toolbar button:hover, .toolbar label:hover { background: #505050; }
+.toolbar button.active { background: #0078d4; border-color: #0078d4; color: #fff; }
+.toolbar .spacer { flex: 1; }
+.toolbar .filename { color: #aaa; font-size: 12px; }
+
+.format-bar {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 12px; background: #252526; border-bottom: 1px solid #333;
+}
+.format-bar button {
+  padding: 4px 10px; border: 1px solid #444; border-radius: 3px;
+  background: #3c3c3c; color: #ddd; cursor: pointer; font-size: 13px;
+  min-width: 30px;
+}
+.format-bar button:hover { background: #505050; }
+.format-bar .sep { width: 1px; height: 20px; background: #444; margin: 0 4px; }
+.format-bar select {
+  padding: 3px 6px; border: 1px solid #444; border-radius: 3px;
+  background: #3c3c3c; color: #ddd; font-size: 12px; cursor: pointer;
+}
+
+.main { flex: 1; display: flex; overflow: hidden; }
+
+.panel { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.panel-header {
+  padding: 4px 12px; background: #252526; font-size: 12px; color: #888;
+  border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px;
+}
+.panel-header .sync-indicator {
+  font-size: 10px; padding: 1px 6px; border-radius: 8px;
+}
+.sync-indicator.synced { background: #2ea04370; color: #7ee787; }
+.sync-indicator.editing { background: #d2992250; color: #e3b341; }
+
+#code-editor {
+  flex: 1; width: 100%; border: none; resize: none;
+  background: #1e1e1e; color: #d4d4d4; padding: 12px;
+  font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 14px;
+  line-height: 1.6; tab-size: 2; outline: none;
+}
+
+.divider { width: 4px; background: #333; cursor: col-resize; }
+.divider:hover { background: #0078d4; }
+
+#preview-frame { flex: 1; width: 100%; border: none; background: #fff; }
+
+.hidden { display: none !important; }
+
+.drop-overlay {
+  position: fixed; inset: 0; background: rgba(0,120,212,0.15);
+  border: 3px dashed #0078d4; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: #0078d4; pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button id="btn-load">
+    <label for="file-input" style="cursor:pointer;padding:0;border:none;background:none;color:inherit;">📂 載入</label>
+  </button>
+  <input type="file" id="file-input" accept=".html,.htm" style="display:none">
+  <button id="btn-new">📄 新建</button>
+  <button id="btn-paste">📋 貼上</button>
+  <div class="spacer"></div>
+  <span class="filename" id="current-file">未載入檔案</span>
+  <div class="spacer"></div>
+  <button id="btn-code" class="active">程式碼</button>
+  <button id="btn-split">分割</button>
+  <button id="btn-preview">預覽</button>
+  <div class="spacer"></div>
+  <button id="btn-save" style="background:#0078d4;border-color:#0078d4;color:#fff;">💾 儲存</button>
+</div>
+
+<div class="format-bar" id="format-bar">
+  <select id="block-type" title="區塊類型">
+    <option value="p">段落</option>
+    <option value="h1">標題 1</option>
+    <option value="h2">標題 2</option>
+    <option value="h3">標題 3</option>
+    <option value="h4">標題 4</option>
+    <option value="blockquote">引用</option>
+    <option value="pre">程式碼區塊</option>
+  </select>
+  <div class="sep"></div>
+  <button id="fmt-bold" title="粗體 (Ctrl+B)"><b>B</b></button>
+  <button id="fmt-italic" title="斜體 (Ctrl+I)"><i>I</i></button>
+  <button id="fmt-underline" title="底線 (Ctrl+U)"><u>U</u></button>
+  <button id="fmt-strike" title="刪除線"><s>S</s></button>
+  <button id="fmt-code" title="行內程式碼">&lt;/&gt;</button>
+  <div class="sep"></div>
+  <button id="fmt-link" title="插入連結">🔗</button>
+  <button id="fmt-img" title="插入圖片">🖼️</button>
+  <div class="sep"></div>
+  <button id="fmt-ul" title="無序列表">• 列表</button>
+  <button id="fmt-ol" title="有序列表">1. 列表</button>
+  <div class="sep"></div>
+  <button id="fmt-hr" title="水平線">─</button>
+  <button id="fmt-removeformat" title="清除格式">✕ 格式</button>
+  <div class="sep"></div>
+  <button id="fmt-undo" title="復原 (Ctrl+Z)">↩</button>
+  <button id="fmt-redo" title="重做 (Ctrl+Y)">↪</button>
+</div>
+
+<div class="main" id="main">
+  <div class="panel" id="code-panel">
+    <div class="panel-header">
+      HTML 原始碼
+      <span class="sync-indicator synced" id="code-sync">已同步</span>
+    </div>
+    <textarea id="code-editor" spellcheck="false" placeholder="在此貼上或輸入 HTML..."></textarea>
+  </div>
+  <div class="divider" id="divider"></div>
+  <div class="panel" id="preview-panel">
+    <div class="panel-header">
+      即時預覽（可直接編輯）
+      <span class="sync-indicator synced" id="preview-sync">已同步</span>
+    </div>
+    <iframe id="preview-frame"></iframe>
+  </div>
+</div>
+
+<script>
+const editor = document.getElementById('code-editor');
+const preview = document.getElementById('preview-frame');
+const codePanel = document.getElementById('code-panel');
+const previewPanel = document.getElementById('preview-panel');
+const divider = document.getElementById('divider');
+const btnCode = document.getElementById('btn-code');
+const btnSplit = document.getElementById('btn-split');
+const btnPreview = document.getElementById('btn-preview');
+const btnSave = document.getElementById('btn-save');
+const btnNew = document.getElementById('btn-new');
+const btnPaste = document.getElementById('btn-paste');
+const fileInput = document.getElementById('file-input');
+const currentFile = document.getElementById('current-file');
+const formatBar = document.getElementById('format-bar');
+const codeSync = document.getElementById('code-sync');
+const previewSync = document.getElementById('preview-sync');
+
+let filename = 'untitled.html';
+let debounceTimer = null;
+let syncDirection = null; // 'code-to-preview' | 'preview-to-code'
+
+// === 預覽區寫入並啟用 contentEditable ===
+function updatePreview() {
+  syncDirection = 'code-to-preview';
+  const doc = preview.contentDocument;
+  doc.open();
+  doc.write(editor.value);
+  doc.close();
+  enableEditing();
+  setSyncState('synced');
+}
+
+function enableEditing() {
+  const doc = preview.contentDocument;
+  if (!doc || !doc.body) return;
+  doc.body.contentEditable = 'true';
+  doc.body.style.outline = 'none';
+  doc.body.style.minHeight = '100%';
+  doc.body.style.cursor = 'text';
+
+  // 預覽區編輯 → 同步回程式碼
+  doc.body.addEventListener('input', onPreviewEdit);
+  doc.addEventListener('keydown', onPreviewKeydown);
+}
+
+let previewDebounce = null;
+function onPreviewEdit() {
+  setSyncState('editing');
+  clearTimeout(previewDebounce);
+  previewDebounce = setTimeout(syncPreviewToCode, 400);
+}
+
+function syncPreviewToCode() {
+  syncDirection = 'preview-to-code';
+  const doc = preview.contentDocument;
+  // 重組完整 HTML：保留 head，取 body 內容
+  const html = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  editor.value = formatHTML(html);
+  setSyncState('synced');
+  syncDirection = null;
+}
+
+function setSyncState(state) {
+  const cls = state === 'synced' ? 'sync-indicator synced' : 'sync-indicator editing';
+  const txt = state === 'synced' ? '已同步' : '編輯中...';
+  codeSync.className = cls; codeSync.textContent = txt;
+  previewSync.className = cls; previewSync.textContent = txt;
+}
+
+// 簡易 HTML 格式化
+function formatHTML(html) {
+  return html
+    .replace(/></g, '>\n<')
+    .replace(/\n\s*\n/g, '\n');
+}
+
+// === 程式碼編輯 → 預覽 ===
+editor.addEventListener('input', () => {
+  if (syncDirection === 'preview-to-code') return;
+  setSyncState('editing');
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(updatePreview, 400);
+});
+
+// Tab 鍵
+editor.addEventListener('keydown', (e) => {
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const s = editor.selectionStart, end = editor.selectionEnd;
+    editor.value = editor.value.substring(0, s) + '  ' + editor.value.substring(end);
+    editor.selectionStart = editor.selectionEnd = s + 2;
+  }
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveFile(); }
+});
+
+// === 格式工具列 ===
+function execCmd(cmd, val) {
+  const doc = preview.contentDocument;
+  doc.body.focus();
+  doc.execCommand(cmd, false, val || null);
+  clearTimeout(previewDebounce);
+  previewDebounce = setTimeout(syncPreviewToCode, 300);
+}
+
+function onPreviewKeydown(e) {
+  if (e.key === 's' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); saveFile(); }
+}
+
+document.getElementById('fmt-bold').onclick = () => execCmd('bold');
+document.getElementById('fmt-italic').onclick = () => execCmd('italic');
+document.getElementById('fmt-underline').onclick = () => execCmd('underline');
+document.getElementById('fmt-strike').onclick = () => execCmd('strikeThrough');
+document.getElementById('fmt-ul').onclick = () => execCmd('insertUnorderedList');
+document.getElementById('fmt-ol').onclick = () => execCmd('insertOrderedList');
+document.getElementById('fmt-hr').onclick = () => execCmd('insertHorizontalRule');
+document.getElementById('fmt-removeformat').onclick = () => execCmd('removeFormat');
+document.getElementById('fmt-undo').onclick = () => execCmd('undo');
+document.getElementById('fmt-redo').onclick = () => execCmd('redo');
+
+document.getElementById('fmt-code').onclick = () => {
+  const doc = preview.contentDocument;
+  const sel = doc.getSelection();
+  if (sel.rangeCount) {
+    const range = sel.getRangeAt(0);
+    const code = doc.createElement('code');
+    code.style.background = '#f0f0f0';
+    code.style.padding = '2px 4px';
+    code.style.borderRadius = '3px';
+    code.style.fontFamily = 'monospace';
+    range.surroundContents(code);
+    clearTimeout(previewDebounce);
+    previewDebounce = setTimeout(syncPreviewToCode, 300);
+  }
+};
+
+document.getElementById('fmt-link').onclick = () => {
+  const url = prompt('輸入連結 URL：', 'https://');
+  if (url) execCmd('createLink', url);
+};
+
+document.getElementById('fmt-img').onclick = () => {
+  const url = prompt('輸入圖片 URL：', 'https://');
+  if (url) execCmd('insertImage', url);
+};
+
+document.getElementById('block-type').addEventListener('change', (e) => {
+  execCmd('formatBlock', e.target.value);
+});
+
+// === 檢視模式 ===
+let currentView = 'split';
+function setView(mode) {
+  currentView = mode;
+  btnCode.classList.toggle('active', mode === 'code');
+  btnSplit.classList.toggle('active', mode === 'split');
+  btnPreview.classList.toggle('active', mode === 'preview');
+  codePanel.classList.toggle('hidden', mode === 'preview');
+  previewPanel.classList.toggle('hidden', mode === 'code');
+  divider.classList.toggle('hidden', mode !== 'split');
+  formatBar.classList.toggle('hidden', mode === 'code');
+  if (mode !== 'code') updatePreview();
+}
+
+btnCode.onclick = () => setView('code');
+btnSplit.onclick = () => setView('split');
+btnPreview.onclick = () => setView('preview');
+
+// === 分隔線拖曳 ===
+let dragging = false;
+divider.addEventListener('mousedown', () => { dragging = true; });
+document.addEventListener('mousemove', (e) => {
+  if (!dragging) return;
+  const rect = document.getElementById('main').getBoundingClientRect();
+  const pct = ((e.clientX - rect.left) / rect.width) * 100;
+  if (pct > 15 && pct < 85) {
+    codePanel.style.flex = `0 0 ${pct}%`;
+    previewPanel.style.flex = `0 0 ${100 - pct}%`;
+  }
+});
+document.addEventListener('mouseup', () => { dragging = false; });
+
+// === 檔案操作 ===
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  filename = file.name;
+  currentFile.textContent = filename;
+  const reader = new FileReader();
+  reader.onload = (ev) => { editor.value = ev.target.result; updatePreview(); setView('split'); };
+  reader.readAsText(file, 'UTF-8');
+  fileInput.value = '';
+});
+
+btnNew.onclick = () => {
+  editor.value = '<!DOCTYPE html>\n<html lang="zh-TW">\n<head>\n  <meta charset="UTF-8">\n  <title>新頁面</title>\n  <style>\n    body { font-family: sans-serif; padding: 20px; }\n  </style>\n</head>\n<body>\n  <h1>Hello!</h1>\n  <p>在這裡直接編輯內容...</p>\n</body>\n</html>';
+  filename = 'untitled.html';
+  currentFile.textContent = filename;
+  updatePreview();
+  setView('split');
+};
+
+btnPaste.onclick = async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    editor.value = text;
+    updatePreview();
+    setView('split');
+  } catch { /* 略 */ }
+};
+
+function saveFile() {
+  if (currentView !== 'code') syncPreviewToCode();
+  const blob = new Blob([editor.value], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+btnSave.onclick = saveFile;
+
+// 拖放
+document.addEventListener('dragover', (e) => { e.preventDefault(); });
+document.addEventListener('drop', (e) => {
+  e.preventDefault();
+  const overlay = document.querySelector('.drop-overlay');
+  if (overlay) overlay.remove();
+  const file = e.dataTransfer.files[0];
+  if (file && /\.html?$/i.test(file.name)) {
+    filename = file.name;
+    currentFile.textContent = filename;
+    const reader = new FileReader();
+    reader.onload = (ev) => { editor.value = ev.target.result; updatePreview(); setView('split'); };
+    reader.readAsText(file, 'UTF-8');
+  }
+});
+document.addEventListener('dragenter', (e) => {
+  e.preventDefault();
+  if (!document.querySelector('.drop-overlay')) {
+    const div = document.createElement('div');
+    div.className = 'drop-overlay';
+    div.textContent = '放開以載入 HTML 檔案';
+    document.body.appendChild(div);
+  }
+});
+document.addEventListener('dragleave', (e) => {
+  if (!e.relatedTarget) { const o = document.querySelector('.drop-overlay'); if (o) o.remove(); }
+});
+
+// 初始化
+setView('split');
+</script>
+</body>
+</html>
