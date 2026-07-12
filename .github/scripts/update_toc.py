@@ -41,6 +41,7 @@ TOOL_CATEGORIES = {
     'url-encode.html': 'dev',
     'jwt-decoder.html': 'dev',
     'qr-generator.html': 'dev',
+    'html-editor.html': 'dev',
 
     # 生活工具
     'tarot.html': 'life',
@@ -77,6 +78,7 @@ TOOL_ICONS = {
     'url-encode.html': '🔗',
     'jwt-decoder.html': '🔑',
     'qr-generator.html': '▦',
+    'html-editor.html': '✏️',
     'tarot.html': '🔮',
     'astro-dice.html': '🎲',
     'lucky-draw.html': '🎰',
@@ -111,6 +113,7 @@ TOOL_KEYWORDS = {
     'url-encode.html': 'url 編碼 解碼 encode decode encodeURIComponent 查詢字串 query string',
     'jwt-decoder.html': 'jwt token 解碼 解析 jwt decoder 認證 auth',
     'qr-generator.html': 'qr code 二維碼 產生器 generator png svg',
+    'html-editor.html': 'html 編輯器 editor wysiwyg 所見即所得 預覽 原始碼 網頁',
     'tarot.html': '塔羅 占卜 tarot 牌陣 萊德偉特 星辰',
     'astro-dice.html': '占星 骰子 astro dice 行星 星座 宮位 占卜',
     'lucky-draw.html': '抽獎 隨機 lucky draw 抽籤 名單 中獎',
