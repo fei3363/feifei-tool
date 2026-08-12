@@ -54,6 +54,7 @@
 | [JWT 解碼器](https://tool.feifei.tw/jwt-decoder.html) | JWT Token 解析 Header / Payload |
 | [終端指令提取](https://tool.feifei.tw/bash.html) | 從終端輸出中提取指令 |
 | [編碼/加解密](https://tool.feifei.tw/encry.html) | Base64、MD5、SHA、AES |
+| [HTML 轉 Markdown](https://tool.feifei.tw/html-to-markdown.html) | 將 HTML 轉換為 Markdown |
 | [Windows 轉 WSL](https://tool.feifei.tw/windows-to-wsl.html) | 路徑格式轉換 |
 | [ISO 差異對照](https://tool.feifei.tw/iso-diff-tool.html) | ISO 文件版本比對 |
 

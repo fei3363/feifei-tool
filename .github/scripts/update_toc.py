@@ -32,6 +32,7 @@ TOOL_CATEGORIES = {
     # 開發工具
     'bash.html': 'dev',
     'encry.html': 'dev',
+    'html-to-markdown.html': 'dev',
     'windows-to-wsl.html': 'dev',
     'iso-diff-tool.html': 'dev',
     'gsheet-to-markdown.html': 'dev',
@@ -68,6 +69,7 @@ TOOL_ICONS = {
     'image-to-base64.html': '🖼️',
     'bash.html': '💻',
     'encry.html': '🔐',
+    'html-to-markdown.html': '📝',
     'windows-to-wsl.html': '🪟',
     'iso-diff-tool.html': '📋',
     'gsheet-to-markdown.html': '📊',
@@ -102,6 +104,7 @@ TOOL_KEYWORDS = {
     'image-to-base64.html': '圖片 base64 data url 編碼 image to base64 dataurl',
     'bash.html': '終端 指令 bash shell command terminal',
     'encry.html': '編碼 加密 解密 base64 md5 sha aes hash',
+    'html-to-markdown.html': 'html markdown 轉換 convert md',
     'windows-to-wsl.html': 'windows wsl linux 路徑 轉換 path',
     'iso-diff-tool.html': 'iso 差異 比對 文件 版本',
     'gsheet-to-markdown.html': 'google sheet markdown 表格 試算表 excel spreadsheet 轉換',
