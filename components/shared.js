@@ -41,7 +41,6 @@ const TOOLS = {
         { id: 'jwt-decoder', name: 'JWT 解碼器', icon: '🔑', href: 'jwt-decoder.html', desc: 'JWT Token 解析 Header / Payload' },
         { id: 'bash', name: '終端指令提取', icon: '💻', href: 'bash.html', desc: '從終端輸出中提取指令' },
         { id: 'encry', name: '編碼/加解密', icon: '🔐', href: 'encry.html', desc: 'Base64、MD5、SHA、AES' },
-        { id: 'html-to-markdown', name: 'HTML 轉 Markdown', icon: '📝', href: 'html-to-markdown.html', desc: '將 HTML 轉換為 Markdown' },
         { id: 'windows-to-wsl', name: 'Windows 轉 WSL', icon: '🪟', href: 'windows-to-wsl.html', desc: '路徑格式轉換' },
         { id: 'iso-diff', name: 'ISO 差異對照', icon: '📋', href: 'iso-diff-tool.html', desc: 'ISO 文件版本比對' },
         { id: 'gsheet-to-markdown', name: 'Google Sheet 轉 Markdown', icon: '📊', href: 'gsheet-to-markdown.html', desc: '試算表轉 Markdown 表格' },
