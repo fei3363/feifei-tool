@@ -175,6 +175,8 @@
                 codeBlockStyle: 'fenced'
             });
 
+            turndownService.remove(['script', 'style', 'noscript']);
+
             if (!preserveLinks) {
                 turndownService.addRule('removeLinks', {
                     filter: 'a',
