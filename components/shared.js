@@ -46,6 +46,7 @@ const TOOLS = {
         { id: 'iso-diff', name: 'ISO 差異對照', icon: '📋', href: 'iso-diff-tool.html', desc: 'ISO 文件版本比對' },
         { id: 'gsheet-to-markdown', name: 'Google Sheet 轉 Markdown', icon: '📊', href: 'gsheet-to-markdown.html', desc: '試算表轉 Markdown 表格' },
         { id: 'markdown-viewer', name: 'Markdown 預覽', icon: '📖', href: 'markdown-viewer.html', desc: 'Markdown 即時預覽' },
+        { id: 'remove-newlines', name: '移除換行', icon: '↩️', href: 'remove-newlines.html', desc: '移除換行合併為單行指令' },
     ],
     life: [
         { id: 'tarot', name: '星辰塔羅', icon: '🔮', href: 'tarot.html', desc: '線上塔羅占卜，多種牌陣' },
