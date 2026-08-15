@@ -57,6 +57,7 @@
 | [HTML 轉 Markdown](https://tool.feifei.tw/html-to-markdown.html) | 將 HTML 轉換為 Markdown |
 | [Windows 轉 WSL](https://tool.feifei.tw/windows-to-wsl.html) | 路徑格式轉換 |
 | [ISO 差異對照](https://tool.feifei.tw/iso-diff-tool.html) | ISO 文件版本比對 |
+| [移除換行](https://tool.feifei.tw/remove-newlines.html) | 移除換行合併為單行指令 |
 
 ### 生活工具
 
